@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: populate-users-table
+      author: AdamMudrak
+      changes:
+      - sql:
+          sql: |
+            INSERT INTO users (email, password, first_name, last_name, shipping_address)
+            VALUES
+            ('admin@example.com',
+            '$2a$10$ltn6yO5CngLYgNFpvlXNCOXwvLAACa5Bz8yTo1JkjOVKOJ4LPEHfe',
+            'Admin',
+            'Adminson',
+            '789 Oak St, Adminville, USA');
