@@ -1,0 +1,42 @@
+services:
+  mysqldb:
+    platform: linux/amd64/v3
+    image: mysql
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE=$MYSQLDB_DATABASE
+    ports:
+      - "$MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT"
+    command: --init-file /data/application/init.sql
+    volumes:
+      - ./init.sql:/data/application/init.sql
+  app:
+    depends_on:
+    - mysqldb
+    restart: on-failure
+    image: posts-service
+    build: .
+    env_file: ./.env
+    ports:
+      - "$SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT"
+      - "$DEBUG_PORT:$DEBUG_PORT"
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "spring.application.name": "$SPRING_APPLICATION_NAME",
+        "spring.datasource.url": "jdbc:mysql://mysqldb:$MYSQLDB_DOCKER_PORT/$MYSQLDB_DATABASE",
+        "spring.datasource.driverClassName": "$SPRING_DATASOURCE_MYSQLDRIVERCLASSNAME",
+        "spring.datasource.username": "$MYSQLDB_USER",
+        "spring.datasource.password": "$MYSQL_ROOT_PASSWORD",
+        "spring.jpa.database-platform": "$SPRING_JPA_DATABASE_MYSQLPLATFORM",
+        "spring.jpa.hibernate.ddl-auto": "$SPRING_JPA_HIBERNATE_DDL_AUTO_MYSQL",
+        "spring.jpa.show-sql": "$SPRING_JPA_SHOW_SQL",
+        "jwt.expiration": "$JWT_EXPIRATION",
+        "jwt.secret": "$JWT_SECRET",
+        "spring.liquibase.change-log" : "$SPRING_LIQUIBASE_CHANGELOG",
+        "spring.liquibase.url" : "jdbc:mysql://mysqldb:$MYSQLDB_DOCKER_PORT/$MYSQLDB_DATABASE",
+        "spring.liquibase.user" : "$MYSQLDB_USER",
+        "spring.liquibase.password" : "$MYSQL_ROOT_PASSWORD"
+      }'
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
