@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,5 +46,23 @@ public class AuthController {
     @PostMapping("/login")
     public UserLoginResponseDto login(@RequestBody @Valid UserLoginRequestDto request) {
         return authenticationService.authenticate(request);
+    }
+
+    //TODO delete later
+    //For testing purposes
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiResponse(responseCode = Constants.CODE_200, description = Constants.SUCCESSFULLY_RETRIEVED)
+    @GetMapping
+    public String getAnyMessage() {
+        return "Anybody can see this message";
+    }
+
+    //TODO delete later
+    //For testing purposes
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ApiResponse(responseCode = Constants.CODE_200, description = Constants.SUCCESSFULLY_RETRIEVED)
+    @GetMapping("/admin")
+    public String getAdminMessage() {
+        return "Only admin can see this message";
     }
 }
