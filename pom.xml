@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>budgetingapp</artifactId>
+	<artifactId>budgetapp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>budgetingapp</name>
 	<description>Team project for personal budgeting</description>
