@@ -42,8 +42,4 @@ public record UserRegistrationRequestDto(
         @Schema(name = UserDtoConstants.LAST_NAME,
         example = UserDtoConstants.LAST_NAME_EXAMPLE,
         requiredMode = REQUIRED)
-        @NotBlank String lastName,
-
-        @Schema(name = UserDtoConstants.SHIPPING_ADDRESS,
-        example = UserDtoConstants.SHIPPING_ADDRESS_EXAMPLE)
-        String shippingAddress){}
+        @NotBlank String lastName){}
