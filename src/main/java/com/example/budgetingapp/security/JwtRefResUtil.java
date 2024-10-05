@@ -1,6 +1,7 @@
 package com.example.budgetingapp.security;
 
-import static com.example.budgetingapp.security.SecurityConstants.*;
+import static com.example.budgetingapp.security.SecurityConstants.REFRESH;
+import static com.example.budgetingapp.security.SecurityConstants.RESET;
 
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;

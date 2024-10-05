@@ -2,8 +2,10 @@ package com.example.budgetingapp.controllers;
 
 import com.example.budgetingapp.constants.AuthConstants;
 import com.example.budgetingapp.constants.Constants;
+import com.example.budgetingapp.dtos.user.request.UserInitiateResetRequestDto;
 import com.example.budgetingapp.dtos.user.request.UserLoginRequestDto;
 import com.example.budgetingapp.dtos.user.request.UserRegistrationRequestDto;
+import com.example.budgetingapp.dtos.user.request.UserResetRequestDto;
 import com.example.budgetingapp.dtos.user.response.UserLoginResponseDto;
 import com.example.budgetingapp.dtos.user.response.UserRegistrationResponseDto;
 import com.example.budgetingapp.exceptions.RegistrationException;
@@ -14,8 +16,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,21 +48,15 @@ public class AuthController {
         return authenticationService.authenticate(request);
     }
 
-    //TODO delete later
-    //For testing purposes
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @ApiResponse(responseCode = Constants.CODE_200, description = Constants.SUCCESSFULLY_RETRIEVED)
-    @GetMapping
-    public String getAnyMessage() {
-        return "Anybody can see this message";
+    @PostMapping("/forgot-password")
+    public void initiatePasswordReset(@RequestBody UserInitiateResetRequestDto request) {
+        authenticationService.initiatePasswordReset(request.email());
     }
 
-    //TODO delete later
-    //For testing purposes
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @ApiResponse(responseCode = Constants.CODE_200, description = Constants.SUCCESSFULLY_RETRIEVED)
-    @GetMapping("/admin")
-    public String getAdminMessage() {
-        return "Only admin can see this message";
+    @PostMapping("/password-reset")
+    public UserLoginResponseDto resetPassword(@RequestBody
+                                                  UserResetRequestDto userResetRequestDto) {
+        return authenticationService.authenticate(
+                authenticationService.resetPassword(userResetRequestDto));
     }
 }
