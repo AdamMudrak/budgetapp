@@ -20,7 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final JwtUtil jwtUtil;
+    private final JwtAccUtil jwtAccUtil;
     private final UserDetailsService userDetailsService;
 
     @Override
@@ -31,8 +31,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         String token = getToken(request);
 
-        if (token != null && jwtUtil.isValidToken(token)) {
-            String username = jwtUtil.getUsername(token);
+        if (token != null && jwtAccUtil.isValidToken(token)) {
+            String username = jwtAccUtil.getUsername(token);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             Authentication authentication = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities()

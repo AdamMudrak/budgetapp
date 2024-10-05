@@ -9,17 +9,21 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.function.Function;
 import javax.crypto.SecretKey;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+@Getter
+@Setter
 @Component
-public class JwtUtil {
+public class JwtAccUtil {
     private final SecretKey secret;
 
-    @Value("${jwt.expiration}")
+    @Value("${jwt.access-expiration}")
     private long expiration;
 
-    public JwtUtil(@Value("${jwt.secret}") String secretString) {
+    public JwtAccUtil(@Value("${jwt.secret}") String secretString) {
         secret = Keys.hmacShaKeyFor(secretString.getBytes(StandardCharsets.UTF_8));
     }
 
