@@ -17,13 +17,22 @@ public class EmailService {
     private String subject;
     private String body;
 
-    public void sendSimpleEmail(String to, String token) {
+    public void sendSimpleEmail(String to, String setText) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject(subject);
-        message.setText(body + System.lineSeparator() + PATH
-                + emailSecretProvider.getEmailSecret()
-                + "=" + token);
+        message.setText(setText);
         mailSender.send(message);
+    }
+
+    public String formTextForReset(String token) {
+        return body + System.lineSeparator() + PATH
+                + emailSecretProvider.getEmailSecret()
+                + "=" + token;
+    }
+
+    public String formTextForNewPassword(String password) {
+        return body + System.lineSeparator()
+                + password;
     }
 }
