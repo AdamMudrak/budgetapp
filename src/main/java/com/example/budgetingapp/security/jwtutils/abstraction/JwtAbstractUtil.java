@@ -9,10 +9,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.function.Function;
 import javax.crypto.SecretKey;
+import org.springframework.stereotype.Component;
 
+@Component
 public abstract class JwtAbstractUtil {
     protected final SecretKey secret;
-    protected long expiration;
+    protected final long expiration;
 
     public JwtAbstractUtil(String secretString, long expiration) {
         secret = Keys.hmacShaKeyFor(secretString.getBytes(StandardCharsets.UTF_8));
