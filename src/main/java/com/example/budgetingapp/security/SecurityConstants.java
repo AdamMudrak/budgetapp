@@ -6,10 +6,10 @@ public class SecurityConstants {
     public static final int RANDOM_PASSWORD_STRENGTH = 25;
     public static final String RANDOM_STRING_BASE =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    public static final String JWT_ACCESS_EXPIRATION = "jwt.access-expiration";
-    public static final String JWT_RESET_EXPIRATION = "jwt.reset-expiration";
-    public static final String JWT_REFRESH_EXPIRATION = "jwt.refresh-expiration";
-    public static final String JWT_SECRET = "jwt.secret";
+    public static final String JWT_ACCESS_EXPIRATION = "${jwt.access.expiration}";
+    public static final String JWT_RESET_EXPIRATION = "${jwt.reset.expiration}";
+    public static final String JWT_REFRESH_EXPIRATION = "${jwt.refresh.expiration}";
+    public static final String JWT_SECRET = "${jwt.secret}";
     public static final String ACCESS = "ACCESS";
     public static final String RESET = "RESET";
     public static final String REFRESH = "REFRESH";
