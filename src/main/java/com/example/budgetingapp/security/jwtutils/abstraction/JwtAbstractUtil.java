@@ -1,4 +1,4 @@
-package com.example.budgetingapp.security;
+package com.example.budgetingapp.security.jwtutils.abstraction;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -9,22 +9,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.function.Function;
 import javax.crypto.SecretKey;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
-@Getter
-@Setter
-@Component
-public class JwtAccUtil {
-    private final SecretKey secret;
+public abstract class JwtAbstractUtil {
+    protected final SecretKey secret;
+    protected long expiration;
 
-    @Value("${jwt.access-expiration}")
-    private long expiration;
-
-    public JwtAccUtil(@Value("${jwt.secret}") String secretString) {
+    public JwtAbstractUtil(String secretString, long expiration) {
         secret = Keys.hmacShaKeyFor(secretString.getBytes(StandardCharsets.UTF_8));
+        this.expiration = expiration;
     }
 
     public String generateToken(String username) {
