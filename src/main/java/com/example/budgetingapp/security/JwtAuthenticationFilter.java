@@ -1,12 +1,14 @@
 package com.example.budgetingapp.security;
 
 import com.example.budgetingapp.constants.AuthConstants;
+import com.example.budgetingapp.security.jwtutils.abstraction.JwtAbstractUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,10 +20,16 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
-@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final JwtAccUtil jwtAccUtil;
+    private final JwtAbstractUtil jwtAbstractUtil;
     private final UserDetailsService userDetailsService;
+
+    public JwtAuthenticationFilter(@Autowired @Qualifier("jwtAccessUtil")
+                                   JwtAbstractUtil jwtAbstractUtil,
+                                   @Autowired UserDetailsService userDetailsService) {
+        this.jwtAbstractUtil = jwtAbstractUtil;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     protected void doFilterInternal(
@@ -31,8 +39,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         String token = getToken(request);
 
-        if (token != null && jwtAccUtil.isValidToken(token)) {
-            String username = jwtAccUtil.getUsername(token);
+        if (token != null && jwtAbstractUtil.isValidToken(token)) {
+            String username = jwtAbstractUtil.getUsername(token);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             Authentication authentication = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities()
