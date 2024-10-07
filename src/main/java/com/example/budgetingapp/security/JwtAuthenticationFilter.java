@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,11 +26,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
     private final JwtAbstractUtil jwtAbstractUtil;
 
-    public JwtAuthenticationFilter(@Autowired Environment environment,
-                                   @Autowired JwtStrategy jwtStrategy,
-                                   @Autowired UserDetailsService userDetailsService) {
+    public JwtAuthenticationFilter(@Autowired JwtStrategy jwtStrategy,
+            @Autowired UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
-        this.jwtAbstractUtil = jwtStrategy.getJwtUtilByKey(environment, ACCESS);
+        this.jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
     }
 
     @Override

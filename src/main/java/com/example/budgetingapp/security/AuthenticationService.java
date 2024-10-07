@@ -27,7 +27,6 @@ import io.jsonwebtoken.JwtException;
 import java.util.Optional;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -37,7 +36,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class AuthenticationService {
-    private final Environment environment;
     private final EmailService emailService;
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
@@ -50,8 +48,8 @@ public class AuthenticationService {
                 .authenticate(
                         new UsernamePasswordAuthenticationToken(
                                 requestDto.email(), requestDto.password()));
-        JwtAbstractUtil jwtUtil = jwtStrategy.getJwtUtilByKey(environment, ACCESS);
-        String token = jwtUtil.generateToken(authentication.getName());
+        JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
+        String token = jwtAbstractUtil.generateToken(authentication.getName());
         return new UserLoginResponseDto(token);
     }
 
@@ -62,18 +60,18 @@ public class AuthenticationService {
                     "User with email " + email + " was not found");
         }
 
-        JwtAbstractUtil jwtUtil = jwtStrategy.getJwtUtilByKey(environment, RESET);
+        JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(RESET);
         ResetToken resetToken = new ResetToken();
-        resetToken.setResetToken(jwtUtil.generateToken(email));
+        resetToken.setResetToken(jwtAbstractUtil.generateToken(email));
         resetTokenRepository.save(resetToken);
         sendInitiatePasswordReset(email, resetToken.getResetToken());
         return SUCCESS_EMAIL;
     }
 
     public String resetPassword(String token) {
-        JwtAbstractUtil jwtUtil = jwtStrategy.getJwtUtilByKey(environment, ACCESS);
+        JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
         try {
-            jwtUtil.isValidToken(token);
+            jwtAbstractUtil.isValidToken(token);
         } catch (JwtException e) {
             throw new LinkExpiredException("This link is expired. Please, submit another "
                     + " \"forgot password\" request");
@@ -84,7 +82,7 @@ public class AuthenticationService {
             throw new EntityNotFoundException("No reset request was found by this link");
         }
 
-        String email = jwtUtil.getUsername(resetToken.get().getResetToken());
+        String email = jwtAbstractUtil.getUsername(resetToken.get().getResetToken());
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty()) {
             throw new EntityNotFoundException("User with email " + email + " was not found");
@@ -100,8 +98,8 @@ public class AuthenticationService {
 
     public String changePassword(String token,
                                  UserSetNewPasswordRequestDto userSetNewPasswordRequestDto) {
-        JwtAbstractUtil jwtUtil = jwtStrategy.getJwtUtilByKey(environment, ACCESS);
-        String email = jwtUtil.getUsername(token);
+        JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
+        String email = jwtAbstractUtil.getUsername(token);
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
