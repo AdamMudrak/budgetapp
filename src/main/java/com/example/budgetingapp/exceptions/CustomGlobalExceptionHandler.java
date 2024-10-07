@@ -85,6 +85,17 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
                 request);
     }
 
+    @ExceptionHandler(LinkExpiredException.class)
+    protected ResponseEntity<Object> handleLinkExpired(
+            Exception ex, WebRequest request) {
+        return handleExceptionInternal(
+                ex,
+                ex.getMessage(),
+                new HttpHeaders(),
+                BAD_REQUEST,
+                request);
+    }
+
     private String getErrorMessage(ObjectError e) {
         if (e instanceof FieldError fieldError) {
             String field = fieldError.getField();
