@@ -1,6 +1,9 @@
 package com.example.budgetingapp.security;
 
+import static com.example.budgetingapp.security.SecurityConstants.ACCESS;
+
 import com.example.budgetingapp.constants.AuthConstants;
+import com.example.budgetingapp.security.jwtutils.JwtStrategy;
 import com.example.budgetingapp.security.jwtutils.abstraction.JwtAbstractUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -8,7 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,14 +24,14 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final JwtAbstractUtil jwtAbstractUtil;
     private final UserDetailsService userDetailsService;
+    private final JwtAbstractUtil jwtAbstractUtil;
 
-    public JwtAuthenticationFilter(@Autowired @Qualifier("jwtAccessUtil")
-                                   JwtAbstractUtil jwtAbstractUtil,
+    public JwtAuthenticationFilter(@Autowired Environment environment,
+                                   @Autowired JwtStrategy jwtStrategy,
                                    @Autowired UserDetailsService userDetailsService) {
-        this.jwtAbstractUtil = jwtAbstractUtil;
         this.userDetailsService = userDetailsService;
+        this.jwtAbstractUtil = jwtStrategy.getJwtUtilByKey(environment, ACCESS);
     }
 
     @Override

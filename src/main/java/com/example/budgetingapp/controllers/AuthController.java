@@ -54,9 +54,9 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public void initiatePasswordReset(@RequestBody
+    public String initiatePasswordReset(@RequestBody
                                           UserGetLinkToSetRandomPasswordRequestDto request) {
-        authenticationService.initiatePasswordReset(request.email());
+        return authenticationService.initiatePasswordReset(request.email());
     }
 
     @PostMapping("/reset-password")

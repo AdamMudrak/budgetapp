@@ -1,17 +1,31 @@
 package com.example.budgetingapp.security;
 
+import static com.example.budgetingapp.security.SecurityConstants.ACCESS;
+import static com.example.budgetingapp.security.SecurityConstants.INITIATE_RANDOM_PASSWORD_BODY;
+import static com.example.budgetingapp.security.SecurityConstants.INITIATE_RANDOM_PASSWORD_SUBJECT;
+import static com.example.budgetingapp.security.SecurityConstants.RANDOM_PASSWORD_BODY;
+import static com.example.budgetingapp.security.SecurityConstants.RANDOM_PASSWORD_STRENGTH;
+import static com.example.budgetingapp.security.SecurityConstants.RANDOM_PASSWORD_SUBJECT;
+import static com.example.budgetingapp.security.SecurityConstants.RANDOM_STRING_BASE;
 import static com.example.budgetingapp.security.SecurityConstants.RESET;
+import static com.example.budgetingapp.security.SecurityConstants.SUCCESSFUL_RESET_MSG;
+import static com.example.budgetingapp.security.SecurityConstants.SUCCESS_EMAIL;
 
 import com.example.budgetingapp.dtos.user.request.UserLoginRequestDto;
-import com.example.budgetingapp.dtos.user.request.UserResetRequestDto;
+import com.example.budgetingapp.dtos.user.request.UserSetNewPasswordRequestDto;
 import com.example.budgetingapp.dtos.user.response.UserLoginResponseDto;
 import com.example.budgetingapp.entities.ResetToken;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.exceptions.EntityNotFoundException;
+import com.example.budgetingapp.exceptions.LinkExpiredException;
+import com.example.budgetingapp.exceptions.PasswordMismatch;
 import com.example.budgetingapp.repositories.resetpassword.ResetTokenRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
-import java.util.Objects;
+import com.example.budgetingapp.security.jwtutils.JwtStrategy;
+import com.example.budgetingapp.security.jwtutils.abstraction.JwtAbstractUtil;
+import io.jsonwebtoken.JwtException;
 import java.util.Optional;
+import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,53 +42,121 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final ResetTokenRepository resetTokenRepository;
-    private final JwtAccUtil jwtAccUtil;
     private final PasswordEncoder passwordEncoder;
+    private final JwtStrategy jwtStrategy;
 
     public UserLoginResponseDto authenticate(UserLoginRequestDto requestDto) {
         final Authentication authentication = authenticationManager
                 .authenticate(
                         new UsernamePasswordAuthenticationToken(
                                 requestDto.email(), requestDto.password()));
-        String token = jwtAccUtil.generateToken(authentication.getName());
+        JwtAbstractUtil jwtUtil = jwtStrategy.getJwtUtilByKey(environment, ACCESS);
+        String token = jwtUtil.generateToken(authentication.getName());
         return new UserLoginResponseDto(token);
     }
 
-    public void initiatePasswordReset(String email) {
+    public String initiatePasswordReset(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isEmpty()) {
             throw new EntityNotFoundException(
                     "User with email " + email + " was not found");
         }
-        JwtAccUtil jwtAccUtil1 = new JwtAccUtil(Objects.requireNonNull(
-                environment.getProperty("jwt.secret")));
-        JwtRefResUtil jwtRefResUtil = new JwtRefResUtil(jwtAccUtil1);
-        jwtRefResUtil.acquireExpiration(RESET, environment);
-        ResetToken resetToken = new ResetToken();
-        resetToken.setResetToken(jwtAccUtil.generateToken(email));
-        resetTokenRepository.save(resetToken);
 
-        emailService.sendSimpleEmail(email, resetToken.getResetToken());
+        JwtAbstractUtil jwtUtil = jwtStrategy.getJwtUtilByKey(environment, RESET);
+        ResetToken resetToken = new ResetToken();
+        resetToken.setResetToken(jwtUtil.generateToken(email));
+        resetTokenRepository.save(resetToken);
+        sendInitiatePasswordReset(email, resetToken.getResetToken());
+        return SUCCESS_EMAIL;
     }
 
-    public UserLoginRequestDto resetPassword(UserResetRequestDto userResetRequestDto) {
-        jwtAccUtil.isValidToken(userResetRequestDto.token());
-        //TODO проброс ошибки на клиента про устаревший токен
-        String login = jwtAccUtil.getUsername(userResetRequestDto.token());
-        if (userResetRequestDto.email().equals(login)) {
-            //TODO ошибка на клиента про то, что email не совпал
-            if (!userResetRequestDto.newPassword()
-                    .equals(userResetRequestDto.repeatNewPassword())) {
-                //TODO проброс ошибки на клиента
-            }
-            Optional<User> optionalUser = userRepository.findByEmail(userResetRequestDto.email());
-            if (optionalUser.isPresent()) {
-                User user = optionalUser.get();
-                user.setPassword(passwordEncoder.encode(userResetRequestDto.newPassword()));
-                userRepository.save(user);
-            }
+    public String resetPassword(String token) {
+        JwtAbstractUtil jwtUtil = jwtStrategy.getJwtUtilByKey(environment, ACCESS);
+        try {
+            jwtUtil.isValidToken(token);
+        } catch (JwtException e) {
+            throw new LinkExpiredException("This link is expired. Please, submit another "
+                    + " \"forgot password\" request");
         }
-        return new UserLoginRequestDto(userResetRequestDto.email(),
-                userResetRequestDto.newPassword());
+
+        Optional<ResetToken> resetToken = resetTokenRepository.findByResetToken(token);
+        if (resetToken.isEmpty()) {
+            throw new EntityNotFoundException("No reset request was found by this link");
+        }
+
+        String email = jwtUtil.getUsername(resetToken.get().getResetToken());
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isEmpty()) {
+            throw new EntityNotFoundException("User with email " + email + " was not found");
+        }
+
+        String randomPassword = generateRandomString();
+        User user = optionalUser.get();
+        user.setPassword(passwordEncoder.encode(randomPassword));
+        userRepository.save(user);
+        sendResetPassword(email, randomPassword);
+        return SUCCESSFUL_RESET_MSG;
+    }
+
+    public String changePassword(String token,
+                                 UserSetNewPasswordRequestDto userSetNewPasswordRequestDto) {
+        JwtAbstractUtil jwtUtil = jwtStrategy.getJwtUtilByKey(environment, ACCESS);
+        String email = jwtUtil.getUsername(token);
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (isCurrentPasswordMatch(user, userSetNewPasswordRequestDto)) {
+                if (isNewPasswordMatch(userSetNewPasswordRequestDto)) {
+                    user.setPassword(passwordEncoder
+                            .encode(userSetNewPasswordRequestDto.newPassword()));
+                    userRepository.save(user);
+                } else {
+                    throw new PasswordMismatch("New password doesn't match with its repetition. "
+                            + "Try again.");
+                }
+            } else {
+                throw new PasswordMismatch("Wrong password. Try resetting password and using new "
+                        + "random password");
+            }
+        } else {
+            throw new EntityNotFoundException("Can't find user with email "
+                    + email);
+        }
+        return "New password has been set successfully";
+    }
+
+    private String generateRandomString() {
+        String characters = RANDOM_STRING_BASE;
+        StringBuilder randomString =
+                new StringBuilder(RANDOM_PASSWORD_STRENGTH);
+        Random random = new Random();
+        for (int i = 0; i < RANDOM_PASSWORD_STRENGTH; i++) {
+            randomString.append(characters.charAt(random.nextInt(characters.length())));
+        }
+        return randomString.toString();
+    }
+
+    private boolean isCurrentPasswordMatch(User user,
+            UserSetNewPasswordRequestDto userSetNewPasswordRequestDto) {
+        return user.getPassword()
+                .equals(passwordEncoder.encode(userSetNewPasswordRequestDto.currentPassword()));
+    }
+
+    private boolean isNewPasswordMatch(UserSetNewPasswordRequestDto userSetNewPasswordRequestDto) {
+        return userSetNewPasswordRequestDto.newPassword()
+                .equals(userSetNewPasswordRequestDto.repeatNewPassword());
+    }
+
+    private void sendInitiatePasswordReset(String email, String resetToken) {
+        emailService.setSubject(INITIATE_RANDOM_PASSWORD_SUBJECT);
+        emailService.setBody(INITIATE_RANDOM_PASSWORD_BODY);
+        emailService.sendSimpleEmail(email,
+                emailService.formTextForReset(resetToken));
+    }
+
+    private void sendResetPassword(String email, String randomPassword) {
+        emailService.setSubject(RANDOM_PASSWORD_SUBJECT);
+        emailService.setBody(RANDOM_PASSWORD_BODY);
+        emailService.sendSimpleEmail(email, emailService.formTextForNewPassword(randomPassword));
     }
 }
