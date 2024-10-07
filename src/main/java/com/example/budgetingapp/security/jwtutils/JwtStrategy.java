@@ -1,48 +1,34 @@
 package com.example.budgetingapp.security.jwtutils;
 
 import static com.example.budgetingapp.security.SecurityConstants.ACCESS;
-import static com.example.budgetingapp.security.SecurityConstants.JWT_ACCESS_EXPIRATION;
-import static com.example.budgetingapp.security.SecurityConstants.JWT_REFRESH_EXPIRATION;
-import static com.example.budgetingapp.security.SecurityConstants.JWT_RESET_EXPIRATION;
-import static com.example.budgetingapp.security.SecurityConstants.JWT_SECRET;
 import static com.example.budgetingapp.security.SecurityConstants.REFRESH;
 import static com.example.budgetingapp.security.SecurityConstants.RESET;
 
 import com.example.budgetingapp.security.jwtutils.abstraction.JwtAbstractUtil;
-import com.example.budgetingapp.security.jwtutils.implementations.JwtImplUtil;
 import io.jsonwebtoken.JwtException;
-import java.util.Objects;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
-@Getter
-@Setter
+@Component
 public class JwtStrategy {
-    private JwtAbstractUtil abstractUtil;
-    private String secretString;
-    private long expiration;
+    private final JwtAbstractUtil accessUtil;
+    private final JwtAbstractUtil refreshUtil;
+    private final JwtAbstractUtil resetUtil;
 
-    public JwtAbstractUtil getJwtUtilByKey(Environment environment,
-                                           String key) {
-        setSecretString(environment.getProperty(JWT_SECRET));
-        switch (key) {
-            case ACCESS -> {
-                setExpiration(Long.parseLong(Objects.requireNonNull(
-                        environment.getProperty(JWT_ACCESS_EXPIRATION))));
-                return new JwtImplUtil(secretString, expiration);
-            }
-            case REFRESH -> {
-                setExpiration(Long.parseLong(Objects.requireNonNull(
-                        environment.getProperty(JWT_REFRESH_EXPIRATION))));
-                return new JwtImplUtil(secretString, expiration);
-            }
-            case RESET -> {
-                setExpiration(Long.parseLong(Objects.requireNonNull(
-                        environment.getProperty(JWT_RESET_EXPIRATION))));
-                return new JwtImplUtil(secretString, expiration);
-            }
-            default -> throw new JwtException("No such util");
-        }
+    public JwtStrategy(@Qualifier(ACCESS) JwtAbstractUtil accessUtil,
+                      @Qualifier(REFRESH) JwtAbstractUtil refreshUtil,
+                      @Qualifier(RESET) JwtAbstractUtil resetUtil) {
+        this.accessUtil = accessUtil;
+        this.refreshUtil = refreshUtil;
+        this.resetUtil = resetUtil;
+    }
+
+    public JwtAbstractUtil getStrategy(String key) {
+        return switch (key) {
+            case ACCESS -> accessUtil;
+            case REFRESH -> refreshUtil;
+            case RESET -> resetUtil;
+            default -> throw new JwtException("No such Jwt util");
+        };
     }
 }
