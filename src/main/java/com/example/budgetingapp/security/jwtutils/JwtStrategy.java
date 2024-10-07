@@ -15,11 +15,9 @@ import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 @Getter
 @Setter
-@Component
 public class JwtStrategy {
     private JwtAbstractUtil abstractUtil;
     private String secretString;

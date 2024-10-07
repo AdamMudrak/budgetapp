@@ -1,12 +1,5 @@
 package com.example.budgetingapp.security;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-
-@RequiredArgsConstructor
-@Getter
-@Setter
 public class SecurityConstants {
     public static final String PATH = "http://localhost:8080/auth/reset-password?";
 
