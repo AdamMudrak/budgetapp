@@ -1,10 +1,11 @@
 package com.example.budgetingapp.security;
 
-import static com.example.budgetingapp.constants.Constants.PATH;
 import static com.example.budgetingapp.constants.Constants.SPLITERATOR;
+import static com.example.budgetingapp.constants.security.SecurityConstants.PATH_PROPERTY;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 public class EmailService {
     private final JavaMailSender mailSender;
     private final EmailSecretProvider emailSecretProvider;
+    @Value(PATH_PROPERTY)
+    private String resetPath;
     private String subject;
     private String body;
 
@@ -27,7 +30,7 @@ public class EmailService {
     }
 
     public String formTextForReset(String token) {
-        return body + System.lineSeparator() + PATH
+        return body + System.lineSeparator() + resetPath
                 + emailSecretProvider.getEmailSecret()
                 + SPLITERATOR + token;
     }

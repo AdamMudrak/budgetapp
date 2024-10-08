@@ -1,7 +1,6 @@
 package com.example.budgetingapp.constants;
 
 public class Constants {
-    public static final String PATH = "http://localhost:8080/auth/reset-password?";
     public static final String SPLITERATOR = "=";
 
     public static final String SUCCESSFULLY_RETRIEVED = "Successfully retrieved";

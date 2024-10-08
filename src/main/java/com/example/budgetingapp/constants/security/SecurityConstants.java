@@ -1,7 +1,6 @@
 package com.example.budgetingapp.constants.security;
 
 public class SecurityConstants {
-
     public static final int RANDOM_PASSWORD_STRENGTH = 25;
     public static final String RANDOM_STRING_BASE =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -10,6 +9,7 @@ public class SecurityConstants {
     public static final String JWT_REFRESH_EXPIRATION = "${jwt.refresh.expiration}";
     public static final String JWT_SECRET = "${jwt.secret}";
     public static final String EMAIL_SECRET = "email.secret";
+    public static final String PATH_PROPERTY = "${reset.path}";
     public static final int BEGIN_INDEX = 7;
     public static final String ACCESS = "ACCESS";
     public static final String RESET = "RESET";
