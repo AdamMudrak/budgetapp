@@ -1,5 +1,7 @@
 package com.example.budgetingapp.security;
 
+import static com.example.budgetingapp.security.SecurityConstants.EMAIL_SECRET;
+
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -11,6 +13,6 @@ public class EmailSecretProvider {
     private final String emailSecret;
 
     public EmailSecretProvider(@Autowired Environment environment) {
-        emailSecret = environment.getProperty("email.secret");
+        emailSecret = environment.getProperty(EMAIL_SECRET);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.budgetingapp.security;
 
-import static com.example.budgetingapp.security.SecurityConstants.PATH;
+import static com.example.budgetingapp.constants.Constants.PATH;
+import static com.example.budgetingapp.constants.Constants.SPLITERATOR;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -28,7 +29,7 @@ public class EmailService {
     public String formTextForReset(String token) {
         return body + System.lineSeparator() + PATH
                 + emailSecretProvider.getEmailSecret()
-                + "=" + token;
+                + SPLITERATOR + token;
     }
 
     public String formTextForNewPassword(String password) {

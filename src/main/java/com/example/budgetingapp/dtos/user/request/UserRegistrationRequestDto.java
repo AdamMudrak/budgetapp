@@ -2,17 +2,17 @@ package com.example.budgetingapp.dtos.user.request;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
-import com.example.budgetingapp.constants.UserDtoConstants;
-import com.example.budgetingapp.validation.Email;
-import com.example.budgetingapp.validation.FieldMatch;
-import com.example.budgetingapp.validation.Password;
+import com.example.budgetingapp.constants.dtos.UserDtoConstants;
+import com.example.budgetingapp.validation.email.Email;
+import com.example.budgetingapp.validation.fieldmatch.FieldRegisterMatch;
+import com.example.budgetingapp.validation.password.Password;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@FieldMatch
+@FieldRegisterMatch
 public record UserRegistrationRequestDto(
         @Schema(name = UserDtoConstants.EMAIL,
         example = UserDtoConstants.EMAIL_EXAMPLE,
@@ -29,7 +29,7 @@ public record UserRegistrationRequestDto(
         @Password String password,
 
         @Schema(name = UserDtoConstants.REPEAT_PASSWORD,
-        example = UserDtoConstants.REPEAT_PASSWORD_EXAMPLE,
+        example = UserDtoConstants.PASSWORD_EXAMPLE,
         description = UserDtoConstants.REPEAT_PASSWORD_DESCRIPTION,
         requiredMode = REQUIRED)
         @NotBlank String repeatPassword,

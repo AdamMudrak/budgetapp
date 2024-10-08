@@ -1,4 +1,4 @@
-package com.example.budgetingapp.validation;
+package com.example.budgetingapp.validation.fieldmatch;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -7,11 +7,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = FieldMatchValidator.class)
+@Constraint(validatedBy = FieldSetNewPasswordMatchValidator.class)
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface FieldMatch {
-    String message() default "password and repeatPassword don't match. Try again";
+public @interface FieldSetNewPasswordMatch {
+    String message() default "newPassword and repeatPassword don't match. Try again";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

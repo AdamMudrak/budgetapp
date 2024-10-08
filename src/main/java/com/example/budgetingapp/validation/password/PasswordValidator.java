@@ -1,4 +1,4 @@
-package com.example.budgetingapp.validation;
+package com.example.budgetingapp.validation.password;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

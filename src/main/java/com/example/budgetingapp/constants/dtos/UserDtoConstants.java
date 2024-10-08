@@ -1,4 +1,4 @@
-package com.example.budgetingapp.constants;
+package com.example.budgetingapp.constants.dtos;
 
 public class UserDtoConstants {
     public static final String EMAIL = "email";
@@ -15,17 +15,18 @@ public class UserDtoConstants {
                     5) from 8 to 32 characters.""";
 
     public static final String REPEAT_PASSWORD = "repeatPassword";
-    public static final String REPEAT_PASSWORD_EXAMPLE = PASSWORD_EXAMPLE;
     public static final String REPEAT_PASSWORD_DESCRIPTION =
             "This field must be the same as password!";
+
+    public static final String CURRENT_PASSWORD = "currentPassword";
+
+    public static final String NEW_PASSWORD = "newPassword";
+
+    public static final String REPEAT_NEW_PASSWORD = "repeatNewPassword";
 
     public static final String FIRST_NAME = "firstName";
     public static final String FIRST_NAME_EXAMPLE = "John";
 
     public static final String LAST_NAME = "lastName";
     public static final String LAST_NAME_EXAMPLE = "Wick";
-
-    public static final String SHIPPING_ADDRESS = "shippingAddress";
-    public static final String SHIPPING_ADDRESS_EXAMPLE =
-            "132, My Street, Kingston, New York 12401";
 }

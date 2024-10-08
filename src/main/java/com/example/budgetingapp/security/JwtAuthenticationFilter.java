@@ -1,8 +1,9 @@
 package com.example.budgetingapp.security;
 
 import static com.example.budgetingapp.security.SecurityConstants.ACCESS;
+import static com.example.budgetingapp.security.SecurityConstants.BEGIN_INDEX;
 
-import com.example.budgetingapp.constants.AuthConstants;
+import com.example.budgetingapp.constants.controllers.AuthControllerConstants;
 import com.example.budgetingapp.security.jwtutils.JwtStrategy;
 import com.example.budgetingapp.security.jwtutils.abstraction.JwtAbstractUtil;
 import jakarta.servlet.FilterChain;
@@ -54,8 +55,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private String getToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(AuthConstants.BEARER)) {
-            return bearerToken.substring(7);
+        if (StringUtils.hasText(bearerToken)
+                && bearerToken.startsWith(AuthControllerConstants.BEARER)) {
+            return bearerToken.substring(BEGIN_INDEX);
         }
         return null;
     }

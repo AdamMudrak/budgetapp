@@ -8,6 +8,7 @@ import static com.example.budgetingapp.security.SecurityConstants.RANDOM_PASSWOR
 import static com.example.budgetingapp.security.SecurityConstants.RANDOM_PASSWORD_SUBJECT;
 import static com.example.budgetingapp.security.SecurityConstants.RANDOM_STRING_BASE;
 import static com.example.budgetingapp.security.SecurityConstants.RESET;
+import static com.example.budgetingapp.security.SecurityConstants.SUCCESSFUL_CHANGE_MESSAGE;
 import static com.example.budgetingapp.security.SecurityConstants.SUCCESSFUL_RESET_MSG;
 import static com.example.budgetingapp.security.SecurityConstants.SUCCESS_EMAIL;
 
@@ -101,26 +102,16 @@ public class AuthenticationService {
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
         String email = jwtAbstractUtil.getUsername(token);
         Optional<User> optionalUser = userRepository.findByEmail(email);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            if (isCurrentPasswordMatch(user, userSetNewPasswordRequestDto)) {
-                if (isNewPasswordMatch(userSetNewPasswordRequestDto)) {
-                    user.setPassword(passwordEncoder
-                            .encode(userSetNewPasswordRequestDto.newPassword()));
-                    userRepository.save(user);
-                } else {
-                    throw new PasswordMismatch("New password doesn't match with its repetition. "
-                            + "Try again.");
-                }
-            } else {
-                throw new PasswordMismatch("Wrong password. Try resetting password and using new "
-                        + "random password");
-            }
-        } else {
-            throw new EntityNotFoundException("Can't find user with email "
-                    + email);
+        optionalUser.orElseThrow(() -> new EntityNotFoundException("Can't find user with email "
+                + email));
+        if (!isCurrentPasswordValid(optionalUser.get(), userSetNewPasswordRequestDto)) {
+            throw new PasswordMismatch("Wrong password. Try resetting "
+                    + "password and using a new random password");
         }
-        return "New password has been set successfully";
+        optionalUser.get().setPassword(passwordEncoder
+                .encode(userSetNewPasswordRequestDto.newPassword()));
+        userRepository.save(optionalUser.get());
+        return SUCCESSFUL_CHANGE_MESSAGE;
     }
 
     private String generateRandomString() {
@@ -134,15 +125,10 @@ public class AuthenticationService {
         return randomString.toString();
     }
 
-    private boolean isCurrentPasswordMatch(User user,
+    private boolean isCurrentPasswordValid(User user,
             UserSetNewPasswordRequestDto userSetNewPasswordRequestDto) {
-        return user.getPassword()
-                .equals(passwordEncoder.encode(userSetNewPasswordRequestDto.currentPassword()));
-    }
-
-    private boolean isNewPasswordMatch(UserSetNewPasswordRequestDto userSetNewPasswordRequestDto) {
-        return userSetNewPasswordRequestDto.newPassword()
-                .equals(userSetNewPasswordRequestDto.repeatNewPassword());
+        return passwordEncoder
+                .matches(userSetNewPasswordRequestDto.currentPassword(), user.getPassword());
     }
 
     private void sendInitiatePasswordReset(String email, String resetToken) {

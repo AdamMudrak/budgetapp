@@ -1,10 +1,10 @@
-package com.example.budgetingapp.validation;
+package com.example.budgetingapp.validation.fieldmatch;
 
 import com.example.budgetingapp.dtos.user.request.UserRegistrationRequestDto;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class FieldMatchValidator implements ConstraintValidator<FieldMatch,
+public class FieldRegisterMatchValidator implements ConstraintValidator<FieldRegisterMatch,
         UserRegistrationRequestDto> {
     @Override
     public boolean isValid(UserRegistrationRequestDto userRegistrationRequestDto,
