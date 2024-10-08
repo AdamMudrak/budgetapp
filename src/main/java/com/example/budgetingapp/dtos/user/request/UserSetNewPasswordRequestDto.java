@@ -19,9 +19,7 @@ public record UserSetNewPasswordRequestDto(
                 example = UserDtoConstants.PASSWORD_EXAMPLE,
                 description = UserDtoConstants.PASSWORD_DESCRIPTION,
                 requiredMode = REQUIRED)
-        @Size(min = 8, max = 32)
         @NotBlank
-        @Password
         String currentPassword,
         @Schema(name = UserDtoConstants.NEW_PASSWORD,
                 example = UserDtoConstants.PASSWORD_EXAMPLE,

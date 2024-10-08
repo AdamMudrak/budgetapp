@@ -21,6 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,7 +39,8 @@ public class AuthController {
     private final EmailSecretProvider emailSecretProvider;
 
     @Operation(summary = AuthControllerConstants.REGISTER_SUMMARY)
-    @ApiResponse(responseCode = Constants.CODE_200, description = Constants.SUCCESSFULLY_REGISTERED)
+    @ApiResponse(responseCode = Constants.CODE_200, description =
+            AuthControllerConstants.SUCCESSFULLY_REGISTERED)
     @ApiResponse(responseCode = Constants.CODE_400, description = Constants.INVALID_ENTITY_VALUE)
     @PostMapping("/register")
     public UserRegistrationResponseDto registerUser(
@@ -48,28 +50,46 @@ public class AuthController {
     }
 
     @Operation(summary = AuthControllerConstants.LOGIN_SUMMARY)
-    @ApiResponse(responseCode = Constants.CODE_200, description = Constants.SUCCESSFULLY_LOGGED_IN)
+    @ApiResponse(responseCode = Constants.CODE_200, description =
+            AuthControllerConstants.SUCCESSFULLY_LOGGED_IN)
     @ApiResponse(responseCode = Constants.CODE_400, description = Constants.INVALID_ENTITY_VALUE)
+    @ApiResponse(responseCode = Constants.CODE_403, description = Constants.ACCESS_DENIED)
     @PostMapping("/login")
     public UserLoginResponseDto login(@RequestBody @Valid UserLoginRequestDto request) {
         return authenticationService.authenticate(request);
     }
 
+    @Operation(summary = AuthControllerConstants.INITIATE_PASSWORD_RESET_SUMMARY)
+    @ApiResponse(responseCode = Constants.CODE_200, description =
+            AuthControllerConstants.SUCCESSFULLY_INITIATED_PASSWORD_RESET)
+    @ApiResponse(responseCode = Constants.CODE_400, description = Constants.INVALID_ENTITY_VALUE)
     @PostMapping("/forgot-password")
     public String initiatePasswordReset(@RequestBody
-                                          UserGetLinkToSetRandomPasswordRequestDto request) {
+                                          @Valid UserGetLinkToSetRandomPasswordRequestDto request) {
         return authenticationService.initiatePasswordReset(request.email());
     }
 
+    @Operation(summary = AuthControllerConstants.RESET_PASSWORD_SUMMARY)
+    @ApiResponse(responseCode = Constants.CODE_200, description =
+            AuthControllerConstants.SUCCESSFULLY_RESET_PASSWORD)
+    @ApiResponse(responseCode = Constants.CODE_400, description = Constants.INVALID_ENTITY_VALUE)
     @PostMapping("/reset-password")
     public String resetPassword(HttpServletRequest httpServletRequest) {
         return authenticationService.resetPassword(httpServletRequest
                 .getParameter(emailSecretProvider.getEmailSecret()));
     }
 
+    @Operation(summary = AuthControllerConstants.LOGIN_SUMMARY)
+    @ApiResponse(responseCode = Constants.CODE_200, description =
+            AuthControllerConstants.CHANGE_PASSWORD_SUMMARY)
+    @ApiResponse(responseCode = Constants.CODE_400, description =
+            AuthControllerConstants.SUCCESSFULLY_CHANGE_PASSWORD)
+    @ApiResponse(responseCode = Constants.CODE_401, description = Constants.AUTHORIZATION_REQUIRED)
+    @ApiResponse(responseCode = Constants.CODE_403, description = Constants.ACCESS_DENIED)
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/change-password")
     public String changePassword(HttpServletRequest httpServletRequest,
-                                 @RequestBody UserSetNewPasswordRequestDto request) {
+                                 @RequestBody @Valid UserSetNewPasswordRequestDto request) {
         String bearerToken = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.hasText(bearerToken) && bearerToken
                 .startsWith(AuthControllerConstants.BEARER)) {
@@ -77,5 +97,4 @@ public class AuthController {
         }
         return authenticationService.changePassword(bearerToken, request);
     }
-    //TODO document other methods
 }

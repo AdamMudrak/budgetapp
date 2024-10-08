@@ -5,7 +5,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 public class FieldCurrentAndNewPasswordCollisionValidator implements ConstraintValidator<
-        FieldSetNewPasswordMatch, UserSetNewPasswordRequestDto> {
+        FieldCurrentAndNewPasswordCollision, UserSetNewPasswordRequestDto> {
     @Override
     public boolean isValid(UserSetNewPasswordRequestDto userSetNewPasswordRequestDto,
                            ConstraintValidatorContext constraintValidatorContext) {

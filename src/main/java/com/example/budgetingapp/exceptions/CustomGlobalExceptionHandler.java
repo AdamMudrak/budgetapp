@@ -2,6 +2,7 @@ package com.example.budgetingapp.exceptions;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
 import jakarta.validation.ConstraintViolationException;
@@ -81,7 +82,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
                 ex,
                 ex.getMessage(),
                 new HttpHeaders(),
-                BAD_REQUEST,
+                UNAUTHORIZED,
                 request);
     }
 
