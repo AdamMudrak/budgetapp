@@ -14,7 +14,7 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: resetToken
+                  name: reset_token
                   type: varchar(512)
                   constraints:
                     nullable: false
