@@ -1,8 +1,8 @@
 package com.example.budgetingapp.security.jwtutils.implementations;
 
-import static com.example.budgetingapp.security.SecurityConstants.JWT_REFRESH_EXPIRATION;
-import static com.example.budgetingapp.security.SecurityConstants.JWT_SECRET;
-import static com.example.budgetingapp.security.SecurityConstants.REFRESH;
+import static com.example.budgetingapp.constants.security.SecurityConstants.JWT_REFRESH_EXPIRATION;
+import static com.example.budgetingapp.constants.security.SecurityConstants.JWT_SECRET;
+import static com.example.budgetingapp.constants.security.SecurityConstants.REFRESH;
 
 import com.example.budgetingapp.security.jwtutils.abstraction.JwtAbstractUtil;
 import org.springframework.beans.factory.annotation.Qualifier;

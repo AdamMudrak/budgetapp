@@ -1,7 +1,7 @@
 package com.example.budgetingapp.security;
 
-import static com.example.budgetingapp.security.SecurityConstants.ACCESS;
-import static com.example.budgetingapp.security.SecurityConstants.BEGIN_INDEX;
+import static com.example.budgetingapp.constants.security.SecurityConstants.ACCESS;
+import static com.example.budgetingapp.constants.security.SecurityConstants.BEGIN_INDEX;
 
 import com.example.budgetingapp.constants.controllers.AuthControllerConstants;
 import com.example.budgetingapp.security.jwtutils.JwtStrategy;

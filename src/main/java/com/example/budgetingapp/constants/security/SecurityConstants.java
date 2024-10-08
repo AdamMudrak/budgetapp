@@ -1,4 +1,4 @@
-package com.example.budgetingapp.security;
+package com.example.budgetingapp.constants.security;
 
 public class SecurityConstants {
 

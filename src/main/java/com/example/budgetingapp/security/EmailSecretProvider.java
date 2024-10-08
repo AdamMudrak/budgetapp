@@ -1,6 +1,6 @@
 package com.example.budgetingapp.security;
 
-import static com.example.budgetingapp.security.SecurityConstants.EMAIL_SECRET;
+import static com.example.budgetingapp.constants.security.SecurityConstants.EMAIL_SECRET;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;

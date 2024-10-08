@@ -1,16 +1,16 @@
 package com.example.budgetingapp.security;
 
-import static com.example.budgetingapp.security.SecurityConstants.ACCESS;
-import static com.example.budgetingapp.security.SecurityConstants.INITIATE_RANDOM_PASSWORD_BODY;
-import static com.example.budgetingapp.security.SecurityConstants.INITIATE_RANDOM_PASSWORD_SUBJECT;
-import static com.example.budgetingapp.security.SecurityConstants.RANDOM_PASSWORD_BODY;
-import static com.example.budgetingapp.security.SecurityConstants.RANDOM_PASSWORD_STRENGTH;
-import static com.example.budgetingapp.security.SecurityConstants.RANDOM_PASSWORD_SUBJECT;
-import static com.example.budgetingapp.security.SecurityConstants.RANDOM_STRING_BASE;
-import static com.example.budgetingapp.security.SecurityConstants.RESET;
-import static com.example.budgetingapp.security.SecurityConstants.SUCCESSFUL_CHANGE_MESSAGE;
-import static com.example.budgetingapp.security.SecurityConstants.SUCCESSFUL_RESET_MSG;
-import static com.example.budgetingapp.security.SecurityConstants.SUCCESS_EMAIL;
+import static com.example.budgetingapp.constants.security.SecurityConstants.ACCESS;
+import static com.example.budgetingapp.constants.security.SecurityConstants.INITIATE_RANDOM_PASSWORD_BODY;
+import static com.example.budgetingapp.constants.security.SecurityConstants.INITIATE_RANDOM_PASSWORD_SUBJECT;
+import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_BODY;
+import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_STRENGTH;
+import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_SUBJECT;
+import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_STRING_BASE;
+import static com.example.budgetingapp.constants.security.SecurityConstants.RESET;
+import static com.example.budgetingapp.constants.security.SecurityConstants.SUCCESSFUL_CHANGE_MESSAGE;
+import static com.example.budgetingapp.constants.security.SecurityConstants.SUCCESSFUL_RESET_MSG;
+import static com.example.budgetingapp.constants.security.SecurityConstants.SUCCESS_EMAIL;
 
 import com.example.budgetingapp.dtos.user.request.UserLoginRequestDto;
 import com.example.budgetingapp.dtos.user.request.UserSetNewPasswordRequestDto;

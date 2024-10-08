@@ -1,8 +1,8 @@
 package com.example.budgetingapp.security.jwtutils;
 
-import static com.example.budgetingapp.security.SecurityConstants.ACCESS;
-import static com.example.budgetingapp.security.SecurityConstants.REFRESH;
-import static com.example.budgetingapp.security.SecurityConstants.RESET;
+import static com.example.budgetingapp.constants.security.SecurityConstants.ACCESS;
+import static com.example.budgetingapp.constants.security.SecurityConstants.REFRESH;
+import static com.example.budgetingapp.constants.security.SecurityConstants.RESET;
 
 import com.example.budgetingapp.security.jwtutils.abstraction.JwtAbstractUtil;
 import io.jsonwebtoken.JwtException;
