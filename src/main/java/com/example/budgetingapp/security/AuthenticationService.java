@@ -82,7 +82,7 @@ public class AuthenticationService {
         if (resetToken.isEmpty()) {
             throw new EntityNotFoundException("No reset request was found by this link");
         }
-
+        resetTokenRepository.deleteById(resetToken.get().getId());
         String email = jwtAbstractUtil.getUsername(resetToken.get().getResetToken());
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty()) {
