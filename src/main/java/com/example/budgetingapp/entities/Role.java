@@ -1,5 +1,7 @@
 package com.example.budgetingapp.entities;
 
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.ROLES;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,7 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 @Getter
 @Setter
 @Entity
-@Table(name = "roles")
+@Table(name = ROLES)
 public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

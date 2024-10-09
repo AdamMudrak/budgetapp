@@ -1,5 +1,7 @@
 package com.example.budgetingapp.entities;
 
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.RESET_TOKENS;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "reset_tokens")
+@Table(name = RESET_TOKENS)
 public class ResetToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,10 @@
 package com.example.budgetingapp.entities;
 
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.ROLE_ID;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.USERS;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.USERS_ROLES_JOIN_TABLE;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.USER_ID;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,7 +26,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
+@Table(name = USERS)
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,9 +41,9 @@ public class User implements UserDetails {
     private String lastName;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
+            name = USERS_ROLES_JOIN_TABLE,
+            joinColumns = @JoinColumn(name = USER_ID),
+            inverseJoinColumns = @JoinColumn(name = ROLE_ID)
     )
     private Set<Role> roles = new HashSet<>();
 
