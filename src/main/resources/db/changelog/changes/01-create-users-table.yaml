@@ -35,5 +35,8 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: shipping_address
-                  type: varchar(255)
+                  name: is_enabled
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false

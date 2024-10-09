@@ -1,8 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: remove-shipping-address-column
-      author: AdamMudrak
-      changes:
-        - dropColumn:
-            columnName: shipping_address
-            tableName: users

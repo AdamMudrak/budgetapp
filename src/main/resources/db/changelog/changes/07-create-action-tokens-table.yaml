@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: create-reset-tokens-table
+      id: create-action-tokens-table
       author: AdamMudrak
       changes:
         - createTable:
-            tableName: reset_tokens
+            tableName: action_tokens
             columns:
               - column:
                   name: id
@@ -14,7 +14,7 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: reset_token
+                  name: action_token
                   type: varchar(512)
                   constraints:
                     nullable: false
