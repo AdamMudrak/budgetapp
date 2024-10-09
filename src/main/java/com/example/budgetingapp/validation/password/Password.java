@@ -1,5 +1,7 @@
 package com.example.budgetingapp.validation.password;
 
+import static com.example.budgetingapp.constants.validation.ValidationConstants.INVALID_PASSWORD;
+
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import java.lang.annotation.ElementType;
@@ -11,12 +13,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Password {
-    String message() default "Password should contain"
-            + " 1 lowercase letter,"
-            + " 1 uppercase letter,"
-            + " 1 digit,"
-            + " 1 special character,"
-            + " and be 8 to 32 characters long";
+    String message() default INVALID_PASSWORD;
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

@@ -1,5 +1,7 @@
 package com.example.budgetingapp.validation.fieldmatch;
 
+import static com.example.budgetingapp.constants.validation.ValidationConstants.PASSWORD_COLLISION;
+
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import java.lang.annotation.ElementType;
@@ -11,7 +13,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FieldCurrentAndNewPasswordCollision {
-    String message() default "currentPassword collides with newPassword. Try again";
+    String message() default PASSWORD_COLLISION;
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

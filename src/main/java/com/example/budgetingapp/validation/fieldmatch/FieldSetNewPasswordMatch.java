@@ -1,5 +1,7 @@
 package com.example.budgetingapp.validation.fieldmatch;
 
+import static com.example.budgetingapp.constants.validation.ValidationConstants.NEW_PASSWORD_MISMATCH;
+
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import java.lang.annotation.ElementType;
@@ -11,7 +13,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FieldSetNewPasswordMatch {
-    String message() default "newPassword and repeatPassword don't match. Try again";
+    String message() default NEW_PASSWORD_MISMATCH;
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
