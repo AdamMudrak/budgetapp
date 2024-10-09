@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,7 +73,7 @@ public class AuthController {
     @ApiResponse(responseCode = Constants.CODE_200, description =
             AuthControllerConstants.SUCCESSFULLY_RESET_PASSWORD)
     @ApiResponse(responseCode = Constants.CODE_400, description = Constants.INVALID_ENTITY_VALUE)
-    @PostMapping(AuthControllerConstants.RESET_PASSWORD)
+    @GetMapping(AuthControllerConstants.RESET_PASSWORD)
     public String resetPassword(HttpServletRequest httpServletRequest) {
         return authenticationService.resetPassword(httpServletRequest
                 .getParameter(emailSecretProvider.getEmailSecret()));
