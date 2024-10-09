@@ -1,6 +1,6 @@
 package com.example.budgetingapp.entities;
 
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.RESET_TOKENS;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.ACTION_TOKENS;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,11 +14,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = RESET_TOKENS)
-public class ResetToken {
+@Table(name = ACTION_TOKENS)
+public class ActionToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, unique = true)
-    private String resetToken;
+    private String actionToken;
 }
