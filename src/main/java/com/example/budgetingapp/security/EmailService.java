@@ -17,7 +17,7 @@ public class EmailService {
     private final JavaMailSender mailSender;
     private final EmailSecretProvider emailSecretProvider;
     @Value(PATH_PROPERTY)
-    private String resetPath;
+    private String actionPath;
     private String subject;
     private String body;
 
@@ -29,8 +29,8 @@ public class EmailService {
         mailSender.send(message);
     }
 
-    public String formTextForReset(String token) {
-        return body + System.lineSeparator() + resetPath
+    public String formTextForAction(String token) {
+        return body + System.lineSeparator() + actionPath
                 + emailSecretProvider.getEmailSecret()
                 + SPLITERATOR + token;
     }

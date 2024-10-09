@@ -1,5 +1,6 @@
 package com.example.budgetingapp.entities;
 
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.BOOLEAN_TO_INT;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.ROLE_ID;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.USERS;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.USERS_ROLES_JOIN_TABLE;
@@ -47,6 +48,9 @@ public class User implements UserDetails {
     )
     private Set<Role> roles = new HashSet<>();
 
+    @Column(nullable = false, columnDefinition = BOOLEAN_TO_INT)
+    private boolean isEnabled;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
@@ -79,6 +83,10 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
-    } //Not in use so far
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
 }

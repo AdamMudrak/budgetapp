@@ -8,7 +8,6 @@ import com.example.budgetingapp.dtos.user.request.UserLoginRequestDto;
 import com.example.budgetingapp.dtos.user.request.UserRegistrationRequestDto;
 import com.example.budgetingapp.dtos.user.request.UserSetNewPasswordRequestDto;
 import com.example.budgetingapp.dtos.user.response.UserLoginResponseDto;
-import com.example.budgetingapp.dtos.user.response.UserRegistrationResponseDto;
 import com.example.budgetingapp.exceptions.RegistrationException;
 import com.example.budgetingapp.security.AuthenticationService;
 import com.example.budgetingapp.security.EmailSecretProvider;
@@ -43,10 +42,20 @@ public class AuthController {
             AuthControllerConstants.SUCCESSFULLY_REGISTERED)
     @ApiResponse(responseCode = Constants.CODE_400, description = Constants.INVALID_ENTITY_VALUE)
     @PostMapping(AuthControllerConstants.REGISTER)
-    public UserRegistrationResponseDto registerUser(
+    public String register(
             @RequestBody @Valid UserRegistrationRequestDto requestDto)
             throws RegistrationException {
         return userService.register(requestDto);
+    }
+
+    @Operation(summary = AuthControllerConstants.CONFIRM_SUMMARY)
+    @ApiResponse(responseCode = Constants.CODE_200, description =
+            AuthControllerConstants.SUCCESSFULLY_CONFIRMED)
+    @ApiResponse(responseCode = Constants.CODE_403, description = Constants.ACCESS_DENIED)
+    @GetMapping(AuthControllerConstants.CONFIRM_REGISTRATION)
+    public String confirmRegistration(HttpServletRequest httpServletRequest) {
+        return userService.confirmRegistration(httpServletRequest
+                .getParameter(emailSecretProvider.getEmailSecret()));
     }
 
     @Operation(summary = AuthControllerConstants.LOGIN_SUMMARY)
@@ -79,11 +88,10 @@ public class AuthController {
                 .getParameter(emailSecretProvider.getEmailSecret()));
     }
 
-    @Operation(summary = AuthControllerConstants.LOGIN_SUMMARY)
+    @Operation(summary = AuthControllerConstants.CHANGE_PASSWORD_SUMMARY)
     @ApiResponse(responseCode = Constants.CODE_200, description =
-            AuthControllerConstants.CHANGE_PASSWORD_SUMMARY)
-    @ApiResponse(responseCode = Constants.CODE_400, description =
             AuthControllerConstants.SUCCESSFULLY_CHANGE_PASSWORD)
+    @ApiResponse(responseCode = Constants.CODE_400, description = Constants.INVALID_ENTITY_VALUE)
     @ApiResponse(responseCode = Constants.CODE_401, description = Constants.AUTHORIZATION_REQUIRED)
     @ApiResponse(responseCode = Constants.CODE_403, description = Constants.ACCESS_DENIED)
     @PreAuthorize(AuthControllerConstants.ROLE_USER)

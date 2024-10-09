@@ -11,6 +11,7 @@ public class AuthControllerConstants {
             """;
     public static final String AUTH = "/auth";
     public static final String REGISTER = "/register";
+    public static final String CONFIRM_REGISTRATION = "/register-success";
     public static final String LOGIN = "/login";
     public static final String FORGOT_PASSWORD = "/forgot-password";
     public static final String RESET_PASSWORD = "/reset-password";
@@ -21,6 +22,9 @@ public class AuthControllerConstants {
 
     public static final String REGISTER_SUMMARY = "Register a new user in the app";
     public static final String SUCCESSFULLY_REGISTERED = "Successfully registered";
+
+    public static final String CONFIRM_SUMMARY = "Confirm registration of a new user in the app";
+    public static final String SUCCESSFULLY_CONFIRMED = "Successfully confirmed";
 
     public static final String LOGIN_SUMMARY = "Log in using existing account";
     public static final String SUCCESSFULLY_LOGGED_IN = "Successfully logged in";

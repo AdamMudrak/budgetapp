@@ -1,8 +1,8 @@
 package com.example.budgetingapp.security.jwtutils;
 
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACCESS;
+import static com.example.budgetingapp.constants.security.SecurityConstants.ACTION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.REFRESH;
-import static com.example.budgetingapp.constants.security.SecurityConstants.RESET;
 
 import com.example.budgetingapp.security.jwtutils.abstraction.JwtAbstractUtil;
 import io.jsonwebtoken.JwtException;
@@ -17,7 +17,7 @@ public class JwtStrategy {
 
     public JwtStrategy(@Qualifier(ACCESS) JwtAbstractUtil accessUtil,
                       @Qualifier(REFRESH) JwtAbstractUtil refreshUtil,
-                      @Qualifier(RESET) JwtAbstractUtil resetUtil) {
+                      @Qualifier(ACTION) JwtAbstractUtil resetUtil) {
         this.accessUtil = accessUtil;
         this.refreshUtil = refreshUtil;
         this.resetUtil = resetUtil;
@@ -27,7 +27,7 @@ public class JwtStrategy {
         return switch (key) {
             case ACCESS -> accessUtil;
             case REFRESH -> refreshUtil;
-            case RESET -> resetUtil;
+            case ACTION -> resetUtil;
             default -> throw new JwtException("No such Jwt util");
         };
     }

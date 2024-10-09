@@ -5,7 +5,7 @@ public class SecurityConstants {
     public static final String RANDOM_STRING_BASE =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
     public static final String JWT_ACCESS_EXPIRATION = "${jwt.access.expiration}";
-    public static final String JWT_RESET_EXPIRATION = "${jwt.reset.expiration}";
+    public static final String JWT_ACTION_EXPIRATION = "${jwt.action.expiration}";
     public static final String JWT_REFRESH_EXPIRATION = "${jwt.refresh.expiration}";
     public static final String JWT_SECRET = "${jwt.secret}";
     public static final String EMAIL_SECRET = "email.secret";
@@ -13,9 +13,15 @@ public class SecurityConstants {
     public static final String PATH_PROPERTY = "${reset.path}";
     public static final int BEGIN_INDEX = 7;
     public static final String ACCESS = "ACCESS";
-    public static final String RESET = "RESET";
+    public static final String ACTION = "ACTION";
     public static final String REFRESH = "REFRESH";
 
+    public static final String CONFIRM_REGISTRATION_SUBJECT =
+            "Finish registration in Moneta";
+    public static final String CONFIRM_REGISTRATION_BODY = """
+            Good day! This email is to help you
+            confirm you registration of moneta account.
+            Please, use this link finish it.""";
     public static final String INITIATE_RANDOM_PASSWORD_SUBJECT =
             "Initiate password reset for Moneta";
     public static final String RANDOM_PASSWORD_SUBJECT = "New password for Moneta";
