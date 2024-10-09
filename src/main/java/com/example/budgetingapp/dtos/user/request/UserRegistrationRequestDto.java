@@ -24,7 +24,8 @@ public record UserRegistrationRequestDto(
         example = UserDtoConstants.PASSWORD_EXAMPLE,
         description = UserDtoConstants.PASSWORD_DESCRIPTION,
         requiredMode = REQUIRED)
-        @Size(min = 8, max = 32)
+        @Size(min = UserDtoConstants.MIN_PASSWORD_SIZE,
+                max = UserDtoConstants.MAX_PASSWORD_SIZE)
         @NotBlank
         @Password String password,
 
