@@ -9,6 +9,16 @@ public class AuthControllerConstants {
             get a new random password instead, and set
             a new password afterwards
             """;
+    public static final String AUTH = "/auth";
+    public static final String REGISTER = "/register";
+    public static final String LOGIN = "/login";
+    public static final String FORGOT_PASSWORD = "/forgot-password";
+    public static final String RESET_PASSWORD = "/reset-password";
+    public static final String CHANGE_PASSWORD = "/change-password";
+
+    public static final String ROLE_USER = "hasRole('ROLE_USER')";
+    public static final String ROLE_ADMIN = "hasRole('ROLE_ADMIN')";
+
     public static final String REGISTER_SUMMARY = "Register a new user in the app";
     public static final String SUCCESSFULLY_REGISTERED = "Successfully registered";
 

@@ -1,9 +1,8 @@
 package com.example.budgetingapp.controllers;
 
-import static com.example.budgetingapp.constants.security.SecurityConstants.BEGIN_INDEX;
-
 import com.example.budgetingapp.constants.Constants;
 import com.example.budgetingapp.constants.controllers.AuthControllerConstants;
+import com.example.budgetingapp.constants.security.SecurityConstants;
 import com.example.budgetingapp.dtos.user.request.UserGetLinkToSetRandomPasswordRequestDto;
 import com.example.budgetingapp.dtos.user.request.UserLoginRequestDto;
 import com.example.budgetingapp.dtos.user.request.UserRegistrationRequestDto;
@@ -32,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Tag(name = AuthControllerConstants.AUTH_API_NAME,
         description = AuthControllerConstants.AUTH_API_DESCRIPTION)
-@RequestMapping("/auth")
+@RequestMapping(AuthControllerConstants.AUTH)
 public class AuthController {
     private final UserService userService;
     private final AuthenticationService authenticationService;
@@ -42,7 +41,7 @@ public class AuthController {
     @ApiResponse(responseCode = Constants.CODE_200, description =
             AuthControllerConstants.SUCCESSFULLY_REGISTERED)
     @ApiResponse(responseCode = Constants.CODE_400, description = Constants.INVALID_ENTITY_VALUE)
-    @PostMapping("/register")
+    @PostMapping(AuthControllerConstants.REGISTER)
     public UserRegistrationResponseDto registerUser(
             @RequestBody @Valid UserRegistrationRequestDto requestDto)
             throws RegistrationException {
@@ -54,7 +53,7 @@ public class AuthController {
             AuthControllerConstants.SUCCESSFULLY_LOGGED_IN)
     @ApiResponse(responseCode = Constants.CODE_400, description = Constants.INVALID_ENTITY_VALUE)
     @ApiResponse(responseCode = Constants.CODE_403, description = Constants.ACCESS_DENIED)
-    @PostMapping("/login")
+    @PostMapping(AuthControllerConstants.LOGIN)
     public UserLoginResponseDto login(@RequestBody @Valid UserLoginRequestDto request) {
         return authenticationService.authenticate(request);
     }
@@ -63,7 +62,7 @@ public class AuthController {
     @ApiResponse(responseCode = Constants.CODE_200, description =
             AuthControllerConstants.SUCCESSFULLY_INITIATED_PASSWORD_RESET)
     @ApiResponse(responseCode = Constants.CODE_400, description = Constants.INVALID_ENTITY_VALUE)
-    @PostMapping("/forgot-password")
+    @PostMapping(AuthControllerConstants.FORGOT_PASSWORD)
     public String initiatePasswordReset(@RequestBody
                                           @Valid UserGetLinkToSetRandomPasswordRequestDto request) {
         return authenticationService.initiatePasswordReset(request.email());
@@ -73,7 +72,7 @@ public class AuthController {
     @ApiResponse(responseCode = Constants.CODE_200, description =
             AuthControllerConstants.SUCCESSFULLY_RESET_PASSWORD)
     @ApiResponse(responseCode = Constants.CODE_400, description = Constants.INVALID_ENTITY_VALUE)
-    @PostMapping("/reset-password")
+    @PostMapping(AuthControllerConstants.RESET_PASSWORD)
     public String resetPassword(HttpServletRequest httpServletRequest) {
         return authenticationService.resetPassword(httpServletRequest
                 .getParameter(emailSecretProvider.getEmailSecret()));
@@ -86,14 +85,14 @@ public class AuthController {
             AuthControllerConstants.SUCCESSFULLY_CHANGE_PASSWORD)
     @ApiResponse(responseCode = Constants.CODE_401, description = Constants.AUTHORIZATION_REQUIRED)
     @ApiResponse(responseCode = Constants.CODE_403, description = Constants.ACCESS_DENIED)
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @PostMapping("/change-password")
+    @PreAuthorize(AuthControllerConstants.ROLE_USER)
+    @PostMapping(AuthControllerConstants.CHANGE_PASSWORD)
     public String changePassword(HttpServletRequest httpServletRequest,
                                  @RequestBody @Valid UserSetNewPasswordRequestDto request) {
         String bearerToken = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.hasText(bearerToken) && bearerToken
                 .startsWith(AuthControllerConstants.BEARER)) {
-            bearerToken = bearerToken.substring(BEGIN_INDEX);
+            bearerToken = bearerToken.substring(SecurityConstants.BEGIN_INDEX);
         }
         return authenticationService.changePassword(bearerToken, request);
     }
