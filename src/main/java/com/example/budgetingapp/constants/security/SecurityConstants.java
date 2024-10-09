@@ -1,9 +1,9 @@
 package com.example.budgetingapp.constants.security;
 
 public class SecurityConstants {
-    public static final int RANDOM_PASSWORD_STRENGTH = 25;
+    public static final int RANDOM_PASSWORD_STRENGTH = 32;
     public static final String RANDOM_STRING_BASE =
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
     public static final String JWT_ACCESS_EXPIRATION = "${jwt.access.expiration}";
     public static final String JWT_RESET_EXPIRATION = "${jwt.reset.expiration}";
     public static final String JWT_REFRESH_EXPIRATION = "${jwt.refresh.expiration}";
