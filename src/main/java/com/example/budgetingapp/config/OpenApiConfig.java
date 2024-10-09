@@ -1,5 +1,6 @@
 package com.example.budgetingapp.config;
 
+import com.example.budgetingapp.constants.config.ConfigConstants;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
@@ -13,11 +14,12 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI customOpenApi() {
         return new OpenAPI()
-                .components(new Components().addSecuritySchemes("BearerAuth",
+                .components(new Components().addSecuritySchemes(ConfigConstants.SECURITY_SCHEME_KEY,
                         new SecurityScheme()
                                 .type(SecurityScheme.Type.HTTP)
-                                .scheme("bearer")
-                                .bearerFormat("JWT")))
-                .addSecurityItem(new SecurityRequirement().addList("BearerAuth"));
+                                .scheme(ConfigConstants.SECURITY_SCHEME)
+                                .bearerFormat(ConfigConstants.BEARER_FORMAT)))
+                .addSecurityItem(new SecurityRequirement()
+                        .addList(ConfigConstants.SECURITY_SCHEME_KEY));
     }
 }

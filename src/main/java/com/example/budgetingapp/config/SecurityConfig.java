@@ -2,6 +2,7 @@ package com.example.budgetingapp.config;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
+import com.example.budgetingapp.constants.config.ConfigConstants;
 import com.example.budgetingapp.security.JwtAuthenticationFilter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -33,25 +34,25 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder(STRENGTH);
     }
 
-    //TODO везде убрать *
+    //TODO Изменить источник, методы, хедеры только на используемые
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("*")); // Replace with your frontend origin(s)
-                    config.setAllowedMethods(List.of("*")); // Allowed HTTP methods
-                    config.setAllowedHeaders(List.of("*")); // Allowed headers
+                    config.setAllowedOrigins(List.of(ConfigConstants.ALLOWED_ORIGINS));
+                    config.setAllowedMethods(List.of(ConfigConstants.ALLOWED_METHODS));
+                    config.setAllowedHeaders(List.of(ConfigConstants.ALLOWED_HEADERS));
                     return config;
                 }))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth -> auth
                                 .requestMatchers(
-                                        antMatcher("/auth/**"),
-                                        antMatcher("/swagger-ui/**"),
-                                        antMatcher("/v3/api-docs/**"),
-                                        antMatcher("/errors")
+                                        antMatcher(ConfigConstants.AUTH_MATCHER),
+                                        antMatcher(ConfigConstants.SWAGGER_MATCHER),
+                                        antMatcher(ConfigConstants.SWAGGER_DOCS_MATCHER),
+                                        antMatcher(ConfigConstants.ERRORS_MATCHER)
                                 )
                                 .permitAll()
                                 .anyRequest()
