@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: create-action-tokens-table
+      id: create-param-tokens-table
       author: AdamMudrak
       changes:
         - createTable:
-            tableName: action_tokens
+            tableName: param_tokens
             columns:
               - column:
                   name: id
@@ -13,6 +13,12 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+              - column:
+                  name: parameter
+                  type: varchar(512)
+                  constraints:
+                    nullable: false
+                    unique: true
               - column:
                   name: action_token
                   type: varchar(512)

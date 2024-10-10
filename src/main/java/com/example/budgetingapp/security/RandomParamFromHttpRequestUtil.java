@@ -1,7 +1,7 @@
 package com.example.budgetingapp.security;
 
 import com.example.budgetingapp.exceptions.ActionNotFoundException;
-import com.example.budgetingapp.repositories.actiontoken.ActionTokenRepository;
+import com.example.budgetingapp.repositories.paramtoken.ParamTokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @RequiredArgsConstructor
 public class RandomParamFromHttpRequestUtil {
-    private final ActionTokenRepository actionTokenRepository;
+    private final ParamTokenRepository paramTokenRepository;
     private String randomParam;
     private String token;
 
@@ -27,7 +27,7 @@ public class RandomParamFromHttpRequestUtil {
     }
 
     public String getTokenFromRepo(String randomParam) {
-        setToken(actionTokenRepository
+        setToken(paramTokenRepository
                 .findByParameter(randomParam)
                 .orElseThrow(() -> new ActionNotFoundException(
                         "No such request was found... The link might be expired or forged"))
