@@ -9,7 +9,6 @@ public class SecurityConstants {
     public static final String JWT_ACTION_EXPIRATION = "${jwt.action.expiration}";
     public static final String JWT_REFRESH_EXPIRATION = "${jwt.refresh.expiration}";
     public static final String JWT_SECRET = "${jwt.secret}";
-    public static final String EMAIL_SECRET = "email.secret";
     public static final String SERVER_PATH = "${server.path}";
     public static final String RESET_PATH = "${reset.path}";
     public static final String CONFIRMATION_PATH = "${confirmation.path}";

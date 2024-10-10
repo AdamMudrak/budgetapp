@@ -10,7 +10,6 @@ import com.example.budgetingapp.dtos.user.request.UserSetNewPasswordRequestDto;
 import com.example.budgetingapp.dtos.user.response.UserLoginResponseDto;
 import com.example.budgetingapp.exceptions.RegistrationException;
 import com.example.budgetingapp.security.AuthenticationService;
-import com.example.budgetingapp.security.EmailLinkParameterProvider;
 import com.example.budgetingapp.security.RandomParamFromHttpRequestUtil;
 import com.example.budgetingapp.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,7 +35,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final UserService userService;
     private final AuthenticationService authenticationService;
-    private final EmailLinkParameterProvider emailLinkParameterProvider;
     private final RandomParamFromHttpRequestUtil randomParamFromHttpRequestUtil;
 
     @Operation(summary = AuthControllerConstants.REGISTER_SUMMARY)

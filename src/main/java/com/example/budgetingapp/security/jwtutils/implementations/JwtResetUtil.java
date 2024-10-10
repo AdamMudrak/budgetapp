@@ -1,8 +1,8 @@
 package com.example.budgetingapp.security.jwtutils.implementations;
 
+import static com.example.budgetingapp.constants.security.SecurityConstants.ACTION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.JWT_ACTION_EXPIRATION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.JWT_SECRET;
-import static com.example.budgetingapp.constants.security.SecurityConstants.ACTION;
 
 import com.example.budgetingapp.security.jwtutils.abstraction.JwtAbstractUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
