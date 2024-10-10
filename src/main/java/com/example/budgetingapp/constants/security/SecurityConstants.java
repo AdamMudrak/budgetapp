@@ -2,16 +2,20 @@ package com.example.budgetingapp.constants.security;
 
 public class SecurityConstants {
     public static final int RANDOM_PASSWORD_STRENGTH = 32;
+    public static final int RANDOM_LINK_STRENGTH = 128;
     public static final String RANDOM_STRING_BASE =
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     public static final String JWT_ACCESS_EXPIRATION = "${jwt.access.expiration}";
     public static final String JWT_ACTION_EXPIRATION = "${jwt.action.expiration}";
     public static final String JWT_REFRESH_EXPIRATION = "${jwt.refresh.expiration}";
     public static final String JWT_SECRET = "${jwt.secret}";
     public static final String EMAIL_SECRET = "email.secret";
     public static final String SERVER_PATH = "${server.path}";
-    public static final String PATH_PROPERTY = "${reset.path}";
+    public static final String RESET_PATH = "${reset.path}";
+    public static final String CONFIRMATION_PATH = "${confirmation.path}";
     public static final int BEGIN_INDEX = 7;
+    public static final String RESET = "RESET";
+    public static final String CONFIRMATION = "CONFIRMATION";
     public static final String ACCESS = "ACCESS";
     public static final String ACTION = "ACTION";
     public static final String REFRESH = "REFRESH";
