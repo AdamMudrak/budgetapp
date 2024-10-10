@@ -10,7 +10,7 @@ import com.example.budgetingapp.dtos.user.request.UserSetNewPasswordRequestDto;
 import com.example.budgetingapp.dtos.user.response.UserLoginResponseDto;
 import com.example.budgetingapp.exceptions.RegistrationException;
 import com.example.budgetingapp.security.AuthenticationService;
-import com.example.budgetingapp.security.EmailSecretProvider;
+import com.example.budgetingapp.security.EmailLinkParameterProvider;
 import com.example.budgetingapp.security.RandomParamFromHttpRequestUtil;
 import com.example.budgetingapp.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final UserService userService;
     private final AuthenticationService authenticationService;
-    private final EmailSecretProvider emailSecretProvider;
+    private final EmailLinkParameterProvider emailLinkParameterProvider;
     private final RandomParamFromHttpRequestUtil randomParamFromHttpRequestUtil;
 
     @Operation(summary = AuthControllerConstants.REGISTER_SUMMARY)
@@ -56,11 +56,11 @@ public class AuthController {
     @ApiResponse(responseCode = Constants.CODE_403, description = Constants.ACCESS_DENIED)
     @GetMapping(AuthControllerConstants.CONFIRM_REGISTRATION)
     public String confirmRegistration(HttpServletRequest httpServletRequest) {
-        randomParamFromHttpRequestUtil.getSecretParam(httpServletRequest);
+        randomParamFromHttpRequestUtil.parseRandomParameterAndToken(httpServletRequest);
         return userService
-                .confirmRegistration(randomParamFromHttpRequestUtil
-                        .getTokenFromRepo(randomParamFromHttpRequestUtil
-                                .getRandomParam()));
+                .confirmRegistration(randomParamFromHttpRequestUtil.getTokenFromRepo(
+                        randomParamFromHttpRequestUtil.getRandomParameter(),
+                        randomParamFromHttpRequestUtil.getToken()));
     }
 
     @Operation(summary = AuthControllerConstants.LOGIN_SUMMARY)
@@ -89,11 +89,10 @@ public class AuthController {
     @ApiResponse(responseCode = Constants.CODE_400, description = Constants.INVALID_ENTITY_VALUE)
     @GetMapping(AuthControllerConstants.RESET_PASSWORD)
     public String resetPassword(HttpServletRequest httpServletRequest) {
-        randomParamFromHttpRequestUtil.getSecretParam(httpServletRequest);
-        return userService
-                .confirmRegistration(randomParamFromHttpRequestUtil
-                        .getTokenFromRepo(randomParamFromHttpRequestUtil
-                                .getRandomParam()));
+        randomParamFromHttpRequestUtil.parseRandomParameterAndToken(httpServletRequest);
+        return authenticationService.resetPassword(randomParamFromHttpRequestUtil.getTokenFromRepo(
+                randomParamFromHttpRequestUtil.getRandomParameter(),
+                randomParamFromHttpRequestUtil.getToken()));
     }
 
     @Operation(summary = AuthControllerConstants.CHANGE_PASSWORD_SUMMARY)
