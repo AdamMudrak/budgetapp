@@ -43,6 +43,10 @@ public class SecurityConstants {
             as soon as possible""";
     public static final String SUCCESSFUL_CHANGE_MESSAGE =
             "New password has been set successfully";
+    public static final String REGISTERED_BUT_NOT_ACTIVATED =
+            "User is registered but not enabled. "
+                    + "Check your email to confirm registration. "
+                    + "Your account will not be available until then";
 
     public static final String SUCCESS_EMAIL = "An email with reset link has been sent";
 }
