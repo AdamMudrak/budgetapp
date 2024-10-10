@@ -1,7 +1,7 @@
 package com.example.budgetingapp.exceptions;
 
 public class ActionNotFoundException extends RuntimeException {
-    ActionNotFoundException(String message) {
+    public ActionNotFoundException(String message) {
         super(message);
     }
 }
