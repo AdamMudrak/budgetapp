@@ -1,5 +1,6 @@
 package com.example.budgetingapp.security;
 
+import com.example.budgetingapp.entities.ParamToken;
 import com.example.budgetingapp.exceptions.ActionNotFoundException;
 import com.example.budgetingapp.repositories.paramtoken.ParamTokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,11 +28,12 @@ public class RandomParamFromHttpRequestUtil {
     }
 
     public String getTokenFromRepo(String randomParam) {
-        setToken(paramTokenRepository
+        ParamToken paramToken = paramTokenRepository
                 .findByParameter(randomParam)
                 .orElseThrow(() -> new ActionNotFoundException(
-                        "No such request was found... The link might be expired or forged"))
-                .getActionToken());
+                        "No such request was found... The link might be expired or forged"));
+        setToken(paramToken.getActionToken());
+        paramTokenRepository.deleteById(paramToken.getId());
         return token;
     }
 }
