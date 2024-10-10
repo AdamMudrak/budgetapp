@@ -16,24 +16,24 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RandomParamFromHttpRequestUtil {
     private final ParamTokenRepository paramTokenRepository;
-    private String randomParam;
+    private String randomParameter;
     private String token;
 
-    public void getSecretParam(HttpServletRequest request) {
+    public void parseRandomParameterAndToken(HttpServletRequest request) {
         Map<String, String[]> parameterMap = request.getParameterMap();
         for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
-            setRandomParam(entry.getKey());
+            setRandomParameter(entry.getKey());
+            setToken(entry.getValue()[0]);
             break;
         }
     }
 
-    public String getTokenFromRepo(String randomParam) {
+    public String getTokenFromRepo(String randomParam, String token) {
         ParamToken paramToken = paramTokenRepository
-                .findByParameter(randomParam)
+                .findByParameterAndActionToken(randomParam, token)
                 .orElseThrow(() -> new ActionNotFoundException(
                         "No such request was found... The link might be expired or forged"));
         setToken(paramToken.getActionToken());
-        paramTokenRepository.deleteById(paramToken.getId());
         return token;
     }
 }
