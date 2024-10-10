@@ -1,6 +1,7 @@
 package com.example.budgetingapp.exceptions;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
@@ -99,6 +100,17 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
                 ex.getMessage(),
                 new HttpHeaders(),
                 BAD_REQUEST,
+                request);
+    }
+
+    @ExceptionHandler(LoginException.class)
+    protected ResponseEntity<Object> handleLoginException(
+            Exception ex, WebRequest request) {
+        return handleExceptionInternal(
+                ex,
+                ex.getMessage(),
+                new HttpHeaders(),
+                FORBIDDEN,
                 request);
     }
 
