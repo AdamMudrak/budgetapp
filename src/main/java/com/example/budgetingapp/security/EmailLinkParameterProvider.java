@@ -6,7 +6,7 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.RAND
 import com.example.budgetingapp.entities.ParamToken;
 import com.example.budgetingapp.repositories.paramtoken.ParamTokenRepository;
 import com.example.budgetingapp.security.jwtutils.JwtStrategy;
-import com.example.budgetingapp.security.jwtutils.abstraction.JwtAbstractUtil;
+import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -23,7 +23,7 @@ public class EmailLinkParameterProvider {
     private String emailLinkParameter;
     private String token;
 
-    void formRandomParamTokenPair(String email) {
+    public void formRandomParamTokenPair(String email) {
         setEmailLinkParameter(randomStringUtil.generateRandomString(RANDOM_LINK_STRENGTH));
         JwtAbstractUtil abstractUtil = jwtStrategy.getStrategy(ACTION);
         setToken(abstractUtil.generateToken(email));

@@ -46,6 +46,12 @@ public class SecurityConstants {
             "User is registered but not enabled. "
                     + "Check your email to confirm registration. "
                     + "Your account will not be available until then";
+    public static final String REGISTERED =
+            "User is registered successfully. "
+                    + "Check your email to confirm registration. "
+                    + "Your account will not be enabled until then";
+    public static final String REGISTERED_AND_CONFIRMED =
+            "Your registration is successfully confirmed";
 
     public static final String SUCCESS_EMAIL = "An email with reset link has been sent";
 }

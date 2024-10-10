@@ -1,10 +1,10 @@
-package com.example.budgetingapp.security.jwtutils.implementations;
+package com.example.budgetingapp.security.jwtutils.impl;
 
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACTION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.JWT_ACTION_EXPIRATION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.JWT_SECRET;
 
-import com.example.budgetingapp.security.jwtutils.abstraction.JwtAbstractUtil;
+import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

@@ -8,9 +8,11 @@ import com.example.budgetingapp.dtos.user.request.UserLoginRequestDto;
 import com.example.budgetingapp.dtos.user.request.UserRegistrationRequestDto;
 import com.example.budgetingapp.dtos.user.request.UserSetNewPasswordRequestDto;
 import com.example.budgetingapp.dtos.user.response.UserLoginResponseDto;
+import com.example.budgetingapp.dtos.user.response.UserPasswordResetResponseDto;
+import com.example.budgetingapp.dtos.user.response.UserRegistrationResponseDto;
 import com.example.budgetingapp.exceptions.RegistrationException;
-import com.example.budgetingapp.security.AuthenticationService;
 import com.example.budgetingapp.security.RandomParamFromHttpRequestUtil;
+import com.example.budgetingapp.security.services.AuthenticationService;
 import com.example.budgetingapp.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -42,7 +44,7 @@ public class AuthController {
             AuthControllerConstants.SUCCESSFULLY_REGISTERED)
     @ApiResponse(responseCode = Constants.CODE_400, description = Constants.INVALID_ENTITY_VALUE)
     @PostMapping(AuthControllerConstants.REGISTER)
-    public String register(
+    public UserRegistrationResponseDto register(
             @RequestBody @Valid UserRegistrationRequestDto requestDto)
             throws RegistrationException {
         return userService.register(requestDto);
@@ -53,7 +55,7 @@ public class AuthController {
             AuthControllerConstants.SUCCESSFULLY_CONFIRMED)
     @ApiResponse(responseCode = Constants.CODE_403, description = Constants.ACCESS_DENIED)
     @GetMapping(AuthControllerConstants.CONFIRM_REGISTRATION)
-    public String confirmRegistration(HttpServletRequest httpServletRequest) {
+    public UserRegistrationResponseDto confirmRegistration(HttpServletRequest httpServletRequest) {
         randomParamFromHttpRequestUtil.parseRandomParameterAndToken(httpServletRequest);
         return userService
                 .confirmRegistration(randomParamFromHttpRequestUtil.getTokenFromRepo(
@@ -76,7 +78,7 @@ public class AuthController {
             AuthControllerConstants.SUCCESSFULLY_INITIATED_PASSWORD_RESET)
     @ApiResponse(responseCode = Constants.CODE_400, description = Constants.INVALID_ENTITY_VALUE)
     @PostMapping(AuthControllerConstants.FORGOT_PASSWORD)
-    public String initiatePasswordReset(@RequestBody
+    public UserPasswordResetResponseDto initiatePasswordReset(@RequestBody
                                           @Valid UserGetLinkToSetRandomPasswordRequestDto request) {
         return authenticationService.initiatePasswordReset(request.email());
     }
@@ -86,9 +88,10 @@ public class AuthController {
             AuthControllerConstants.SUCCESSFULLY_RESET_PASSWORD)
     @ApiResponse(responseCode = Constants.CODE_400, description = Constants.INVALID_ENTITY_VALUE)
     @GetMapping(AuthControllerConstants.RESET_PASSWORD)
-    public String resetPassword(HttpServletRequest httpServletRequest) {
+    public UserPasswordResetResponseDto resetPassword(HttpServletRequest httpServletRequest) {
         randomParamFromHttpRequestUtil.parseRandomParameterAndToken(httpServletRequest);
-        return authenticationService.resetPassword(randomParamFromHttpRequestUtil.getTokenFromRepo(
+        return authenticationService
+                .confirmResetPassword(randomParamFromHttpRequestUtil.getTokenFromRepo(
                 randomParamFromHttpRequestUtil.getRandomParameter(),
                 randomParamFromHttpRequestUtil.getToken()));
     }
@@ -101,7 +104,7 @@ public class AuthController {
     @ApiResponse(responseCode = Constants.CODE_403, description = Constants.ACCESS_DENIED)
     @PreAuthorize(AuthControllerConstants.ROLE_USER)
     @PostMapping(AuthControllerConstants.CHANGE_PASSWORD)
-    public String changePassword(HttpServletRequest httpServletRequest,
+    public UserPasswordResetResponseDto changePassword(HttpServletRequest httpServletRequest,
                                  @RequestBody @Valid UserSetNewPasswordRequestDto request) {
         String bearerToken = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.hasText(bearerToken) && bearerToken

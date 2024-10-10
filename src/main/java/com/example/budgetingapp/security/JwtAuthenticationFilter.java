@@ -5,7 +5,7 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.BEGI
 
 import com.example.budgetingapp.constants.controllers.AuthControllerConstants;
 import com.example.budgetingapp.security.jwtutils.JwtStrategy;
-import com.example.budgetingapp.security.jwtutils.abstraction.JwtAbstractUtil;
+import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

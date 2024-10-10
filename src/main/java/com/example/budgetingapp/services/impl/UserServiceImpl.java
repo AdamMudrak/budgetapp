@@ -2,8 +2,11 @@ package com.example.budgetingapp.services.impl;
 
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACTION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION;
+import static com.example.budgetingapp.constants.security.SecurityConstants.REGISTERED;
+import static com.example.budgetingapp.constants.security.SecurityConstants.REGISTERED_AND_CONFIRMED;
 
 import com.example.budgetingapp.dtos.user.request.UserRegistrationRequestDto;
+import com.example.budgetingapp.dtos.user.response.UserRegistrationResponseDto;
 import com.example.budgetingapp.entities.ParamToken;
 import com.example.budgetingapp.entities.Role;
 import com.example.budgetingapp.entities.User;
@@ -13,9 +16,9 @@ import com.example.budgetingapp.mappers.UserMapper;
 import com.example.budgetingapp.repositories.paramtoken.ParamTokenRepository;
 import com.example.budgetingapp.repositories.role.RoleRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
-import com.example.budgetingapp.security.EmailService;
 import com.example.budgetingapp.security.jwtutils.JwtStrategy;
-import com.example.budgetingapp.security.jwtutils.abstraction.JwtAbstractUtil;
+import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
+import com.example.budgetingapp.services.MessageService;
 import com.example.budgetingapp.services.UserService;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +34,10 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtStrategy jwtStrategy;
-    private final EmailService emailService;
+    private final MessageService messageService;
 
     @Override
-    public String register(UserRegistrationRequestDto requestDto)
+    public UserRegistrationResponseDto register(UserRegistrationRequestDto requestDto)
             throws RegistrationException {
         if (userRepository.existsByEmail(requestDto.email())) {
             throw new RegistrationException("User with email "
@@ -45,14 +48,12 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(requestDto.password()));
         userRepository.save(user);
 
-        emailService.sendActionEmail(user.getEmail(), CONFIRMATION);
-        return "User is registered successfully. "
-                + "Check your email to confirm registration. "
-                + "Your account will not be available until then";
+        messageService.sendActionMessage(user.getEmail(), CONFIRMATION);
+        return new UserRegistrationResponseDto(REGISTERED);
     }
 
     @Override
-    public String confirmRegistration(String token) {
+    public UserRegistrationResponseDto confirmRegistration(String token) {
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACTION);
         String email = jwtAbstractUtil.getUsername(token);
         User user = userRepository.findByEmail(email).orElseThrow(
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService {
         ParamToken paramToken = paramTokenRepository.findByActionToken(token).orElseThrow(()
                 -> new EntityNotFoundException("No such request"));
         paramTokenRepository.deleteById(paramToken.getId());
-        return "Your registration is successfully confirmed";
+        return new UserRegistrationResponseDto(REGISTERED_AND_CONFIRMED);
     }
 
     private void assignUserRole(User user) {

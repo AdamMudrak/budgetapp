@@ -1,4 +1,4 @@
-package com.example.budgetingapp.security;
+package com.example.budgetingapp.security.services.impl;
 
 import com.example.budgetingapp.exceptions.EntityNotFoundException;
 import com.example.budgetingapp.repositories.user.UserRepository;

@@ -1,4 +1,4 @@
-package com.example.budgetingapp.security;
+package com.example.budgetingapp.services.impl;
 
 import static com.example.budgetingapp.constants.Constants.SPLITERATOR;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION;
@@ -13,6 +13,8 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.RESE
 import static com.example.budgetingapp.constants.security.SecurityConstants.RESET_PATH;
 
 import com.example.budgetingapp.exceptions.ActionNotFoundException;
+import com.example.budgetingapp.security.EmailLinkParameterProvider;
+import com.example.budgetingapp.services.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +25,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Setter
-public class EmailService {
+public class PasswordEmailServiceImpl implements MessageService {
     private final JavaMailSender mailSender;
     private final EmailLinkParameterProvider emailLinkParameterProvider;
     @Value(RESET_PATH)
@@ -33,7 +35,8 @@ public class EmailService {
     private String subject;
     private String body;
 
-    public void sendEmail(String to, String setText) {
+    @Override
+    public void sendMessage(String to, String setText) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject(subject);
@@ -41,33 +44,35 @@ public class EmailService {
         mailSender.send(message);
     }
 
-    public String formTextForAction(String email, String actionPath) {
-        emailLinkParameterProvider.formRandomParamTokenPair(email);
-        return body + System.lineSeparator() + actionPath
-                + emailLinkParameterProvider.getEmailLinkParameter()
-                + SPLITERATOR + emailLinkParameterProvider.getToken();
-    }
-
-    public void sendActionEmail(String email, String action) {
+    @Override
+    public void sendActionMessage(String email, String action) {
         switch (action) {
             case RESET -> {
                 this.setSubject(INITIATE_RANDOM_PASSWORD_SUBJECT);
                 this.setBody(INITIATE_RANDOM_PASSWORD_BODY);
-                this.sendEmail(email, formTextForAction(email, resetPath));
+                this.sendMessage(email, formTextForAction(email, resetPath));
             }
             case CONFIRMATION -> {
                 this.setSubject(CONFIRM_REGISTRATION_SUBJECT);
                 this.setBody(CONFIRM_REGISTRATION_BODY);
-                this.sendEmail(email, formTextForAction(email, confirmationPath));
+                this.sendMessage(email, formTextForAction(email, confirmationPath));
             }
             default -> throw new ActionNotFoundException("Unknown action " + action);
         }
     }
 
+    @Override
     public void sendResetPassword(String email, String randomPassword) {
         this.setSubject(RANDOM_PASSWORD_SUBJECT);
         this.setBody(RANDOM_PASSWORD_BODY);
         String mail = body + System.lineSeparator() + randomPassword;
-        this.sendEmail(email, mail);
+        this.sendMessage(email, mail);
+    }
+
+    private String formTextForAction(String email, String actionPath) {
+        emailLinkParameterProvider.formRandomParamTokenPair(email);
+        return body + System.lineSeparator() + actionPath
+                + emailLinkParameterProvider.getEmailLinkParameter()
+                + SPLITERATOR + emailLinkParameterProvider.getToken();
     }
 }

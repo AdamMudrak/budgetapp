@@ -1,4 +1,4 @@
-package com.example.budgetingapp.security.jwtutils.abstraction;
+package com.example.budgetingapp.security.jwtutils.abstr;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

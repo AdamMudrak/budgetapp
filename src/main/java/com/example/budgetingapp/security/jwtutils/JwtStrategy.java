@@ -4,7 +4,7 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.ACCE
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACTION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.REFRESH;
 
-import com.example.budgetingapp.security.jwtutils.abstraction.JwtAbstractUtil;
+import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
