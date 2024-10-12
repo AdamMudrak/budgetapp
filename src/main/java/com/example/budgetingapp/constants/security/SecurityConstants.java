@@ -1,6 +1,7 @@
 package com.example.budgetingapp.constants.security;
 
 public class SecurityConstants {
+    public static final String TELEGRAM_TOKEN = "7412278941:AAEQXPsnrLU2eg7MPZrrIA7BlQcnHo0EBis";
     public static final int RANDOM_PASSWORD_STRENGTH = 32;
     public static final int RANDOM_LINK_STRENGTH = 128;
     public static final String RANDOM_STRING_BASE =
@@ -52,6 +53,19 @@ public class SecurityConstants {
                     + "Your account will not be enabled until then";
     public static final String REGISTERED_AND_CONFIRMED =
             "Your registration is successfully confirmed";
+    public static final String TELEGRAM_REGISTRATION =
+            "To register in our app, you'll need"
+            + System.lineSeparator()
+            + "to share your data with us, specifically:"
+            + System.lineSeparator()
+            + "your phoneNumber number, name, last name"
+            + System.lineSeparator()
+            + "This data is going to be used only in"
+            + System.lineSeparator()
+            + "registration purposes. You'll then receive"
+            + System.lineSeparator()
+            + "a password to login in the app";
+    public static final String TOKEN = "7412278941:AAEQXPsnrLU2eg7MPZrrIA7BlQcnHo0EBis";
 
     public static final String SUCCESS_EMAIL = "An email with reset link has been sent";
 }

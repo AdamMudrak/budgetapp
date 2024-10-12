@@ -3,6 +3,7 @@ package com.example.budgetingapp.controllers;
 import com.example.budgetingapp.constants.Constants;
 import com.example.budgetingapp.constants.controllers.AuthControllerConstants;
 import com.example.budgetingapp.constants.security.SecurityConstants;
+import com.example.budgetingapp.dtos.user.request.TelegramAuthenticationRequestDto;
 import com.example.budgetingapp.dtos.user.request.UserGetLinkToSetRandomPasswordRequestDto;
 import com.example.budgetingapp.dtos.user.request.UserLoginRequestDto;
 import com.example.budgetingapp.dtos.user.request.UserRegistrationRequestDto;
@@ -10,7 +11,11 @@ import com.example.budgetingapp.dtos.user.request.UserSetNewPasswordRequestDto;
 import com.example.budgetingapp.dtos.user.response.UserLoginResponseDto;
 import com.example.budgetingapp.dtos.user.response.UserPasswordResetResponseDto;
 import com.example.budgetingapp.dtos.user.response.UserRegistrationResponseDto;
+import com.example.budgetingapp.entities.Role;
+import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.exceptions.RegistrationException;
+import com.example.budgetingapp.repositories.role.RoleRepository;
+import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.security.RandomParamFromHttpRequestUtil;
 import com.example.budgetingapp.security.services.AuthenticationService;
 import com.example.budgetingapp.services.UserService;
@@ -28,6 +33,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Set;
 
 @RequiredArgsConstructor
 @RestController
@@ -112,5 +119,11 @@ public class AuthController {
             bearerToken = bearerToken.substring(SecurityConstants.BEGIN_INDEX);
         }
         return authenticationService.changePassword(bearerToken, request);
+    }
+
+    @PostMapping("/telegramauth")
+    private void telegramAuth(@RequestBody @Valid
+                              TelegramAuthenticationRequestDto telegramAuthenticationRequestDto) {
+        System.out.println(telegramAuthenticationRequestDto);
     }
 }
