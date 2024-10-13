@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(requestDto.password()));
         userRepository.save(user);
 
-        messageService.sendActionMessage(user.getEmail(), CONFIRMATION);
+        messageService.sendActionMessage(user.getUsername(), CONFIRMATION);
         return new UserRegistrationResponseDto(REGISTERED);
     }
 
