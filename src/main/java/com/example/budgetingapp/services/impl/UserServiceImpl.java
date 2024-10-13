@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserRegistrationResponseDto register(UserRegistrationRequestDto requestDto)
             throws RegistrationException {
-        if (userRepository.existsByEmail(requestDto.userName())) {
+        if (userRepository.existsByUserName(requestDto.userName())) {
             throw new RegistrationException("User with email "
                     + requestDto.userName() + " already exists");
         }
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
     public UserRegistrationResponseDto confirmRegistration(String token) {
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACTION);
         String email = jwtAbstractUtil.getUsername(token);
-        User user = userRepository.findByEmail(email).orElseThrow(
+        User user = userRepository.findByUserName(email).orElseThrow(
                 () -> new EntityNotFoundException("User with email "
                         + email + " was not found"));
         user.setEnabled(true);

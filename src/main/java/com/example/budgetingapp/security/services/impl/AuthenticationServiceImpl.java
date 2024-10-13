@@ -60,7 +60,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public UserPasswordResetResponseDto initiatePasswordReset(String email) {
-        Optional<User> user = userRepository.findByEmail(email);
+        Optional<User> user = userRepository.findByUserName(email);
         if (user.isEmpty()) {
             throw new EntityNotFoundException(
                     "User with email " + email + " was not found");
@@ -80,7 +80,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         String email = getEmailFromTokenSecure(token, jwtAbstractUtil);
         String randomPassword = randomStringUtil.generateRandomString(RANDOM_PASSWORD_STRENGTH);
-        User user = userRepository.findByEmail(email).orElseThrow(() ->
+        User user = userRepository.findByUserName(email).orElseThrow(() ->
                 new EntityNotFoundException("User with email " + email + " was not found"));
         user.setPassword(passwordEncoder.encode(randomPassword));
         userRepository.save(user);
@@ -93,7 +93,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                                  UserSetNewPasswordRequestDto userSetNewPasswordRequestDto) {
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
         String email = jwtAbstractUtil.getUsername(token);
-        User user = userRepository.findByEmail(email).orElseThrow(() ->
+        User user = userRepository.findByUserName(email).orElseThrow(() ->
                 new EntityNotFoundException("User with email " + email + " was not found"));
         if (!isCurrentPasswordValid(user, userSetNewPasswordRequestDto)) {
             throw new PasswordMismatch("Wrong password. Try resetting "
@@ -112,7 +112,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     private void isCreatedAndEnabled(UserLoginRequestDto requestDto) {
-        User user = userRepository.findByEmail(requestDto.email())
+        User user = userRepository.findByUserName(requestDto.email())
                 .orElseThrow(() -> new EntityNotFoundException(
                         "User with email " + requestDto.email() + " was not found"));
         if (!user.isEnabled()) {
