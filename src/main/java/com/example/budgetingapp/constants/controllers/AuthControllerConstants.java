@@ -16,6 +16,7 @@ public class AuthControllerConstants {
     public static final String FORGOT_PASSWORD = "/forgot-password";
     public static final String RESET_PASSWORD = "/reset-password";
     public static final String CHANGE_PASSWORD = "/change-password";
+    public static final String TELEGRAM_AUTH = "/telegramauth";
 
     public static final String ROLE_USER = "hasRole('ROLE_USER')";
     public static final String ROLE_ADMIN = "hasRole('ROLE_ADMIN')";
@@ -40,6 +41,11 @@ public class AuthControllerConstants {
     public static final String CHANGE_PASSWORD_SUMMARY =
             "Change password while being logged in, either using a random or your own password";
     public static final String SUCCESSFULLY_CHANGE_PASSWORD = "Successfully changed password";
+
+    public static final String TELEGRAM_AUTH_SUMMARY =
+            "Change password while being logged in, either using a random or your own password";
+    public static final String SUCCESSFULLY_AUTHENTICATED_VIA_TELEGRAM =
+            "Successfully authenticated using telegram";
 
     public static final String BEARER = "Bearer ";
 }
