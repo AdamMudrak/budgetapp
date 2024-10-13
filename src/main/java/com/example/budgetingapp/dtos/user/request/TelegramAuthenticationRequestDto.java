@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record TelegramAuthenticationRequestDto(String firstName,
                                              String lastName,
-                                             String email,
+                                             String userName,//phoneNumber
                                              String password,
                                              String token) {
 }
