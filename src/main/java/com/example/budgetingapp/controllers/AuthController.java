@@ -8,16 +8,14 @@ import com.example.budgetingapp.dtos.user.request.UserGetLinkToSetRandomPassword
 import com.example.budgetingapp.dtos.user.request.UserLoginRequestDto;
 import com.example.budgetingapp.dtos.user.request.UserRegistrationRequestDto;
 import com.example.budgetingapp.dtos.user.request.UserSetNewPasswordRequestDto;
+import com.example.budgetingapp.dtos.user.response.TelegramAuthenticationResponseDto;
 import com.example.budgetingapp.dtos.user.response.UserLoginResponseDto;
 import com.example.budgetingapp.dtos.user.response.UserPasswordResetResponseDto;
 import com.example.budgetingapp.dtos.user.response.UserRegistrationResponseDto;
-import com.example.budgetingapp.entities.Role;
-import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.exceptions.RegistrationException;
-import com.example.budgetingapp.repositories.role.RoleRepository;
-import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.security.RandomParamFromHttpRequestUtil;
 import com.example.budgetingapp.security.services.AuthenticationService;
+import com.example.budgetingapp.security.services.TelegramAuthenticationService;
 import com.example.budgetingapp.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,8 +32,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Set;
-
 @RequiredArgsConstructor
 @RestController
 @Tag(name = AuthControllerConstants.AUTH_API_NAME,
@@ -44,6 +40,7 @@ import java.util.Set;
 public class AuthController {
     private final UserService userService;
     private final AuthenticationService authenticationService;
+    private final TelegramAuthenticationService telegramAuthenticationService;
     private final RandomParamFromHttpRequestUtil randomParamFromHttpRequestUtil;
 
     @Operation(summary = AuthControllerConstants.REGISTER_SUMMARY)
@@ -121,9 +118,14 @@ public class AuthController {
         return authenticationService.changePassword(bearerToken, request);
     }
 
-    @PostMapping("/telegramauth")
-    private void telegramAuth(@RequestBody @Valid
+    @Operation(summary = AuthControllerConstants.TELEGRAM_AUTH_SUMMARY)
+    @ApiResponse(responseCode = Constants.CODE_200, description =
+            AuthControllerConstants.SUCCESSFULLY_AUTHENTICATED_VIA_TELEGRAM)
+    @ApiResponse(responseCode = Constants.CODE_400, description = Constants.INVALID_ENTITY_VALUE)
+    @ApiResponse(responseCode = Constants.CODE_403, description = Constants.ACCESS_DENIED)
+    @PostMapping(AuthControllerConstants.TELEGRAM_AUTH)
+    private TelegramAuthenticationResponseDto telegramAuth(@RequestBody @Valid
                               TelegramAuthenticationRequestDto telegramAuthenticationRequestDto) {
-        System.out.println(telegramAuthenticationRequestDto);
+        return telegramAuthenticationService.register(telegramAuthenticationRequestDto);
     }
 }
