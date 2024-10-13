@@ -16,7 +16,7 @@ public class AuthControllerConstants {
     public static final String FORGOT_PASSWORD = "/forgot-password";
     public static final String RESET_PASSWORD = "/reset-password";
     public static final String CHANGE_PASSWORD = "/change-password";
-    public static final String TELEGRAM_AUTH = "/telegramauth";
+    public static final String TELEGRAM_AUTH = "/telegram-auth";
 
     public static final String ROLE_USER = "hasRole('ROLE_USER')";
     public static final String ROLE_ADMIN = "hasRole('ROLE_ADMIN')";
