@@ -116,7 +116,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "User with email " + requestDto.email() + " was not found"));
         if (!user.isEnabled()) {
-            messageService.sendActionMessage(user.getEmail(), CONFIRMATION);
+            messageService.sendActionMessage(user.getUsername(), CONFIRMATION);
             throw new LoginException(REGISTERED_BUT_NOT_ACTIVATED);
         }
     }
