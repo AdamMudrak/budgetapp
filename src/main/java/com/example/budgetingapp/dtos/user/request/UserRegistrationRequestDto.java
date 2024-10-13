@@ -18,7 +18,7 @@ public record UserRegistrationRequestDto(
         example = UserDtoConstants.EMAIL_EXAMPLE,
         requiredMode = REQUIRED)
         @NotBlank
-        @Email String email,
+        @Email String userName,
 
         @Schema(name = UserDtoConstants.PASSWORD,
         example = UserDtoConstants.PASSWORD_EXAMPLE,
