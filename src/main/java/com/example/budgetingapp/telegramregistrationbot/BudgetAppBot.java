@@ -1,16 +1,22 @@
 package com.example.budgetingapp.telegramregistrationbot;
 
+import static com.example.budgetingapp.constants.security.SecurityConstants.ACTION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_STRENGTH;
 import static com.example.budgetingapp.constants.security.SecurityConstants.TOKEN;
 
-import com.example.budgetingapp.dtos.user.request.TelegramAuthenticationRequestDto;
+import com.example.budgetingapp.entities.ActionToken;
+import com.example.budgetingapp.exceptions.LoginException;
+import com.example.budgetingapp.repositories.actiontoken.ActionTokenRepository;
 import com.example.budgetingapp.security.RandomStringUtil;
+import com.example.budgetingapp.security.jwtutils.JwtStrategy;
+import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -24,13 +30,19 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Component
 public class BudgetAppBot extends TelegramLongPollingBot {
     private final RandomStringUtil randomStringUtil;
-
+    private final ActionTokenRepository actionTokenRepository;
+    private final JwtStrategy jwtStrategy;
     private boolean isBotActive;
 
-    public BudgetAppBot(@Autowired RandomStringUtil randomStringUtil) {
+    public BudgetAppBot(@Autowired Environment environment,
+                        @Autowired RandomStringUtil randomStringUtil,
+                        @Autowired ActionTokenRepository actionTokenRepository,
+                        @Autowired JwtStrategy jwtStrategy) {
         super(TOKEN);
         getBotUsername();
         this.randomStringUtil = randomStringUtil;
+        this.actionTokenRepository = actionTokenRepository;
+        this.jwtStrategy = jwtStrategy;
     }
 
     @Override
@@ -92,16 +104,8 @@ public class BudgetAppBot extends TelegramLongPollingBot {
         if (phoneNumber.isBlank()) {
             throw new RuntimeException("Phone can't be empty!");
         }
-        sendRegisterOrLoginRequest(new TelegramAuthenticationRequestDto(firstName,
-                lastName,
-                phoneNumber,
-                password));
-        String response = "First name: " + firstName + System.lineSeparator()
-                + "Last name: " + lastName + System.lineSeparator()
-                + "Phone number: " + phoneNumber + System.lineSeparator()
-                + "Password: " + password + System.lineSeparator()
-                + "You can use your phoneNumber number " + System.lineSeparator()
-                + "and password to login" + System.lineSeparator();
+        sendRegisterOrLoginRequest(firstName, lastName, phoneNumber, password);
+        String response = formTelegramResponse(firstName, lastName, phoneNumber, password);
         sendMessage(contact.getUserId(), response);
     }
 
@@ -128,17 +132,16 @@ public class BudgetAppBot extends TelegramLongPollingBot {
         }
     }
 
-    private void sendRegisterOrLoginRequest(TelegramAuthenticationRequestDto requestDto) {
+    private void sendRegisterOrLoginRequest(String firstName,
+                                            String lastName,
+                                            String phoneNumber,
+                                            String password) {
+        String token = setActionTokenForCurrentRequest(phoneNumber);
         try {
             HttpClient client = HttpClient.newHttpClient();
-            String requestBody = String.format("{\"firstName\": \"%s\", "
-                    + "\"lastName\": \"%s\", "
-                    + "\"phoneNumber\": \"%s\", "
-                    + "\"password\": \"%s\"}",
-                    requestDto.firstName(),
-                    requestDto.lastName(),
-                    requestDto.phoneNumber(),
-                    requestDto.password());
+            String requestBody = formRequestBody(firstName, lastName, phoneNumber,
+                    password, token);
+
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("http://localhost:8080/auth/telegramauth"))
                     .header("Content-Type", "application/json")
@@ -151,7 +154,40 @@ public class BudgetAppBot extends TelegramLongPollingBot {
             System.out.println("Response Code: " + response.statusCode());
             System.out.println("Response Body: " + response.body());
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new LoginException("Couldn't register or login via telegram", e);
         }
+    }
+
+    private String setActionTokenForCurrentRequest(String phoneNumber) {
+        JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACTION);
+        String token = jwtAbstractUtil.generateToken(phoneNumber);
+        ActionToken actionToken = new ActionToken();
+        actionToken.setActionToken(token);
+        actionTokenRepository.save(actionToken);
+        return token;
+    }
+
+    private String formTelegramResponse(String firstName, String lastName,
+                                        String phoneNumber, String password) {
+        return "First name: " + firstName + System.lineSeparator()
+                + "Last name: " + lastName + System.lineSeparator()
+                + "Phone number: " + phoneNumber + System.lineSeparator()
+                + "Password: " + password + System.lineSeparator()
+                + "You can use your phoneNumber number " + System.lineSeparator()
+                + "and password to login" + System.lineSeparator();
+    }
+
+    private String formRequestBody(String firstName, String lastName, String phoneNumber,
+                                   String password, String token) {
+        return String.format("{\"firstName\": \"%s\", "
+                        + "\"lastName\": \"%s\", "
+                        + "\"userName\": \"%s\", "
+                        + "\"password\": \"%s\", "
+                        + "\"token\": \"%s\"}",
+                firstName,
+                lastName,
+                phoneNumber,
+                password,
+                token);
     }
 }
