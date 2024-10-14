@@ -51,7 +51,7 @@ public class AuthenticationService {
         final Authentication authentication = authenticationManager
                 .authenticate(
                         new UsernamePasswordAuthenticationToken(
-                                requestDto.email(), requestDto.password()));
+                                requestDto.userName(), requestDto.password()));
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
         String accessToken = jwtAbstractUtil.generateToken(authentication.getName());
         jwtAbstractUtil = jwtStrategy.getStrategy(REFRESH);
@@ -110,9 +110,9 @@ public class AuthenticationService {
     }
 
     private void isCreatedAndEnabled(UserLoginRequestDto requestDto) {
-        User user = userRepository.findByUserName(requestDto.email())
+        User user = userRepository.findByUserName(requestDto.userName())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "User with email " + requestDto.email() + " was not found"));
+                        "User with email " + requestDto.userName() + " was not found"));
         if (!user.isEnabled()) {
             messageService.sendActionMessage(user.getUsername(), CONFIRMATION);
             throw new LoginException(REGISTERED_BUT_NOT_ACTIVATED);
