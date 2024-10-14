@@ -124,7 +124,7 @@ public class AuthController {
     @ApiResponse(responseCode = Constants.CODE_400, description = Constants.INVALID_ENTITY_VALUE)
     @ApiResponse(responseCode = Constants.CODE_403, description = Constants.ACCESS_DENIED)
     @PostMapping(AuthControllerConstants.TELEGRAM_AUTH)
-    private TelegramAuthenticationResponseDto telegramAuth(@RequestBody @Valid
+    public TelegramAuthenticationResponseDto telegramAuth(@RequestBody @Valid
                               TelegramAuthenticationRequestDto telegramAuthenticationRequestDto) {
         return telegramAuthenticationService.register(telegramAuthenticationRequestDto);
     }
