@@ -12,6 +12,7 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.SUCC
 
 import com.example.budgetingapp.dtos.user.request.UserLoginRequestDto;
 import com.example.budgetingapp.dtos.user.request.UserSetNewPasswordRequestDto;
+import com.example.budgetingapp.dtos.user.response.AccessTokenResponseDto;
 import com.example.budgetingapp.dtos.user.response.UserLoginResponseDto;
 import com.example.budgetingapp.dtos.user.response.UserPasswordResetResponseDto;
 import com.example.budgetingapp.entities.ParamToken;
@@ -27,6 +28,9 @@ import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
 import com.example.budgetingapp.services.impl.PasswordEmailService;
 import io.jsonwebtoken.JwtException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -103,6 +107,18 @@ public class AuthenticationService {
         return new UserPasswordResetResponseDto(SUCCESSFUL_CHANGE_MESSAGE);
     }
 
+    public AccessTokenResponseDto refreshToken(HttpServletRequest httpServletRequest) {
+        Cookie cookie = findRefreshCookie(httpServletRequest);
+        JwtAbstractUtil refreshUtil = jwtStrategy.getStrategy(REFRESH);
+        JwtAbstractUtil accessUtil = jwtStrategy.getStrategy(ACCESS);
+        String refreshToken = cookie.getValue();
+        if (refreshUtil.isValidToken(refreshToken)) {
+            String username = refreshUtil.getUsername(refreshToken);
+            return new AccessTokenResponseDto(accessUtil.generateToken(username));
+        }
+        throw new LoginException("Something went wrong with your access");
+    }
+
     private boolean isCurrentPasswordValid(User user,
                                        UserSetNewPasswordRequestDto userSetNewPasswordRequestDto) {
         return passwordEncoder
@@ -126,5 +142,12 @@ public class AuthenticationService {
         String email = jwtAbstractUtil.getUsername(paramToken.getActionToken());
         paramTokenRepository.deleteById(paramToken.getId());
         return email;
+    }
+
+    private Cookie findRefreshCookie(HttpServletRequest httpServletRequest) {
+        return Arrays.stream(httpServletRequest.getCookies())
+                .filter(refreshCookie -> refreshCookie.getName().equals("refreshToken"))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("Couldn't find RT in cookies"));
     }
 }
