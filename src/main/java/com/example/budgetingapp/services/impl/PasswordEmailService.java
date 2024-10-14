@@ -14,7 +14,6 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.RESE
 
 import com.example.budgetingapp.exceptions.ActionNotFoundException;
 import com.example.budgetingapp.security.EmailLinkParameterProvider;
-import com.example.budgetingapp.services.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +24,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Setter
-public class PasswordEmailServiceImpl implements MessageService {
+public class PasswordEmailService {
     private final JavaMailSender mailSender;
     private final EmailLinkParameterProvider emailLinkParameterProvider;
     @Value(RESET_PATH)
@@ -35,7 +34,6 @@ public class PasswordEmailServiceImpl implements MessageService {
     private String subject;
     private String body;
 
-    @Override
     public void sendMessage(String to, String setText) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
@@ -44,7 +42,6 @@ public class PasswordEmailServiceImpl implements MessageService {
         mailSender.send(message);
     }
 
-    @Override
     public void sendActionMessage(String email, String action) {
         switch (action) {
             case RESET -> {
@@ -61,7 +58,6 @@ public class PasswordEmailServiceImpl implements MessageService {
         }
     }
 
-    @Override
     public void sendResetPassword(String email, String randomPassword) {
         this.setSubject(RANDOM_PASSWORD_SUBJECT);
         this.setBody(RANDOM_PASSWORD_BODY);

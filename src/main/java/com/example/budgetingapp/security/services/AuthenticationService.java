@@ -25,7 +25,7 @@ import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.security.RandomStringUtil;
 import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
-import com.example.budgetingapp.services.MessageService;
+import com.example.budgetingapp.services.impl.PasswordEmailService;
 import io.jsonwebtoken.JwtException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtStrategy jwtStrategy;
-    private final MessageService messageService;
+    private final PasswordEmailService passwordEmailService;
     private final RandomStringUtil randomStringUtil;
     private final ParamTokenRepository paramTokenRepository;
 
@@ -65,7 +65,7 @@ public class AuthenticationService {
             throw new EntityNotFoundException(
                     "User with email " + email + " was not found");
         }
-        messageService.sendActionMessage(email, RESET);
+        passwordEmailService.sendActionMessage(email, RESET);
         return new UserPasswordResetResponseDto(SUCCESS_EMAIL);
     }
 
@@ -83,7 +83,7 @@ public class AuthenticationService {
                 new EntityNotFoundException("User with email " + email + " was not found"));
         user.setPassword(passwordEncoder.encode(randomPassword));
         userRepository.save(user);
-        messageService.sendResetPassword(email, randomPassword);
+        passwordEmailService.sendResetPassword(email, randomPassword);
         return new UserPasswordResetResponseDto(SUCCESSFUL_RESET_MSG);
     }
 
@@ -114,7 +114,7 @@ public class AuthenticationService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "User with email " + requestDto.userName() + " was not found"));
         if (!user.isEnabled()) {
-            messageService.sendActionMessage(user.getUsername(), CONFIRMATION);
+            passwordEmailService.sendActionMessage(user.getUsername(), CONFIRMATION);
             throw new LoginException(REGISTERED_BUT_NOT_ACTIVATED);
         }
     }
