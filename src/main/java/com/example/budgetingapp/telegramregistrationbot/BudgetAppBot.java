@@ -1,10 +1,13 @@
 package com.example.budgetingapp.telegramregistrationbot;
 
+import static com.example.budgetingapp.constants.Constants.CODE_200;
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACTION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.BOT_NAME;
 import static com.example.budgetingapp.constants.security.SecurityConstants.BOT_TO_SERVER_URI;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONTENT_TYPE;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONTENT_TYPE_HEADER;
+import static com.example.budgetingapp.constants.security.SecurityConstants.FAILED;
+import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_ACTION_JWT_STRENGTH;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_STRENGTH;
 import static com.example.budgetingapp.constants.security.SecurityConstants.START;
 import static com.example.budgetingapp.constants.security.SecurityConstants.STOP;
@@ -117,9 +120,10 @@ public class BudgetAppBot extends TelegramLongPollingBot {
         if (phoneNumber.isBlank()) {
             throw new RuntimeException("Phone can't be empty!");
         }
-        sendRegisterOrLoginRequest(firstName, lastName, phoneNumber, password);
-        String response = formTelegramResponse(firstName, lastName, phoneNumber, password);
-        sendMessage(contact.getUserId(), response);
+        String statusCode = sendRegisterOrLoginRequest(firstName, lastName, phoneNumber, password);
+        String response = getResponseFromController(statusCode, firstName,
+                lastName, phoneNumber, password);
+        sendMarkedDownMessage(contact.getUserId(), response);
     }
 
     private void handleStop(Update update) {
@@ -145,7 +149,19 @@ public class BudgetAppBot extends TelegramLongPollingBot {
         }
     }
 
-    private void sendRegisterOrLoginRequest(String firstName,
+    private void sendMarkedDownMessage(Long chatId, String text) {
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId);
+        message.setText(text);
+        message.setParseMode("MarkdownV2");
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String sendRegisterOrLoginRequest(String firstName,
                                             String lastName,
                                             String phoneNumber,
                                             String password) {
@@ -158,18 +174,20 @@ public class BudgetAppBot extends TelegramLongPollingBot {
                     .header(CONTENT_TYPE_HEADER, CONTENT_TYPE)
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
-        System.out.println(request);
+        HttpResponse<String> response;
         try {
-            httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             throw new LoginException("Couldn't login via telegram with root cause:"
                     + e.getCause() + e.getMessage());
         }
+        return String.valueOf(response.statusCode());
     }
 
     private String setActionTokenForCurrentRequest(String phoneNumber) {
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACTION);
-        String token = jwtAbstractUtil.generateToken(phoneNumber);
+        String token = jwtAbstractUtil.generateToken(randomStringUtil
+                .generateRandomString(RANDOM_ACTION_JWT_STRENGTH));
         ActionToken actionToken = new ActionToken();
         actionToken.setActionToken(token);
         actionTokenRepository.save(actionToken);
@@ -180,10 +198,10 @@ public class BudgetAppBot extends TelegramLongPollingBot {
                                         String phoneNumber, String password) {
         return "First name: " + firstName + System.lineSeparator()
                 + "Last name: " + lastName + System.lineSeparator()
-                + "Phone number: " + phoneNumber + System.lineSeparator()
-                + "Password: " + password + System.lineSeparator()
-                + "You can use your phone number " + System.lineSeparator()
-                + "and password to login" + System.lineSeparator();
+                + "Phone number: " + "`" + phoneNumber + "`" + System.lineSeparator()
+                + "Password: " + "`" + password + "`" + System.lineSeparator()
+                + "You can use your phone number and password to login\\." + System.lineSeparator()
+                + "Just click on them to copy\\!";
     }
 
     private String formRequestBody(String firstName, String lastName, String phoneNumber,
@@ -198,5 +216,13 @@ public class BudgetAppBot extends TelegramLongPollingBot {
                 phoneNumber,
                 password,
                 token);
+    }
+
+    private String getResponseFromController(String statusCode, String firstName,
+                                             String lastName, String phoneNumber, String password) {
+        if (statusCode.equals(CODE_200)) {
+            return formTelegramResponse(firstName, lastName, phoneNumber, password);
+        }
+        return FAILED;
     }
 }

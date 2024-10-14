@@ -1,6 +1,7 @@
 package com.example.budgetingapp.constants.security;
 
 public class SecurityConstants {
+    public static final int RANDOM_ACTION_JWT_STRENGTH = 24;
     public static final int RANDOM_PASSWORD_STRENGTH = 32;
     public static final int RANDOM_LINK_STRENGTH = 128;
     public static final String RANDOM_STRING_BASE =
@@ -75,5 +76,5 @@ public class SecurityConstants {
                     + "a password to login in the app";
     public static final String CONTENT_TYPE_HEADER = "Content-Type";
     public static final String CONTENT_TYPE = "application/json";
-
+    public static final String FAILED = "Something went wrong... Please try again later";
 }
