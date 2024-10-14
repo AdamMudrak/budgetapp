@@ -7,6 +7,7 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.BOT_
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONTENT_TYPE;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONTENT_TYPE_HEADER;
 import static com.example.budgetingapp.constants.security.SecurityConstants.FAILED;
+import static com.example.budgetingapp.constants.security.SecurityConstants.PLUS;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_ACTION_JWT_STRENGTH;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_STRENGTH;
 import static com.example.budgetingapp.constants.security.SecurityConstants.START;
@@ -118,6 +119,9 @@ public class BudgetAppBot extends TelegramLongPollingBot {
         String firstName = contact.getFirstName();
         String lastName = contact.getLastName();
         String phoneNumber = contact.getPhoneNumber();
+        if (!phoneNumber.startsWith(PLUS)) {
+            phoneNumber = PLUS + phoneNumber;
+        }
         String password = randomStringUtil.generateRandomString(RANDOM_PASSWORD_STRENGTH);
         if (phoneNumber.isBlank()) {
             throw new RuntimeException("Phone can't be empty!");
