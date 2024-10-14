@@ -8,6 +8,7 @@ import com.example.budgetingapp.dtos.user.request.UserGetLinkToSetRandomPassword
 import com.example.budgetingapp.dtos.user.request.UserLoginRequestDto;
 import com.example.budgetingapp.dtos.user.request.UserRegistrationRequestDto;
 import com.example.budgetingapp.dtos.user.request.UserSetNewPasswordRequestDto;
+import com.example.budgetingapp.dtos.user.response.AccessTokenResponseDto;
 import com.example.budgetingapp.dtos.user.response.TelegramAuthenticationResponseDto;
 import com.example.budgetingapp.dtos.user.response.UserLoginResponseDto;
 import com.example.budgetingapp.dtos.user.response.UserPasswordResetResponseDto;
@@ -127,5 +128,14 @@ public class AuthController {
     public TelegramAuthenticationResponseDto telegramAuth(@RequestBody @Valid
                               TelegramAuthenticationRequestDto telegramAuthenticationRequestDto) {
         return telegramAuthenticationService.registerOrLogin(telegramAuthenticationRequestDto);
+    }
+
+    @Operation(summary = AuthControllerConstants.REFRESH_ACCESS_TOKEN_SUMMARY)
+    @ApiResponse(responseCode = Constants.CODE_200, description =
+            AuthControllerConstants.SUCCESSFULLY_REFRESHED_TOKEN)
+    @ApiResponse(responseCode = Constants.CODE_403, description = Constants.ACCESS_DENIED)
+    @PostMapping(AuthControllerConstants.REFRESH_ACCESS_TOKEN)
+    public AccessTokenResponseDto refreshToken(HttpServletRequest httpServletRequest) {
+        return authenticationService.refreshToken(httpServletRequest);
     }
 }
