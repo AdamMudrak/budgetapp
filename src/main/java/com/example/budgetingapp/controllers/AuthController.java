@@ -126,6 +126,6 @@ public class AuthController {
     @PostMapping(AuthControllerConstants.TELEGRAM_AUTH)
     public TelegramAuthenticationResponseDto telegramAuth(@RequestBody @Valid
                               TelegramAuthenticationRequestDto telegramAuthenticationRequestDto) {
-        return telegramAuthenticationService.register(telegramAuthenticationRequestDto);
+        return telegramAuthenticationService.registerOrLogin(telegramAuthenticationRequestDto);
     }
 }
