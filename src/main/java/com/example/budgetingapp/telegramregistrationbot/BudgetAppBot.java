@@ -87,7 +87,9 @@ public class BudgetAppBot extends TelegramLongPollingBot {
             }
         } else if (update.hasMessage()
                 && update.getMessage().hasContact()) {
-            handleContact(update.getMessage().getContact());
+            if (isBotActive) {
+                handleContact(update.getMessage().getContact());
+            }
         }
     }
 
@@ -165,7 +167,7 @@ public class BudgetAppBot extends TelegramLongPollingBot {
                                             String lastName,
                                             String phoneNumber,
                                             String password) {
-        String token = setActionTokenForCurrentRequest(phoneNumber);
+        String token = setActionTokenForCurrentRequest();
         String requestBody = formRequestBody(firstName, lastName, phoneNumber,
                     password, token);
 
@@ -184,7 +186,7 @@ public class BudgetAppBot extends TelegramLongPollingBot {
         return String.valueOf(response.statusCode());
     }
 
-    private String setActionTokenForCurrentRequest(String phoneNumber) {
+    private String setActionTokenForCurrentRequest() {
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACTION);
         String token = jwtAbstractUtil.generateToken(randomStringUtil
                 .generateRandomString(RANDOM_ACTION_JWT_STRENGTH));
