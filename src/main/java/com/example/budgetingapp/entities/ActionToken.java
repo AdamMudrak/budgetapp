@@ -1,5 +1,7 @@
 package com.example.budgetingapp.entities;
 
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.ACTION_TOKENS;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "action_tokens")
+@Table(name = ACTION_TOKENS)
 public class ActionToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

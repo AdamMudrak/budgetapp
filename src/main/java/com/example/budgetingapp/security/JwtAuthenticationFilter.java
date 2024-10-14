@@ -4,8 +4,8 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.ACCE
 import static com.example.budgetingapp.constants.security.SecurityConstants.BEGIN_INDEX;
 
 import com.example.budgetingapp.constants.controllers.AuthControllerConstants;
-import com.example.budgetingapp.security.jwtutils.JwtStrategy;
 import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
+import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

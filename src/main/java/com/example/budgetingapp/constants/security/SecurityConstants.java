@@ -1,7 +1,6 @@
 package com.example.budgetingapp.constants.security;
 
 public class SecurityConstants {
-    public static final String TELEGRAM_TOKEN = "7412278941:AAEQXPsnrLU2eg7MPZrrIA7BlQcnHo0EBis";
     public static final int RANDOM_PASSWORD_STRENGTH = 32;
     public static final int RANDOM_LINK_STRENGTH = 128;
     public static final String RANDOM_STRING_BASE =
@@ -65,7 +64,7 @@ public class SecurityConstants {
             + "registration purposes. You'll then receive"
             + System.lineSeparator()
             + "a password to login in the app";
-    public static final String TOKEN = "7412278941:AAEQXPsnrLU2eg7MPZrrIA7BlQcnHo0EBis";
+    public static final String TOKEN = "${telegram.bot.token}";
 
     public static final String SUCCESS_EMAIL = "An email with reset link has been sent";
 }
