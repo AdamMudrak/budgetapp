@@ -3,6 +3,7 @@ package com.example.budgetingapp.security.services;
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACCESS;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_STRENGTH;
+import static com.example.budgetingapp.constants.security.SecurityConstants.REFRESH;
 import static com.example.budgetingapp.constants.security.SecurityConstants.REGISTERED_BUT_NOT_ACTIVATED;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RESET;
 import static com.example.budgetingapp.constants.security.SecurityConstants.SUCCESSFUL_CHANGE_MESSAGE;
@@ -52,8 +53,10 @@ public class AuthenticationService {
                         new UsernamePasswordAuthenticationToken(
                                 requestDto.email(), requestDto.password()));
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
-        String token = jwtAbstractUtil.generateToken(authentication.getName());
-        return new UserLoginResponseDto(token);
+        String accessToken = jwtAbstractUtil.generateToken(authentication.getName());
+        jwtAbstractUtil = jwtStrategy.getStrategy(REFRESH);
+        String refreshToken = jwtAbstractUtil.generateToken(authentication.getName());
+        return new UserLoginResponseDto(accessToken, refreshToken);
     }
 
     public UserPasswordResetResponseDto initiatePasswordReset(String email) {
