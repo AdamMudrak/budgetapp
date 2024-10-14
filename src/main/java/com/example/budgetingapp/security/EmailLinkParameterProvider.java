@@ -5,8 +5,8 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.RAND
 
 import com.example.budgetingapp.entities.ParamToken;
 import com.example.budgetingapp.repositories.paramtoken.ParamTokenRepository;
-import com.example.budgetingapp.security.jwtutils.JwtStrategy;
 import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
+import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

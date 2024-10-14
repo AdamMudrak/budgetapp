@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @RequiredArgsConstructor
 public class RandomParamFromHttpRequestUtil {
+    private static final int FIRST_PARAM_POSITION = 0;
     private final ParamTokenRepository paramTokenRepository;
     private String randomParameter;
     private String token;
@@ -23,7 +24,7 @@ public class RandomParamFromHttpRequestUtil {
         Map<String, String[]> parameterMap = request.getParameterMap();
         for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
             setRandomParameter(entry.getKey());
-            setToken(entry.getValue()[0]);
+            setToken(entry.getValue()[FIRST_PARAM_POSITION]);
             break;
         }
     }

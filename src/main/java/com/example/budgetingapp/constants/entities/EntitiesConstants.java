@@ -1,6 +1,8 @@
 package com.example.budgetingapp.constants.entities;
 
 public class EntitiesConstants {
+    public static final String ACTION_TOKENS = "action_tokens";
+
     public static final String PARAM_TOKENS = "param_tokens";
 
     public static final String ROLES = "roles";

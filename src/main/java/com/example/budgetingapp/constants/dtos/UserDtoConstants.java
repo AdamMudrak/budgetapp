@@ -1,6 +1,8 @@
 package com.example.budgetingapp.constants.dtos;
 
 public class UserDtoConstants {
+    public static final String USER_NAME = "userName";
+    public static final String USER_NAME_EXAMPLE = "example@gmail.com / +380630000000";
     public static final String EMAIL = "email";
     public static final String EMAIL_EXAMPLE = "example@gmail.com";
 

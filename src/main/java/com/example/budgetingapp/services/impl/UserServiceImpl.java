@@ -16,9 +16,8 @@ import com.example.budgetingapp.mappers.UserMapper;
 import com.example.budgetingapp.repositories.paramtoken.ParamTokenRepository;
 import com.example.budgetingapp.repositories.role.RoleRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
-import com.example.budgetingapp.security.jwtutils.JwtStrategy;
 import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
-import com.example.budgetingapp.services.MessageService;
+import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
 import com.example.budgetingapp.services.UserService;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -34,21 +33,21 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtStrategy jwtStrategy;
-    private final MessageService messageService;
+    private final PasswordEmailService passwordEmailService;
 
     @Override
     public UserRegistrationResponseDto register(UserRegistrationRequestDto requestDto)
             throws RegistrationException {
-        if (userRepository.existsByEmail(requestDto.email())) {
+        if (userRepository.existsByUserName(requestDto.userName())) {
             throw new RegistrationException("User with email "
-                    + requestDto.email() + " already exists");
+                    + requestDto.userName() + " already exists");
         }
         User user = userMapper.toUser(requestDto);
         assignUserRole(user);
         user.setPassword(passwordEncoder.encode(requestDto.password()));
         userRepository.save(user);
 
-        messageService.sendActionMessage(user.getEmail(), CONFIRMATION);
+        passwordEmailService.sendActionMessage(user.getUsername(), CONFIRMATION);
         return new UserRegistrationResponseDto(REGISTERED);
     }
 
@@ -56,7 +55,7 @@ public class UserServiceImpl implements UserService {
     public UserRegistrationResponseDto confirmRegistration(String token) {
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACTION);
         String email = jwtAbstractUtil.getUsername(token);
-        User user = userRepository.findByEmail(email).orElseThrow(
+        User user = userRepository.findByUserName(email).orElseThrow(
                 () -> new EntityNotFoundException("User with email "
                         + email + " was not found"));
         user.setEnabled(true);

@@ -1,4 +1,4 @@
-package com.example.budgetingapp.security.jwtutils;
+package com.example.budgetingapp.security.jwtutils.strategy;
 
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACCESS;
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACTION;

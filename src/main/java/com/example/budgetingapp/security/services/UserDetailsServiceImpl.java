@@ -1,4 +1,4 @@
-package com.example.budgetingapp.security.services.impl;
+package com.example.budgetingapp.security.services;
 
 import com.example.budgetingapp.exceptions.EntityNotFoundException;
 import com.example.budgetingapp.repositories.user.UserRepository;
@@ -14,7 +14,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException(
+        return userRepository.findByUserName(email).orElseThrow(() -> new EntityNotFoundException(
                 "Can't find user by email " + email));
     }
 }
