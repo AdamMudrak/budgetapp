@@ -1,6 +1,7 @@
 package com.example.budgetingapp.constants.security;
 
 public class SecurityConstants {
+    public static final String PLUS = "+";
     public static final int RANDOM_ACTION_JWT_STRENGTH = 24;
     public static final int RANDOM_PASSWORD_STRENGTH = 32;
     public static final int RANDOM_LINK_STRENGTH = 128;
