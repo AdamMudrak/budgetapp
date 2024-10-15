@@ -4,12 +4,15 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.ACCE
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_STRENGTH;
 import static com.example.budgetingapp.constants.security.SecurityConstants.REFRESH;
+import static com.example.budgetingapp.constants.security.SecurityConstants.REFRESH_TOKEN;
 import static com.example.budgetingapp.constants.security.SecurityConstants.REGISTERED_BUT_NOT_ACTIVATED;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RESET;
 import static com.example.budgetingapp.constants.security.SecurityConstants.SUCCESSFUL_CHANGE_MESSAGE;
 import static com.example.budgetingapp.constants.security.SecurityConstants.SUCCESSFUL_RESET_MSG;
 import static com.example.budgetingapp.constants.security.SecurityConstants.SUCCESS_EMAIL;
 
+import com.example.budgetingapp.constants.controllers.AuthControllerConstants;
+import com.example.budgetingapp.constants.security.SecurityConstants;
 import com.example.budgetingapp.dtos.user.request.UserLoginRequestDto;
 import com.example.budgetingapp.dtos.user.request.UserSetNewPasswordRequestDto;
 import com.example.budgetingapp.dtos.user.response.AccessTokenResponseDto;
@@ -33,11 +36,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 @Component
 @RequiredArgsConstructor
@@ -91,8 +96,9 @@ public class AuthenticationService {
         return new UserPasswordResetResponseDto(SUCCESSFUL_RESET_MSG);
     }
 
-    public UserPasswordResetResponseDto changePassword(String token,
-                                 UserSetNewPasswordRequestDto userSetNewPasswordRequestDto) {
+    public UserPasswordResetResponseDto changePassword(HttpServletRequest httpServletRequest,
+                                       UserSetNewPasswordRequestDto userSetNewPasswordRequestDto) {
+        String token = parseToken(httpServletRequest);
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
         String email = jwtAbstractUtil.getUsername(token);
         User user = userRepository.findByUserName(email).orElseThrow(() ->
@@ -146,8 +152,17 @@ public class AuthenticationService {
 
     private Cookie findRefreshCookie(HttpServletRequest httpServletRequest) {
         return Arrays.stream(httpServletRequest.getCookies())
-                .filter(refreshCookie -> refreshCookie.getName().equals("refreshToken"))
+                .filter(refreshCookie -> refreshCookie.getName().equals(REFRESH_TOKEN))
                 .findFirst()
                 .orElseThrow(() -> new EntityNotFoundException("Couldn't find RT in cookies"));
+    }
+
+    private String parseToken(HttpServletRequest httpServletRequest) {
+        String bearerToken = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
+        if (StringUtils.hasText(bearerToken) && bearerToken
+                .startsWith(AuthControllerConstants.BEARER)) {
+            bearerToken = bearerToken.substring(SecurityConstants.BEGIN_INDEX);
+        }
+        return bearerToken;
     }
 }
