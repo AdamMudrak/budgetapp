@@ -78,4 +78,5 @@ public class SecurityConstants {
     public static final String CONTENT_TYPE_HEADER = "Content-Type";
     public static final String CONTENT_TYPE = "application/json";
     public static final String FAILED = "Something went wrong... Please try again later";
+    public static final String REFRESH_TOKEN = "refreshToken";
 }

@@ -2,7 +2,6 @@ package com.example.budgetingapp.controllers;
 
 import com.example.budgetingapp.constants.Constants;
 import com.example.budgetingapp.constants.controllers.AuthControllerConstants;
-import com.example.budgetingapp.constants.security.SecurityConstants;
 import com.example.budgetingapp.dtos.user.request.TelegramAuthenticationRequestDto;
 import com.example.budgetingapp.dtos.user.request.UserGetLinkToSetRandomPasswordRequestDto;
 import com.example.budgetingapp.dtos.user.request.UserLoginRequestDto;
@@ -24,9 +23,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -111,12 +108,7 @@ public class AuthController {
     @PostMapping(AuthControllerConstants.CHANGE_PASSWORD)
     public UserPasswordResetResponseDto changePassword(HttpServletRequest httpServletRequest,
                                  @RequestBody @Valid UserSetNewPasswordRequestDto request) {
-        String bearerToken = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        if (StringUtils.hasText(bearerToken) && bearerToken
-                .startsWith(AuthControllerConstants.BEARER)) {
-            bearerToken = bearerToken.substring(SecurityConstants.BEGIN_INDEX);
-        }
-        return authenticationService.changePassword(bearerToken, request);
+        return authenticationService.changePassword(httpServletRequest, request);
     }
 
     @Operation(summary = AuthControllerConstants.TELEGRAM_AUTH_SUMMARY)
