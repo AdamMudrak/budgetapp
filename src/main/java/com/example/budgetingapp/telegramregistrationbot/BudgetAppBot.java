@@ -28,7 +28,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -43,13 +45,13 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Component
 public class BudgetAppBot extends TelegramLongPollingBot {
+    private static final Set<Long> stoppedUserIds = new HashSet<>();
     private static final HttpClient httpClient = HttpClient.newHttpClient();
     private final RandomStringUtil randomStringUtil;
     private final ActionTokenRepository actionTokenRepository;
     private final JwtStrategy jwtStrategy;
     @Value(BOT_TO_SERVER_URI)
     private String botToServerUri;
-    private boolean isBotActive;
 
     public BudgetAppBot(@Value(TOKEN) String token,
                         @Autowired RandomStringUtil randomStringUtil,
@@ -69,27 +71,25 @@ public class BudgetAppBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage()
-                && update.getMessage().hasText()) {
-            String command = update.getMessage().getText();
-            switch (command) {
-                case START -> {
-                    isBotActive = true;
+        if (update.hasMessage()) {
+            Long currentUserId = update.getMessage().getChatId();
+            if (update.getMessage().hasText()) {
+                String currentUserMessage = update.getMessage().getText();
+                if (currentUserMessage.equals(START)) {
+                    stoppedUserIds.remove(currentUserId);
                     requestContact(update);
-                }
-                case STOP -> {
-                    if (isBotActive) {
-                        isBotActive = false;
+                } else if (!stoppedUserIds.contains(currentUserId)) {
+                    if (currentUserMessage.equals(STOP)) {
+                        stoppedUserIds.add(currentUserId);
                         handleStop(update);
+                    } else {
+                        handleUnknownCommand(update);
                     }
                 }
-                default -> handleUnknownCommand(update);
-
-            }
-        } else if (update.hasMessage()
-                && update.getMessage().hasContact()) {
-            if (isBotActive) {
-                handleContact(update.getMessage().getContact());
+            } else if (update.getMessage().hasContact()) {
+                if (!stoppedUserIds.contains(currentUserId)) {
+                    handleContact(update.getMessage().getContact());
+                }
             }
         }
     }
@@ -116,8 +116,6 @@ public class BudgetAppBot extends TelegramLongPollingBot {
     }
 
     private void handleContact(Contact contact) {
-        String firstName = contact.getFirstName();
-        String lastName = contact.getLastName();
         String phoneNumber = contact.getPhoneNumber();
         if (!phoneNumber.startsWith(PLUS)) {
             phoneNumber = PLUS + phoneNumber;
@@ -126,9 +124,8 @@ public class BudgetAppBot extends TelegramLongPollingBot {
         if (phoneNumber.isBlank()) {
             throw new RuntimeException("Phone can't be empty!");
         }
-        String statusCode = sendRegisterOrLoginRequest(firstName, lastName, phoneNumber, password);
-        String response = getResponseFromController(statusCode, firstName,
-                lastName, phoneNumber, password);
+        String statusCode = sendRegisterOrLoginRequest(phoneNumber, password);
+        String response = getResponseFromController(statusCode, phoneNumber, password);
         sendMarkedDownMessage(contact.getUserId(), response);
     }
 
@@ -137,9 +134,6 @@ public class BudgetAppBot extends TelegramLongPollingBot {
     }
 
     private void handleUnknownCommand(Update update) {
-        if (!isBotActive) {
-            return;
-        }
         sendMessage(update.getMessage().getChatId(),
                 UNKNOWN_COMMAND);
     }
@@ -167,12 +161,10 @@ public class BudgetAppBot extends TelegramLongPollingBot {
         }
     }
 
-    private String sendRegisterOrLoginRequest(String firstName,
-                                            String lastName,
-                                            String phoneNumber,
+    private String sendRegisterOrLoginRequest(String phoneNumber,
                                             String password) {
         String token = setActionTokenForCurrentRequest();
-        String requestBody = formRequestBody(firstName, lastName, phoneNumber,
+        String requestBody = formRequestBody(phoneNumber,
                     password, token);
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -200,34 +192,31 @@ public class BudgetAppBot extends TelegramLongPollingBot {
         return token;
     }
 
-    private String formTelegramResponse(String firstName, String lastName,
-                                        String phoneNumber, String password) {
-        return "First name: " + firstName + System.lineSeparator()
-                + "Last name: " + lastName + System.lineSeparator()
-                + "Phone number: " + "`" + phoneNumber + "`" + System.lineSeparator()
+    private String formTelegramResponse(String phoneNumber, String password) {
+        return "Login: " + "`" + phoneNumber + "`" + System.lineSeparator()
                 + "Password: " + "`" + password + "`" + System.lineSeparator()
                 + "You can use your phone number and password to login\\." + System.lineSeparator()
-                + "Just click on them to copy\\!";
+                + "Just click on them to copy\\!"
+                + System.lineSeparator()
+                + "Don't forget to set your name when"
+                + System.lineSeparator()
+                + "already on the website\\!";
     }
 
-    private String formRequestBody(String firstName, String lastName, String phoneNumber,
+    private String formRequestBody(String phoneNumber,
                                    String password, String token) {
-        return String.format("{\"firstName\": \"%s\", "
-                        + "\"lastName\": \"%s\", "
-                        + "\"userName\": \"%s\", "
+        return String.format("{\"userName\": \"%s\", "
                         + "\"password\": \"%s\", "
                         + "\"token\": \"%s\"}",
-                firstName,
-                lastName,
                 phoneNumber,
                 password,
                 token);
     }
 
-    private String getResponseFromController(String statusCode, String firstName,
-                                             String lastName, String phoneNumber, String password) {
+    private String getResponseFromController(String statusCode,
+                                             String phoneNumber, String password) {
         if (statusCode.equals(CODE_200)) {
-            return formTelegramResponse(firstName, lastName, phoneNumber, password);
+            return formTelegramResponse(phoneNumber, password);
         }
         return FAILED;
     }
