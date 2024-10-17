@@ -44,7 +44,7 @@ public class AuthControllerConstants {
     public static final String SUCCESSFULLY_CHANGE_PASSWORD = "Successfully changed password";
 
     public static final String TELEGRAM_AUTH_SUMMARY =
-            "Change password while being logged in, either using a random or your own password";
+            "Register or login using telegram";
     public static final String SUCCESSFULLY_AUTHENTICATED_VIA_TELEGRAM =
             "Successfully authenticated using telegram";
 
