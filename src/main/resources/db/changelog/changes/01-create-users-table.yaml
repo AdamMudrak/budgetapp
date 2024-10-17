@@ -30,11 +30,6 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: last_name
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
-              - column:
                   name: is_enabled
                   type: boolean
                   defaultValueBoolean: false
