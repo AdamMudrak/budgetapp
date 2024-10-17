@@ -52,7 +52,7 @@ public class AuthController {
         return userService.register(requestDto);
     }
 
-    @Operation(summary = AuthControllerConstants.CONFIRM_SUMMARY)
+    @Operation(summary = AuthControllerConstants.CONFIRM_SUMMARY, hidden = true)
     @ApiResponse(responseCode = Constants.CODE_200, description =
             AuthControllerConstants.SUCCESSFULLY_CONFIRMED)
     @ApiResponse(responseCode = Constants.CODE_403, description = Constants.ACCESS_DENIED)
@@ -85,7 +85,7 @@ public class AuthController {
         return authenticationService.initiatePasswordReset(request.email());
     }
 
-    @Operation(summary = AuthControllerConstants.RESET_PASSWORD_SUMMARY)
+    @Operation(summary = AuthControllerConstants.RESET_PASSWORD_SUMMARY, hidden = true)
     @ApiResponse(responseCode = Constants.CODE_200, description =
             AuthControllerConstants.SUCCESSFULLY_RESET_PASSWORD)
     @ApiResponse(responseCode = Constants.CODE_400, description = Constants.INVALID_ENTITY_VALUE)
@@ -111,7 +111,7 @@ public class AuthController {
         return authenticationService.changePassword(httpServletRequest, request);
     }
 
-    @Operation(summary = AuthControllerConstants.TELEGRAM_AUTH_SUMMARY)
+    @Operation(summary = AuthControllerConstants.TELEGRAM_AUTH_SUMMARY, hidden = true)
     @ApiResponse(responseCode = Constants.CODE_200, description =
             AuthControllerConstants.SUCCESSFULLY_AUTHENTICATED_VIA_TELEGRAM)
     @ApiResponse(responseCode = Constants.CODE_400, description = Constants.INVALID_ENTITY_VALUE)
@@ -122,7 +122,7 @@ public class AuthController {
         return telegramAuthenticationService.registerOrLogin(telegramAuthenticationRequestDto);
     }
 
-    @Operation(summary = AuthControllerConstants.REFRESH_ACCESS_TOKEN_SUMMARY)
+    @Operation(summary = AuthControllerConstants.REFRESH_ACCESS_TOKEN_SUMMARY, hidden = true)
     @ApiResponse(responseCode = Constants.CODE_200, description =
             AuthControllerConstants.SUCCESSFULLY_REFRESHED_TOKEN)
     @ApiResponse(responseCode = Constants.CODE_403, description = Constants.ACCESS_DENIED)

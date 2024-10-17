@@ -29,9 +29,6 @@ public class UserDtoConstants {
     public static final String FIRST_NAME = "firstName";
     public static final String FIRST_NAME_EXAMPLE = "John";
 
-    public static final String LAST_NAME = "lastName";
-    public static final String LAST_NAME_EXAMPLE = "Wick";
-
     public static final int MIN_PASSWORD_SIZE = 8;
     public static final int MAX_PASSWORD_SIZE = 32;
 }

@@ -62,19 +62,18 @@ public class SecurityConstants {
     public static final String START = "/start";
     public static final String STOP = "/stop";
     public static final String STOPPED_SUCCESS = "The bot has been stopped!";
-    public static final String UNKNOWN_COMMAND = "Unknown command. Please use /start, or /stop.";
+    public static final String UNKNOWN_COMMAND = "Unknown command. Please use /start, "
+            + "or /stop commands or \"Share\" button";
     public static final String TELEGRAM_REGISTRATION =
-            "To register in our app, you'll need"
+            "To register or login in our app, you'll need"
                     + System.lineSeparator()
-                    + "to share your data with us, specifically:"
-                    + System.lineSeparator()
-                    + "your phone number, name, last name"
+                    + "to share your phone number with us."
                     + System.lineSeparator()
                     + "This data is going to be used only in"
                     + System.lineSeparator()
                     + "registration purposes. You'll then receive"
                     + System.lineSeparator()
-                    + "a password to login in the app";
+                    + "a password to login in the app.";
     public static final String CONTENT_TYPE_HEADER = "Content-Type";
     public static final String CONTENT_TYPE = "application/json";
     public static final String FAILED = "Something went wrong... Please try again later";
