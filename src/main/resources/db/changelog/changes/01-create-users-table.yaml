@@ -27,8 +27,6 @@ databaseChangeLog:
               - column:
                   name: first_name
                   type: varchar(255)
-                  constraints:
-                    nullable: false
               - column:
                   name: is_enabled
                   type: boolean
