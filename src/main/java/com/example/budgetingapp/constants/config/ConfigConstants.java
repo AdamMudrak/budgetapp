@@ -7,7 +7,8 @@ public class ConfigConstants {
     public static final String SECURITY_SCHEME = "bearer";
     public static final String BEARER_FORMAT = "JWT";
 
-    public static final String ALLOWED_ORIGINS = "*";
+    public static final String FRONT_END_LOCAL_ALLOWED = "${frontend.local-allowed}";
+    public static final String FRONT_END_REMOTE_ALLOWED = "${frontend.remote-allowed}";
     public static final String ALLOWED_METHODS = "*";
     public static final String ALLOWED_HEADERS = "*";
 

@@ -2,6 +2,7 @@ package com.example.budgetingapp.constants.security;
 
 public class SecurityConstants {
     public static final String PLUS = "+";
+    public static final int STRENGTH = 10;
     public static final int RANDOM_ACTION_JWT_STRENGTH = 24;
     public static final int RANDOM_PASSWORD_STRENGTH = 32;
     public static final int RANDOM_LINK_STRENGTH = 128;
@@ -57,7 +58,7 @@ public class SecurityConstants {
     public static final String SUCCESS_EMAIL = "An email with reset link has been sent";
 
     public static final String TOKEN = "${telegram.bot.token}";
-    public static final String BOT_TO_SERVER_URI = "${bot.to.server.uri}";
+    public static final String BOT_TO_SERVER_REQUEST_URI = "${bot-to-server-request-uri}";
     public static final String BOT_NAME = "BudgetApplicationBot";
     public static final String START = "/start";
     public static final String STOP = "/stop";

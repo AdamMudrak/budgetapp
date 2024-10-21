@@ -15,7 +15,7 @@ import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @FieldRegisterMatch
 public record UserRegistrationRequestDto(
-        @JsonAlias("email")
+        @JsonAlias(UserDtoConstants.EMAIL)
         @Schema(name = UserDtoConstants.EMAIL,
         example = UserDtoConstants.EMAIL_EXAMPLE,
         requiredMode = REQUIRED)
