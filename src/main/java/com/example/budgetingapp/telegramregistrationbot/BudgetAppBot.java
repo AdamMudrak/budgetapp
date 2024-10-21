@@ -3,7 +3,7 @@ package com.example.budgetingapp.telegramregistrationbot;
 import static com.example.budgetingapp.constants.Constants.CODE_200;
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACTION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.BOT_NAME;
-import static com.example.budgetingapp.constants.security.SecurityConstants.BOT_TO_SERVER_URI;
+import static com.example.budgetingapp.constants.security.SecurityConstants.BOT_TO_SERVER_REQUEST_URI;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONTENT_TYPE;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONTENT_TYPE_HEADER;
 import static com.example.budgetingapp.constants.security.SecurityConstants.FAILED;
@@ -50,8 +50,8 @@ public class BudgetAppBot extends TelegramLongPollingBot {
     private final RandomStringUtil randomStringUtil;
     private final ActionTokenRepository actionTokenRepository;
     private final JwtStrategy jwtStrategy;
-    @Value(BOT_TO_SERVER_URI)
-    private String botToServerUri;
+    @Value(BOT_TO_SERVER_REQUEST_URI)
+    private String botToServerRequestUri;
 
     public BudgetAppBot(@Value(TOKEN) String token,
                         @Autowired RandomStringUtil randomStringUtil,
@@ -168,7 +168,7 @@ public class BudgetAppBot extends TelegramLongPollingBot {
                     password, token);
 
         HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(botToServerUri))
+                    .uri(URI.create(botToServerRequestUri))
                     .header(CONTENT_TYPE_HEADER, CONTENT_TYPE)
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
