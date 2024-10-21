@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface ActionTokenRepository extends JpaRepository<ActionToken, Long> {
-    @Query("SELECT DISTINCT actionToken "
+    @Query("SELECT actionToken "
             + "FROM ActionToken actionToken "
             + "WHERE actionToken.actionToken = :actionToken")
     Optional<ActionToken> findByActionToken(String actionToken);
