@@ -2,6 +2,8 @@ package com.example.budgetingapp.config;
 
 import static com.example.budgetingapp.constants.config.ConfigConstants.FRONT_END_LOCAL_ALLOWED;
 import static com.example.budgetingapp.constants.config.ConfigConstants.FRONT_END_REMOTE_ALLOWED;
+import static com.example.budgetingapp.constants.config.ConfigConstants.POSTMAN_REMOTE_ALLOWED;
+import static com.example.budgetingapp.constants.config.ConfigConstants.SWAGGER_REMOTE_ALLOWED;
 import static com.example.budgetingapp.constants.security.SecurityConstants.STRENGTH;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
@@ -35,19 +37,26 @@ public class SecurityConfig {
     private String frontendLocalAllowed;
     @Value(FRONT_END_REMOTE_ALLOWED)
     private String frontendRemoteAllowed;
+    @Value(POSTMAN_REMOTE_ALLOWED)
+    private String postmanRemoteAllowed;
+    //TODO to be deleted before production
+    @Value(SWAGGER_REMOTE_ALLOWED)
+    private String swaggerRemoteAllowed;
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder(STRENGTH);
     }
 
-    //TODO Изменить источник, методы, хедеры только на используемые
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of());
+                    config.setAllowedOrigins(List.of(frontendLocalAllowed,
+                            frontendRemoteAllowed,
+                            postmanRemoteAllowed,
+                            swaggerRemoteAllowed));
                     config.setAllowCredentials(true);
                     config.setAllowedMethods(List.of(ConfigConstants.ALLOWED_METHODS));
                     config.setAllowedHeaders(List.of(ConfigConstants.ALLOWED_HEADERS));

@@ -9,6 +9,8 @@ public class ConfigConstants {
 
     public static final String FRONT_END_LOCAL_ALLOWED = "${frontend.local-allowed}";
     public static final String FRONT_END_REMOTE_ALLOWED = "${frontend.remote-allowed}";
+    public static final String POSTMAN_REMOTE_ALLOWED = "${postman.remote-allowed}";
+    public static final String SWAGGER_REMOTE_ALLOWED = "${swagger.remote-allowed}";
     public static final String ALLOWED_METHODS = "*";
     public static final String ALLOWED_HEADERS = "*";
 
