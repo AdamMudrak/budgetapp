@@ -5,8 +5,13 @@ databaseChangeLog:
       changes:
       - sql:
           sql: |
-            INSERT INTO users (user_name, password, first_name)
+            INSERT INTO users (user_name, password, first_name, is_enabled)
             VALUES
             ('budgetapp.reset@gmail.com',
             '$2a$10$W0hIFSUlyoGpl5hQWaN7Veeox6/mFS1XA913kR3Ob98IVtHzT4sKC',
-            'Admin');
+            'Admin',
+            1),
+            ('example@gmail.com',
+            '$2a$10$FaR2Z8Lir3ymrTlBxwYOhexUVRexFWyLNM6pMVpTRh1mayooTnQum',
+            'Example',
+            1);
