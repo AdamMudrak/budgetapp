@@ -15,3 +15,5 @@ databaseChangeLog:
       file: db/changelog/changes/07-create-param-tokens-table.yaml
   - include:
       file: db/changelog/changes/08-create-action-tokens-table.yaml
+  - include:
+      file: db/changelog/changes/09-create-accounts-table.yaml
