@@ -56,7 +56,9 @@ public class SecurityConfig {
                     config.setAllowedOrigins(List.of(frontendLocalAllowed,
                             frontendRemoteAllowed,
                             postmanRemoteAllowed,
-                            swaggerRemoteAllowed));
+                            swaggerRemoteAllowed,
+                            "http://localhost:8080" //TODO needs to be commented before deploy build
+                    ));
                     config.setAllowCredentials(true);
                     config.setAllowedMethods(List.of(ConfigConstants.ALLOWED_METHODS));
                     config.setAllowedHeaders(List.of(ConfigConstants.ALLOWED_HEADERS));
