@@ -32,6 +32,7 @@ import com.example.budgetingapp.services.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -57,7 +58,7 @@ public class AccountController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PostMapping(ADD_ACCOUNT)
     public AccountDto addAccount(@AuthenticationPrincipal User user,
-            @RequestBody CreateAccountDto createAccountDto) {
+            @RequestBody @Valid CreateAccountDto createAccountDto) {
         return accountService.saveAccount(user.getId(), createAccountDto);
     }
 
@@ -66,7 +67,7 @@ public class AccountController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PutMapping(UPDATE_ACCOUNT)
     public AccountDto updateAccount(@AuthenticationPrincipal User user,
-                                    @RequestBody UpdateAccountDto updateAccountDto) {
+                                    @RequestBody @Valid UpdateAccountDto updateAccountDto) {
         return accountService.updateAccountName(user.getId(), updateAccountDto);
     }
 
@@ -89,7 +90,7 @@ public class AccountController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PutMapping(SET_ACCOUNT_BY_DEFAULT)
     public AccountDto setAccountByDefault(@AuthenticationPrincipal User user,
-                                    @RequestBody SetAccountAsDefaultDto defaultDto) {
+                                    @RequestBody @Valid SetAccountAsDefaultDto defaultDto) {
         return accountService.setAccountByDefault(user.getId(), defaultDto);
     }
 }
