@@ -27,13 +27,13 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDto saveAccount(Long userId, CreateAccountDto requestDto) {
+        User currentUser = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "No user with id " + userId + " found"));
         if (accountRepository.existsByUserIdAndName(userId, requestDto.name())) {
             throw new AlreadyExistsException("You already have account named "
                     + requestDto.name());
         }
-        User currentUser = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "No user with id " + userId + " found"));
         Account newAccount = accountMapper.toAccount(requestDto);
         newAccount.setUser(currentUser);
         if (!accountRepository.existsByUserIdAndByDefault(userId, true)) {
@@ -48,10 +48,11 @@ public class AccountServiceImpl implements AccountService {
             throw new AlreadyExistsException("You already have account named "
                     + requestDto.newName());
         }
-        Account account = accountRepository.findByUserIdAndAccountName(userId,
+        Account account = accountRepository.findByUserIdAndName(userId,
                         requestDto.currentName()).orElseThrow(
                                 () -> new EntityNotFoundException("No account with name "
                         + requestDto.currentName() + " was found"));
+        account.setName(requestDto.newName());
         return accountMapper.toDto(accountRepository.save(account));
     }
 
@@ -73,7 +74,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDto setAccountByDefault(Long userId, SetAccountAsDefaultDto requestDto) {
-        Account account = accountRepository.findByUserIdAndAccountName(userId, requestDto.name())
+        Account account = accountRepository.findByUserIdAndName(userId, requestDto.name())
                 .orElseThrow(() -> new EntityNotFoundException("No account with name "
                         + requestDto.name() + " was found"));
 
@@ -82,7 +83,7 @@ public class AccountServiceImpl implements AccountService {
             Account presentDefaultAccount = byDefault.get();
             if (presentDefaultAccount.getName().equals(requestDto.name())) {
                 throw new ConflictException("Account "
-                        + requestDto.name() + "is already set by default");
+                        + requestDto.name() + " is already set by default");
             }
             presentDefaultAccount.setByDefault(false);
             accountRepository.save(presentDefaultAccount);
