@@ -26,7 +26,7 @@ databaseChangeLog:
                     references: users(id)
               - column:
                   name: balance
-                  type: decimal(19,2)
+                  type: decimal(11,2)
                   constraints:
                     nullable: false
               - column:
