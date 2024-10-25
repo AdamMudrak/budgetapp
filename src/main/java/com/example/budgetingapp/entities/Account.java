@@ -2,6 +2,7 @@ package com.example.budgetingapp.entities;
 
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.ACCOUNTS;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.BOOLEAN_TO_INT;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.USER_ID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,7 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import lombok.Getter;
@@ -26,8 +27,8 @@ public class Account {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = USER_ID, nullable = false)
     private User user;
     @Column(nullable = false)
     private BigDecimal balance;
