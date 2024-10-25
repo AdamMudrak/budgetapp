@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-income-categories-table
+      author: AdamMudrak
+      changes:
+        - createTable:
+            tableName: income_categories
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_a_user_id
+                    references: users(id)

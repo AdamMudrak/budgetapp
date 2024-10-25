@@ -17,3 +17,11 @@ databaseChangeLog:
       file: db/changelog/changes/08-create-action-tokens-table.yaml
   - include:
       file: db/changelog/changes/09-create-accounts-table.yaml
+  - include:
+      file: db/changelog/changes/10-create-expenses-table.yaml
+  - include:
+      file: db/changelog/changes/11-create-incomes-table.yaml
+  - include:
+      file: db/changelog/changes/12-create-expense-categories-table.yaml
+  - include:
+      file: db/changelog/changes/13-create-income-categories-table.yaml
