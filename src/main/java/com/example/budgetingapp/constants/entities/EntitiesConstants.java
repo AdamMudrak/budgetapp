@@ -14,4 +14,7 @@ public class EntitiesConstants {
     public static final String USER_ID = "user_id";
     public static final String ROLE_ID = "role_id";
     public static final String BOOLEAN_TO_INT = "TINYINT(1)";
+
+    public static final String DEFAULT_ACCOUNT_NAME = "Default account";
+    public static final String DEFAULT_ACCOUNT_CURRENCY = "USD";
 }
