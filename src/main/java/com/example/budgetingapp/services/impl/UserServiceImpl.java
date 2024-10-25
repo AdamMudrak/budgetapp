@@ -10,9 +10,9 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.REGI
 import com.example.budgetingapp.dtos.user.request.UserRegistrationRequestDto;
 import com.example.budgetingapp.dtos.user.response.UserRegistrationResponseDto;
 import com.example.budgetingapp.entities.Account;
-import com.example.budgetingapp.entities.tokens.ParamToken;
 import com.example.budgetingapp.entities.Role;
 import com.example.budgetingapp.entities.User;
+import com.example.budgetingapp.entities.tokens.ParamToken;
 import com.example.budgetingapp.exceptions.EntityNotFoundException;
 import com.example.budgetingapp.exceptions.RegistrationException;
 import com.example.budgetingapp.mappers.UserMapper;
