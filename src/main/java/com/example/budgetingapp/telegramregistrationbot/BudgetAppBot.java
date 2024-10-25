@@ -17,7 +17,7 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.TELE
 import static com.example.budgetingapp.constants.security.SecurityConstants.TOKEN;
 import static com.example.budgetingapp.constants.security.SecurityConstants.UNKNOWN_COMMAND;
 
-import com.example.budgetingapp.entities.ActionToken;
+import com.example.budgetingapp.entities.tokens.ActionToken;
 import com.example.budgetingapp.exceptions.LoginException;
 import com.example.budgetingapp.repositories.actiontoken.ActionTokenRepository;
 import com.example.budgetingapp.security.RandomStringUtil;

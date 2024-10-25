@@ -4,7 +4,7 @@ import static com.example.budgetingapp.constants.controllers.AuthControllerConst
 
 import com.example.budgetingapp.dtos.user.request.TelegramAuthenticationRequestDto;
 import com.example.budgetingapp.dtos.user.response.TelegramAuthenticationResponseDto;
-import com.example.budgetingapp.entities.ActionToken;
+import com.example.budgetingapp.entities.tokens.ActionToken;
 import com.example.budgetingapp.entities.Role;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.exceptions.EntityNotFoundException;

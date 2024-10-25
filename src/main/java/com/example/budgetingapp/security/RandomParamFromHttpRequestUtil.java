@@ -1,6 +1,6 @@
 package com.example.budgetingapp.security;
 
-import com.example.budgetingapp.entities.ParamToken;
+import com.example.budgetingapp.entities.tokens.ParamToken;
 import com.example.budgetingapp.exceptions.ActionNotFoundException;
 import com.example.budgetingapp.repositories.paramtoken.ParamTokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
