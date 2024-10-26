@@ -18,10 +18,10 @@ databaseChangeLog:
   - include:
       file: db/changelog/changes/09-create-accounts-table.yaml
   - include:
-      file: db/changelog/changes/10-create-expenses-table.yaml
+      file: db/changelog/changes/10-create-expense-categories-table.yaml
   - include:
-      file: db/changelog/changes/11-create-incomes-table.yaml
+      file: db/changelog/changes/11-create-income-categories-table.yaml
   - include:
-      file: db/changelog/changes/12-create-expense-categories-table.yaml
+      file: db/changelog/changes/12-create-expenses-table.yaml
   - include:
-      file: db/changelog/changes/13-create-income-categories-table.yaml
+      file: db/changelog/changes/13-create-incomes-table.yaml
