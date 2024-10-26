@@ -16,7 +16,8 @@ public interface TransactionService {
     List<ResponseTransactionDto> getAllTransactions(Long userId, Pageable pageable);
     //HISTORY
 
-    List<ResponseTransactionDto> getAllAccountTransactions(Long userId, Long accountId, Pageable pageable);
+    List<ResponseTransactionDto> getAllAccountTransactions(
+            Long userId, Long accountId, Pageable pageable);
     //ACCOUNT HISTORY
 
     void deleteByTransactionId(Long userId, Long transactionId);
