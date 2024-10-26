@@ -20,13 +20,13 @@ databaseChangeLog:
                   name: account_id
                   type: bigint
                   constraints:
-                    foreignKeyName: fk_e_account_id
+                    foreignKeyName: fk_i_account_id
                     references: accounts(id)
               - column:
                   name: income_category_id
                   type: bigint
                   constraints:
-                    foreignKeyName: fk_i_income_id
+                    foreignKeyName: fk_i_category_id
                     references: income_categories(id)
               - column:
                   name: amount

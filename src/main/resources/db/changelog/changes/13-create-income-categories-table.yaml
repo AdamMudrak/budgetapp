@@ -22,5 +22,5 @@ databaseChangeLog:
                   name: user_id
                   type: bigint
                   constraints:
-                    foreignKeyName: fk_a_user_id
+                    foreignKeyName: fk_i_c_user_id
                     references: users(id)
