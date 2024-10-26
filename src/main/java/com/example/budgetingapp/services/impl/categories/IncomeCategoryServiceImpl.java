@@ -1,4 +1,4 @@
-package com.example.budgetingapp.services.impl.transactions.incomes;
+package com.example.budgetingapp.services.impl.categories;
 
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME;
 
