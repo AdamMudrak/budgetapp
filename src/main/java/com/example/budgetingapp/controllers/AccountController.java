@@ -24,7 +24,6 @@ import static com.example.budgetingapp.constants.controllers.AccountControllerCo
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.UPDATE_ACCOUNT_SUMMARY;
 
 import com.example.budgetingapp.dtos.account.request.CreateAccountDto;
-import com.example.budgetingapp.dtos.account.request.SetAccountAsDefaultDto;
 import com.example.budgetingapp.dtos.account.request.UpdateAccountDto;
 import com.example.budgetingapp.dtos.account.response.AccountDto;
 import com.example.budgetingapp.entities.User;
@@ -38,6 +37,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -67,8 +67,9 @@ public class AccountController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PutMapping(UPDATE_ACCOUNT)
     public AccountDto updateAccount(@AuthenticationPrincipal User user,
+                                    @PathVariable Long accountId,
                                     @RequestBody @Valid UpdateAccountDto updateAccountDto) {
-        return accountService.updateAccountName(user.getId(), updateAccountDto);
+        return accountService.updateAccountName(user.getId(), accountId, updateAccountDto);
     }
 
     @Operation(summary = GET_ALL_ACCOUNTS_SUMMARY)
@@ -90,7 +91,7 @@ public class AccountController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PutMapping(SET_ACCOUNT_BY_DEFAULT)
     public AccountDto setAccountByDefault(@AuthenticationPrincipal User user,
-                                    @RequestBody @Valid SetAccountAsDefaultDto defaultDto) {
-        return accountService.setAccountByDefault(user.getId(), defaultDto);
+                                          @PathVariable Long accountId) {
+        return accountService.setAccountByDefault(user.getId(), accountId);
     }
 }

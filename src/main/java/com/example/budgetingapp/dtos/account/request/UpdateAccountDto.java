@@ -9,11 +9,6 @@ import jakarta.validation.constraints.NotBlank;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record UpdateAccountDto(
-        @Schema(name = AccountDtoConstants.CURRENT_NAME,
-                example = AccountDtoConstants.NAME_EXAMPLE,
-                requiredMode = REQUIRED)
-        @NotBlank
-        String currentName,
         @Schema(name = AccountDtoConstants.NEW_NAME,
                 example = AccountDtoConstants.NEW_NAME_EXAMPLE,
                 requiredMode = REQUIRED)

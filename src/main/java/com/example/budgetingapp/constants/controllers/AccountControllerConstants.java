@@ -10,8 +10,8 @@ public class AccountControllerConstants {
     public static final String ACCOUNT = "/account";
     public static final String ADD_ACCOUNT = "/add-account";
     public static final String GET_ALL_ACCOUNTS = "/get-all-accounts";
-    public static final String UPDATE_ACCOUNT = "/update-account";
-    public static final String SET_ACCOUNT_BY_DEFAULT = "/set-account-by-default";
+    public static final String UPDATE_ACCOUNT = "/update-account/{accountId}";
+    public static final String SET_ACCOUNT_BY_DEFAULT = "/set-account-by-default/{accountId}";
     public static final String GET_ACCOUNT_BY_DEFAULT = "/get-account-by-default";
 
     public static final String ADD_ACCOUNT_SUMMARY = "Add a new user's account";
