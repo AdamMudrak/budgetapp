@@ -8,12 +8,15 @@ import static com.example.budgetingapp.constants.controllers.TransactionControll
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.ADD_INCOME_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.DELETE_INCOME_BY_ID;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.DELETE_INCOME_SUMMARY;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_ACCOUNT_INCOMES;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_ACCOUNT_INCOMES_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_INCOMES;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_INCOMES_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME_TRANSACTION_API_NAME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_ADDED_INCOME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_DELETED_INCOME;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_RETRIEVED_ACCOUNT_INCOMES;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_RETRIEVED_INCOMES;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_UPDATED_INCOME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSACTIONS;
@@ -70,9 +73,20 @@ public class IncomeTransactionController {
             SUCCESSFULLY_RETRIEVED_INCOMES)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @GetMapping(GET_ALL_INCOMES)
-    public List<ResponseTransactionDto> getAllIncomeTransactions(@PathVariable Long accountId,
+    public List<ResponseTransactionDto> getAllIncomeTransactions(@AuthenticationPrincipal User user,
                                                                  Pageable pageable) {
-        return incomeTransactionService.getAllTransactions(accountId, pageable);
+        return incomeTransactionService.getAllTransactions(user.getId(), pageable);
+    }
+
+    @Operation(summary = GET_ALL_ACCOUNT_INCOMES_SUMMARY)
+    @ApiResponse(responseCode = CODE_200, description =
+            SUCCESSFULLY_RETRIEVED_ACCOUNT_INCOMES)
+    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
+    @GetMapping(GET_ALL_ACCOUNT_INCOMES)
+    public List<ResponseTransactionDto> getAllAccountIncomeTransactions(
+            @AuthenticationPrincipal User user, @PathVariable Long accountId, Pageable pageable) {
+        return incomeTransactionService.getAllAccountTransactions(
+                user.getId(), accountId, pageable);
     }
 
     @Operation(summary = UPDATE_INCOME_SUMMARY)

@@ -10,10 +10,13 @@ import static com.example.budgetingapp.constants.controllers.TransactionControll
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.DELETE_EXPENSE_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.EXPENSE;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.EXPENSE_TRANSACTION_API_NAME;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_ACCOUNT_EXPENSES_SUMMARY;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_ACCOUNT_INCOMES;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_EXPENSES;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_EXPENSES_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_ADDED_EXPENSE;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_DELETED_EXPENSE;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_RETRIEVED_ACCOUNT_EXPENSES;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_RETRIEVED_EXPENSES;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_UPDATED_EXPENSE;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSACTIONS;
@@ -23,6 +26,7 @@ import static com.example.budgetingapp.constants.controllers.TransactionControll
 
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
+import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.services.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -31,6 +35,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,8 +64,9 @@ public class ExpenseTransactionController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PostMapping(ADD_EXPENSE)
     public ResponseTransactionDto addExpenseTransaction(
+            @AuthenticationPrincipal User user,
             @RequestBody RequestTransactionDto requestTransactionDto) {
-        return expenseTransactionService.saveTransaction(requestTransactionDto);
+        return expenseTransactionService.saveTransaction(user.getId(), requestTransactionDto);
     }
 
     @Operation(summary = GET_ALL_EXPENSES_SUMMARY)
@@ -68,9 +74,20 @@ public class ExpenseTransactionController {
             SUCCESSFULLY_RETRIEVED_EXPENSES)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @GetMapping(GET_ALL_EXPENSES)
-    public List<ResponseTransactionDto> getAllExpenseTransactions(@PathVariable Long accountId,
-                                                                  Pageable pageable) {
-        return expenseTransactionService.getAllTransactions(accountId, pageable);
+    public List<ResponseTransactionDto> getAllExpenseTransactions(
+            @AuthenticationPrincipal User user, Pageable pageable) {
+        return expenseTransactionService.getAllTransactions(user.getId(), pageable);
+    }
+
+    @Operation(summary = GET_ALL_ACCOUNT_EXPENSES_SUMMARY)
+    @ApiResponse(responseCode = CODE_200, description =
+            SUCCESSFULLY_RETRIEVED_ACCOUNT_EXPENSES)
+    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
+    @GetMapping(GET_ALL_ACCOUNT_INCOMES)
+    public List<ResponseTransactionDto> getAllAccountIncomeTransactions(
+            @AuthenticationPrincipal User user, @PathVariable Long accountId, Pageable pageable) {
+        return expenseTransactionService.getAllAccountTransactions(
+                user.getId(), accountId, pageable);
     }
 
     @Operation(summary = UPDATE_EXPENSE_SUMMARY)
@@ -79,9 +96,11 @@ public class ExpenseTransactionController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PutMapping(UPDATE_EXPENSE_BY_ID)
     public ResponseTransactionDto updateExpenseTransaction(
+            @AuthenticationPrincipal User user,
             @RequestBody RequestTransactionDto requestTransactionDto,
             @PathVariable Long transactionId) {
-        return expenseTransactionService.updateTransaction(requestTransactionDto, transactionId);
+        return expenseTransactionService.updateTransaction(
+                user.getId(), requestTransactionDto, transactionId);
     }
 
     @Operation(summary = DELETE_EXPENSE_SUMMARY)
@@ -89,8 +108,8 @@ public class ExpenseTransactionController {
             SUCCESSFULLY_DELETED_EXPENSE)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @DeleteMapping(DELETE_EXPENSE_BY_ID)
-    public void deleteExpenseById(@PathVariable Long transactionId,
-                                  @PathVariable Long accountId) {
-        expenseTransactionService.deleteByTransactionId(transactionId, accountId);
+    public void deleteExpenseById(@AuthenticationPrincipal User user,
+                                  @PathVariable Long transactionId) {
+        expenseTransactionService.deleteByTransactionId(user.getId(), transactionId);
     }
 }
