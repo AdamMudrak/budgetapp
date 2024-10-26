@@ -6,13 +6,11 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IncomeCategoryRepository extends JpaRepository<IncomeCategory, Long> {
-    boolean existsByName(String name);
+    boolean existsByNameAndUserId(String name, Long userId);
 
     List<IncomeCategory> getAllByUserId(Long userId);
 
-    boolean existsByUserIdAndName(Long userId, String name);
+    Optional<IncomeCategory> findByIdAndUserId(Long id, Long userId);
 
-    Optional<IncomeCategory> findByUserIdAndName(Long userId, String name);
-
-    void deleteByUserIdAndName(Long userId, String name);
+    void deleteByIdAndUserId(Long id, Long userId);
 }

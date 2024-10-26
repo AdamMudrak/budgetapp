@@ -8,9 +8,10 @@ import java.util.List;
 public interface CategoryService {
     ResponseCategoryDto saveCategory(Long userId, CreateCategoryDto createCategoryDto);
 
-    ResponseCategoryDto updateCategory(Long userId, UpdateCategoryDto createCategoryDto);
+    ResponseCategoryDto updateCategory(Long userId, Long categoryId,
+                                       UpdateCategoryDto updateCategoryDto);
 
     List<ResponseCategoryDto> getAllCategoriesByUserId(Long userId);
 
-    void deleteByCategoryNameAndUserId(Long userId, String name);
+    void deleteByCategoryIdAndUserId(Long userId, Long categoryId);
 }

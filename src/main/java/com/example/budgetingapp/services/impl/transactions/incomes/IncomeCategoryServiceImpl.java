@@ -28,7 +28,7 @@ public class IncomeCategoryServiceImpl implements CategoryService {
         User currentUser = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No user with id " + userId + " found"));
-        if (incomeCategoryRepository.existsByName(createCategoryDto.name())) {
+        if (incomeCategoryRepository.existsByNameAndUserId(createCategoryDto.name(), userId)) {
             throw new ConflictException("Income category with name "
                     + createCategoryDto.name() + " already exists");
         }
@@ -40,15 +40,16 @@ public class IncomeCategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseCategoryDto updateCategory(Long userId, UpdateCategoryDto createCategoryDto) {
-        if (incomeCategoryRepository.existsByUserIdAndName(userId, createCategoryDto.newName())) {
+    public ResponseCategoryDto updateCategory(Long userId, Long categoryId,
+                                              UpdateCategoryDto createCategoryDto) {
+        if (incomeCategoryRepository.existsByNameAndUserId(createCategoryDto.newName(), userId)) {
             throw new AlreadyExistsException("You already have income category named "
                     + createCategoryDto.newName());
         }
-        IncomeCategory incomeCategory = incomeCategoryRepository.findByUserIdAndName(userId,
-                createCategoryDto.currentName()).orElseThrow(
-                    () -> new EntityNotFoundException("No income category with name "
-                        + createCategoryDto.currentName() + " was found"));
+        IncomeCategory incomeCategory = incomeCategoryRepository.findByIdAndUserId(categoryId,
+                userId).orElseThrow(
+                    () -> new EntityNotFoundException("No income category with id "
+                        + categoryId + " was found for user with id " + userId));
         incomeCategory.setName(createCategoryDto.newName());
         return categoryMapper
                 .toIncomeCategoryDto(incomeCategoryRepository
@@ -63,7 +64,7 @@ public class IncomeCategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void deleteByCategoryNameAndUserId(Long userId, String name) {
-        incomeCategoryRepository.deleteByUserIdAndName(userId, name);
+    public void deleteByCategoryIdAndUserId(Long userId, Long categoryId) {
+        incomeCategoryRepository.deleteByIdAndUserId(categoryId, userId);
     }
 }
