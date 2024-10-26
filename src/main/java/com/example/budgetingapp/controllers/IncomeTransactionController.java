@@ -4,31 +4,20 @@ import static com.example.budgetingapp.constants.Constants.CODE_200;
 import static com.example.budgetingapp.constants.Constants.CODE_400;
 import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.ADD_EXPENSE;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.ADD_EXPENSE_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.ADD_INCOME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.ADD_INCOME_SUMMARY;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.DELETE_EXPENSE_BY_ID;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.DELETE_EXPENSE_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.DELETE_INCOME_BY_ID;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.EXPENSE;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_EXPENSES;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_EXPENSES_SUMMARY;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.DELETE_INCOME_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_INCOMES;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_INCOMES_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_ADDED_EXPENSE;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME_TRANSACTION_API_NAME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_ADDED_INCOME;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_DELETED_EXPENSE;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_RETRIEVED_EXPENSES;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_DELETED_INCOME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_RETRIEVED_INCOMES;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_UPDATED_EXPENSE;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_UPDATED_INCOME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSACTIONS;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSACTION_API_DESCRIPTION;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSACTION_API_NAME;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.UPDATE_EXPENSE_BY_ID;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.UPDATE_EXPENSE_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.UPDATE_INCOME_BY_ID;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.UPDATE_INCOME_SUMMARY;
 
@@ -53,27 +42,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize(ROLE_USER)
 @RestController
-@Tag(name = TRANSACTION_API_NAME,
+@Tag(name = INCOME_TRANSACTION_API_NAME,
         description = TRANSACTION_API_DESCRIPTION)
 @RequestMapping(TRANSACTIONS)
-public class TransactionController {
-    private final TransactionService expenseTransactionService;
+public class IncomeTransactionController {
     private final TransactionService incomeTransactionService;
 
-    public TransactionController(@Qualifier(EXPENSE)TransactionService expenseTransactionService,
-                                 @Qualifier(INCOME) TransactionService incomeTransactionService) {
-        this.expenseTransactionService = expenseTransactionService;
+    public IncomeTransactionController(@Qualifier(INCOME)
+                                       TransactionService incomeTransactionService) {
         this.incomeTransactionService = incomeTransactionService;
-    }
-
-    @Operation(summary = ADD_EXPENSE_SUMMARY)
-    @ApiResponse(responseCode = CODE_200, description =
-            SUCCESSFULLY_ADDED_EXPENSE)
-    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @PostMapping(ADD_EXPENSE)
-    public ResponseTransactionDto addExpenseTransaction(
-            @RequestBody RequestTransactionDto requestTransactionDto) {
-        return expenseTransactionService.saveTransaction(requestTransactionDto);
     }
 
     @Operation(summary = ADD_INCOME_SUMMARY)
@@ -86,16 +63,6 @@ public class TransactionController {
         return incomeTransactionService.saveTransaction(requestTransactionDto);
     }
 
-    @Operation(summary = GET_ALL_EXPENSES_SUMMARY)
-    @ApiResponse(responseCode = CODE_200, description =
-            SUCCESSFULLY_RETRIEVED_EXPENSES)
-    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @GetMapping(GET_ALL_EXPENSES)
-    public List<ResponseTransactionDto> getAllExpenseTransactions(@PathVariable Long accountId,
-                                                                  Pageable pageable) {
-        return expenseTransactionService.getAllTransactions(accountId, pageable);
-    }
-
     @Operation(summary = GET_ALL_INCOMES_SUMMARY)
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_RETRIEVED_INCOMES)
@@ -104,17 +71,6 @@ public class TransactionController {
     public List<ResponseTransactionDto> getAllIncomeTransactions(@PathVariable Long accountId,
                                                                  Pageable pageable) {
         return incomeTransactionService.getAllTransactions(accountId, pageable);
-    }
-
-    @Operation(summary = UPDATE_EXPENSE_SUMMARY)
-    @ApiResponse(responseCode = CODE_200, description =
-            SUCCESSFULLY_UPDATED_EXPENSE)
-    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @PutMapping(UPDATE_EXPENSE_BY_ID)
-    public ResponseTransactionDto updateExpenseTransaction(
-            @RequestBody RequestTransactionDto requestTransactionDto,
-            @PathVariable Long transactionId) {
-        return expenseTransactionService.updateTransaction(requestTransactionDto, transactionId);
     }
 
     @Operation(summary = UPDATE_INCOME_SUMMARY)
@@ -128,19 +84,9 @@ public class TransactionController {
         return incomeTransactionService.updateTransaction(requestTransactionDto, transactionId);
     }
 
-    @Operation(summary = DELETE_EXPENSE_SUMMARY)
+    @Operation(summary = DELETE_INCOME_SUMMARY)
     @ApiResponse(responseCode = CODE_200, description =
-            SUCCESSFULLY_DELETED_EXPENSE)
-    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @DeleteMapping(DELETE_EXPENSE_BY_ID)
-    public void deleteExpenseById(@PathVariable Long transactionId,
-                                  @PathVariable Long accountId) {
-        expenseTransactionService.deleteByTransactionId(transactionId, accountId);
-    }
-
-    @Operation(summary = UPDATE_INCOME_SUMMARY)
-    @ApiResponse(responseCode = CODE_200, description =
-            SUCCESSFULLY_UPDATED_INCOME)
+            SUCCESSFULLY_DELETED_INCOME)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @DeleteMapping(DELETE_INCOME_BY_ID)
     public void deleteIncomeById(@PathVariable Long transactionId,
