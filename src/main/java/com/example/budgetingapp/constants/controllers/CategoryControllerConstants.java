@@ -1,12 +1,12 @@
 package com.example.budgetingapp.constants.controllers;
 
 public class CategoryControllerConstants {
-    public static final String CATEGORY_API_NAME = "Category API";
+    public static final String INCOME_CATEGORY_API_NAME = "Income Category API";
     public static final String CATEGORY_API_DESCRIPTION = """
             Here you'll find a comprehensive overview
             of how to work with categories of transactions
             in this app""";
-    public static final String CATEGORIES = "/categories";
+    public static final String INCOME_CATEGORIES = "/income-categories";
 
     public static final String ADD_CATEGORY = "/add-category";
     public static final String GET_ALL_CATEGORIES = "/get-all-categories";

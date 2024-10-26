@@ -1,5 +1,7 @@
 package com.example.budgetingapp.constants.entities;
 
+import java.util.List;
+
 public class EntitiesConstants {
     public static final String EXPENSES = "expenses";
     public static final String ACCOUNT_ID = "account_id";
@@ -26,4 +28,18 @@ public class EntitiesConstants {
 
     public static final String DEFAULT_ACCOUNT_NAME = "Default account";
     public static final String DEFAULT_ACCOUNT_CURRENCY = "USD";
+
+    public static final List<String> DEFAULT_INCOME_CATEGORIES_LIST = List.of(
+            "Salary",
+            "Freelance",
+            "Investments",
+            "Rental Income",
+            "Gifts");
+
+    public static final List<String> DEFAULT_EXPENSE_CATEGORIES_LIST = List.of(
+            "Groceries",
+            "Utilities",
+            "Transportation",
+            "Entertainment",
+            "Healthcare");
 }
