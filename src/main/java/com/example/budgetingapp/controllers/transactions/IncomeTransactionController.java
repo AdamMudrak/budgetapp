@@ -23,6 +23,7 @@ import static com.example.budgetingapp.constants.controllers.TransactionControll
 
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
+import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.services.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -31,6 +32,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,9 +60,9 @@ public class IncomeTransactionController {
             SUCCESSFULLY_ADDED_INCOME)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PostMapping(ADD_INCOME)
-    public ResponseTransactionDto addIncomeTransaction(
+    public ResponseTransactionDto addIncomeTransaction(@AuthenticationPrincipal User user,
             @RequestBody RequestTransactionDto requestTransactionDto) {
-        return incomeTransactionService.saveTransaction(requestTransactionDto);
+        return incomeTransactionService.saveTransaction(user.getId(), requestTransactionDto);
     }
 
     @Operation(summary = GET_ALL_INCOMES_SUMMARY)
@@ -78,10 +80,11 @@ public class IncomeTransactionController {
             SUCCESSFULLY_UPDATED_INCOME)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PutMapping(UPDATE_INCOME_BY_ID)
-    public ResponseTransactionDto updateIncomeTransaction(
+    public ResponseTransactionDto updateIncomeTransaction(@AuthenticationPrincipal User user,
             @RequestBody RequestTransactionDto requestTransactionDto,
             @PathVariable Long transactionId) {
-        return incomeTransactionService.updateTransaction(requestTransactionDto, transactionId);
+        return incomeTransactionService.updateTransaction(user.getId(),
+                requestTransactionDto, transactionId);
     }
 
     @Operation(summary = DELETE_INCOME_SUMMARY)
@@ -89,8 +92,8 @@ public class IncomeTransactionController {
             SUCCESSFULLY_DELETED_INCOME)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @DeleteMapping(DELETE_INCOME_BY_ID)
-    public void deleteIncomeById(@PathVariable Long transactionId,
-                                 @PathVariable Long accountId) {
-        incomeTransactionService.deleteByTransactionId(transactionId, accountId);
+    public void deleteIncomeById(@AuthenticationPrincipal User user,
+                                 @PathVariable Long transactionId) {
+        incomeTransactionService.deleteByTransactionId(user.getId(), transactionId);
     }
 }

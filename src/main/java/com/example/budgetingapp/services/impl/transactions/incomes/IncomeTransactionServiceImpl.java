@@ -5,11 +5,11 @@ import static com.example.budgetingapp.constants.controllers.TransactionControll
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
 import com.example.budgetingapp.entities.Account;
-import com.example.budgetingapp.entities.transactions.incomes.Income;
+import com.example.budgetingapp.entities.transactions.Income;
 import com.example.budgetingapp.exceptions.EntityNotFoundException;
 import com.example.budgetingapp.mappers.TransactionMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
-import com.example.budgetingapp.repositories.transactions.incomes.IncomeRepository;
+import com.example.budgetingapp.repositories.transactions.IncomeRepository;
 import com.example.budgetingapp.services.TransactionService;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -28,10 +28,11 @@ public class IncomeTransactionServiceImpl implements TransactionService {
 
     @Transactional
     @Override
-    public ResponseTransactionDto saveTransaction(RequestTransactionDto requestTransactionDto) {
+    public ResponseTransactionDto saveTransaction(Long userId,
+                                                  RequestTransactionDto requestTransactionDto) {
         Income income = transactionMapper.toIncome(requestTransactionDto);
         Account account = accountRepository
-                .findById(requestTransactionDto.accountId())
+                .findByIdAndUserId(requestTransactionDto.accountId(), userId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No account with id " + requestTransactionDto.accountId() + " was found"));
         account.setBalance(account.getBalance().add(requestTransactionDto.amount()));
@@ -41,9 +42,25 @@ public class IncomeTransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<ResponseTransactionDto> getAllTransactions(Pageable pageable) {
+    public List<ResponseTransactionDto> getAllTransactions(Long userId,
+                                                                  Pageable pageable) {
         return incomeRepository
-                .findAll(pageable)
+                .findAllByUserId(userId, pageable)
+                .stream()
+                .map(transactionMapper::toIncomeDto)
+                .toList();
+    }
+
+    @Override
+    public List<ResponseTransactionDto> getAllAccountTransactions(Long userId,
+                                                                  Long accountId,
+                                                                  Pageable pageable) {
+        if (accountRepository.existsByIdAndUserId(accountId, userId)) {
+            throw new EntityNotFoundException("No account with id " + accountId
+                    + " for user with id " + userId + " was found");
+        }
+        return incomeRepository
+                .findAllByAccountId(accountId, pageable)
                 .stream()
                 .map(transactionMapper::toIncomeDto)
                 .toList();
@@ -51,7 +68,8 @@ public class IncomeTransactionServiceImpl implements TransactionService {
 
     @Transactional
     @Override
-    public ResponseTransactionDto updateTransaction(RequestTransactionDto requestTransactionDto,
+    public ResponseTransactionDto updateTransaction(Long userId,
+                                                    RequestTransactionDto requestTransactionDto,
                                                     Long transactionId) {
         Income previousIncome = incomeRepository
                 .findById(transactionId)
@@ -59,10 +77,10 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                         new EntityNotFoundException(
                                 "No income with id " + transactionId + " was found"));
         Account account = accountRepository
-                .findById(requestTransactionDto.accountId())
+                .findByIdAndUserId(previousIncome.getAccount().getId(), userId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "No account with id " + requestTransactionDto.accountId() + " was found"));
-        account.setBalance(account.getBalance().subtract(previousIncome.getAmount()));
+                        "No account with id " + previousIncome.getAccount().getId()
+                                + " was found for user with id " + userId));
 
         Income newIncome = transactionMapper.toIncome(requestTransactionDto);
         newIncome.setId(transactionId);
@@ -74,16 +92,17 @@ public class IncomeTransactionServiceImpl implements TransactionService {
 
     @Transactional
     @Override
-    public void deleteByTransactionId(Long transactionId, Long accountId) {
+    public void deleteByTransactionId(Long userId, Long transactionId) {
         Income income = incomeRepository
                 .findById(transactionId)
                 .orElseThrow(() ->
                         new EntityNotFoundException("No income with id "
                                 + transactionId + " was found"));
         Account account = accountRepository
-                .findById(accountId)
+                .findByIdAndUserId(income.getAccount().getId(), userId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "No account with id " + accountId + " was found"));
+                        "No account with id " + income.getAccount().getId()
+                                + " was found for user with id " + userId));
         account.setBalance(account.getBalance().subtract(income.getAmount()));
         accountRepository.save(account);
         incomeRepository.deleteById(transactionId);

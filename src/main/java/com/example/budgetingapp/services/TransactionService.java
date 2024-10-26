@@ -6,12 +6,18 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 
 public interface TransactionService {
-    ResponseTransactionDto saveTransaction(RequestTransactionDto requestTransactionDto);
+    ResponseTransactionDto saveTransaction(Long userId,
+                                           RequestTransactionDto requestTransactionDto);
 
-    ResponseTransactionDto updateTransaction(RequestTransactionDto requestTransactionDto,
+    ResponseTransactionDto updateTransaction(Long userId,
+                                             RequestTransactionDto requestTransactionDto,
                                              Long transactionId);
 
-    List<ResponseTransactionDto> getAllTransactions(Pageable pageable);
+    List<ResponseTransactionDto> getAllTransactions(Long userId, Pageable pageable);
+    //HISTORY
 
-    void deleteByTransactionId(Long transactionId, Long accountId);
+    List<ResponseTransactionDto> getAllAccountTransactions(Long userId, Long accountId, Pageable pageable);
+    //ACCOUNT HISTORY
+
+    void deleteByTransactionId(Long userId, Long transactionId);
 }
