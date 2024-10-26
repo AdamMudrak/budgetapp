@@ -48,7 +48,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ExpenseTransactionController {
     private final TransactionService expenseTransactionService;
 
-    public ExpenseTransactionController(@Qualifier(EXPENSE)TransactionService expenseTransactionService) {
+    public ExpenseTransactionController(@Qualifier(EXPENSE)
+                                        TransactionService expenseTransactionService) {
         this.expenseTransactionService = expenseTransactionService;
     }
 
