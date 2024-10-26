@@ -6,7 +6,7 @@ import com.example.budgetingapp.dtos.transactions.request.CreateCategoryDto;
 import com.example.budgetingapp.dtos.transactions.request.UpdateCategoryDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseCategoryDto;
 import com.example.budgetingapp.entities.User;
-import com.example.budgetingapp.entities.transactions.incomes.IncomeCategory;
+import com.example.budgetingapp.entities.categories.IncomeCategory;
 import com.example.budgetingapp.exceptions.AlreadyExistsException;
 import com.example.budgetingapp.exceptions.ConflictException;
 import com.example.budgetingapp.exceptions.EntityNotFoundException;

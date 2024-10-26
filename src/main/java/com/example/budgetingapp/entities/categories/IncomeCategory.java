@@ -1,6 +1,6 @@
-package com.example.budgetingapp.entities.transactions.expenses;
+package com.example.budgetingapp.entities.categories;
 
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.EXPENSE_CATEGORIES;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.INCOME_CATEGORIES;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.USER_ID;
 
 import com.example.budgetingapp.entities.User;
@@ -19,8 +19,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table (name = EXPENSE_CATEGORIES)
-public class ExpenseCategory {
+@Table(name = INCOME_CATEGORIES)
+public class IncomeCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

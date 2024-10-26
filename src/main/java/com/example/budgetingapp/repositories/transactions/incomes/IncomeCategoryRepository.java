@@ -1,6 +1,6 @@
 package com.example.budgetingapp.repositories.transactions.incomes;
 
-import com.example.budgetingapp.entities.transactions.incomes.IncomeCategory;
+import com.example.budgetingapp.entities.categories.IncomeCategory;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,10 +1,11 @@
-package com.example.budgetingapp.entities.transactions.incomes;
+package com.example.budgetingapp.entities.transactions;
 
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.ACCOUNT_ID;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.INCOMES;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.INCOME_CATEGORY_ID;
 
 import com.example.budgetingapp.entities.Account;
+import com.example.budgetingapp.entities.categories.IncomeCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
