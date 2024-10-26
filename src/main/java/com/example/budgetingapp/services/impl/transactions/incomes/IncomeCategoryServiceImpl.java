@@ -1,5 +1,7 @@
 package com.example.budgetingapp.services.impl.transactions.incomes;
 
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME;
+
 import com.example.budgetingapp.dtos.transactions.request.CreateCategoryDto;
 import com.example.budgetingapp.dtos.transactions.request.UpdateCategoryDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseCategoryDto;
@@ -14,9 +16,11 @@ import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.CategoryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
+@Qualifier(INCOME)
 @RequiredArgsConstructor
 public class IncomeCategoryServiceImpl implements CategoryService {
     private final CategoryMapper categoryMapper;

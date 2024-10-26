@@ -6,19 +6,20 @@ import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.ADD_CATEGORY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.ADD_CATEGORY_SUMMARY;
-import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.CATEGORIES;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.CATEGORY_API_DESCRIPTION;
-import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.CATEGORY_API_NAME;
+import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.INCOME_CATEGORY_API_NAME;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.DELETE_CATEGORY_BY_ID;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.DELETE_CATEGORY_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.GET_ALL_CATEGORIES;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.GET_ALL_CATEGORIES_SUMMARY;
+import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.INCOME_CATEGORIES;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.SUCCESSFULLY_ADDED_CATEGORY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.SUCCESSFULLY_DELETE_CATEGORY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.SUCCESSFULLY_RETRIEVED_CATEGORIES;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.SUCCESSFULLY_UPDATE_CATEGORY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.UPDATE_CATEGORY_BY_ID;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.UPDATE_CATEGORY_SUMMARY;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME;
 
 import com.example.budgetingapp.dtos.transactions.request.CreateCategoryDto;
 import com.example.budgetingapp.dtos.transactions.request.UpdateCategoryDto;
@@ -29,7 +30,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,12 +43,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize(ROLE_USER)
-@RequiredArgsConstructor
 @RestController
-@Tag(name = CATEGORY_API_NAME, description = CATEGORY_API_DESCRIPTION)
-@RequestMapping(CATEGORIES)
-public class CategoryController {
+@Tag(name = INCOME_CATEGORY_API_NAME, description = CATEGORY_API_DESCRIPTION)
+@RequestMapping(INCOME_CATEGORIES)
+public class IncomeCategoryController {
     private final CategoryService incomeCategoryService;
+
+    public IncomeCategoryController(@Qualifier(INCOME) CategoryService incomeCategoryService) {
+        this.incomeCategoryService = incomeCategoryService;
+    }
 
     @Operation(summary = ADD_CATEGORY_SUMMARY)
     @ApiResponse(responseCode = CODE_200, description =
