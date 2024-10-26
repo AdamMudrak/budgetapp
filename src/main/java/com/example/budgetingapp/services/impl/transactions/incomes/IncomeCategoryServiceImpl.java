@@ -11,7 +11,7 @@ import com.example.budgetingapp.exceptions.AlreadyExistsException;
 import com.example.budgetingapp.exceptions.ConflictException;
 import com.example.budgetingapp.exceptions.EntityNotFoundException;
 import com.example.budgetingapp.mappers.CategoryMapper;
-import com.example.budgetingapp.repositories.transactions.incomes.IncomeCategoryRepository;
+import com.example.budgetingapp.repositories.categories.IncomeCategoryRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.CategoryService;
 import java.util.List;

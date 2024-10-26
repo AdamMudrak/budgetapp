@@ -1,4 +1,4 @@
-package com.example.budgetingapp.repositories.transactions.incomes;
+package com.example.budgetingapp.repositories.categories;
 
 import com.example.budgetingapp.entities.categories.IncomeCategory;
 import java.util.List;

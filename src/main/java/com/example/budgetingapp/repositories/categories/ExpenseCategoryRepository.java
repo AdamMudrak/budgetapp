@@ -1,4 +1,4 @@
-package com.example.budgetingapp.repositories.transactions.expenses;
+package com.example.budgetingapp.repositories.categories;
 
 import com.example.budgetingapp.entities.categories.ExpenseCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
