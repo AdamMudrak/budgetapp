@@ -61,17 +61,6 @@ public class ExpenseCategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseCategoryDto getCategoryById(Long userId, Long categoryId) {
-        return categoryMapper
-                .toExpenseCategoryDto(expenseCategoryRepository
-                        .findByIdAndUserId(categoryId, userId)
-                        .orElseThrow(
-                                () -> new EntityNotFoundException("No expense category with id "
-                                + categoryId + " for user with id "
-                                + userId + " was found")));
-    }
-
-    @Override
     public List<ResponseCategoryDto> getAllCategoriesByUserId(Long userId) {
         return categoryMapper
                 .toExpenseCategoryDtoList(expenseCategoryRepository

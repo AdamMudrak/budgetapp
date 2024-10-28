@@ -27,10 +27,6 @@ public class CategoryControllerConstants {
     public static final String SUCCESSFULLY_DELETE_CATEGORY =
             "Successfully deleted a category";
 
-    public static final String GET_CATEGORY_BY_ID_SUMMARY = "Get user's category by id";
-    public static final String SUCCESSFULLY_RETRIEVED_CATEGORY_BY_ID =
-            "Successfully retrieved category by id";
-
     public static final String GET_ALL_CATEGORIES_SUMMARY = "Get all user's categories";
     public static final String SUCCESSFULLY_RETRIEVED_CATEGORIES =
             "Successfully retrieved categories";

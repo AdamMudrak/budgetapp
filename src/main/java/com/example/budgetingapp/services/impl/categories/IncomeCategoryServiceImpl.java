@@ -61,16 +61,6 @@ public class IncomeCategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseCategoryDto getCategoryById(Long userId, Long categoryId) {
-        return categoryMapper
-                .toIncomeCategoryDto(incomeCategoryRepository
-                        .findByIdAndUserId(categoryId, userId)
-                        .orElseThrow(() -> new EntityNotFoundException("No income category with id "
-                                + categoryId + " for user with id "
-                                + userId + " was found")));
-    }
-
-    @Override
     public List<ResponseCategoryDto> getAllCategoriesByUserId(Long userId) {
         return categoryMapper
                 .toIncomeCategoryDtoList(incomeCategoryRepository

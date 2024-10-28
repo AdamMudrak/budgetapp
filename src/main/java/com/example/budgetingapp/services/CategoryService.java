@@ -11,8 +11,6 @@ public interface CategoryService {
     ResponseCategoryDto updateCategory(Long userId, Long categoryId,
                                        UpdateCategoryDto updateCategoryDto);
 
-    ResponseCategoryDto getCategoryById(Long userId, Long categoryId);
-
     List<ResponseCategoryDto> getAllCategoriesByUserId(Long userId);
 
     void deleteByCategoryIdAndUserId(Long userId, Long categoryId);
