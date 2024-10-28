@@ -11,11 +11,13 @@ import static com.example.budgetingapp.constants.controllers.CategoryControllerC
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.DELETE_CATEGORY_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.GET_ALL_CATEGORIES;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.GET_ALL_CATEGORIES_SUMMARY;
+import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.GET_CATEGORY_BY_ID_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.INCOME_CATEGORIES;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.INCOME_CATEGORY_API_NAME;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.SUCCESSFULLY_ADDED_CATEGORY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.SUCCESSFULLY_DELETE_CATEGORY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.SUCCESSFULLY_RETRIEVED_CATEGORIES;
+import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.SUCCESSFULLY_RETRIEVED_CATEGORY_BY_ID;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.SUCCESSFULLY_UPDATE_CATEGORY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.UPDATE_CATEGORY_BY_ID;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.UPDATE_CATEGORY_SUMMARY;
@@ -72,6 +74,15 @@ public class IncomeCategoryController {
                                            @PathVariable Long categoryId,
                                            @RequestBody UpdateCategoryDto updateCategoryDto) {
         return incomeCategoryService.updateCategory(user.getId(), categoryId, updateCategoryDto);
+    }
+
+    @Operation(summary = GET_CATEGORY_BY_ID_SUMMARY)
+    @ApiResponse(responseCode = CODE_200, description =
+            SUCCESSFULLY_RETRIEVED_CATEGORY_BY_ID)
+    @GetMapping(GET_ALL_CATEGORIES)
+    public ResponseCategoryDto getCategoryById(@AuthenticationPrincipal User user,
+                                                     @PathVariable Long categoryId) {
+        return incomeCategoryService.getCategoryById(user.getId(), categoryId);
     }
 
     @Operation(summary = GET_ALL_CATEGORIES_SUMMARY)
