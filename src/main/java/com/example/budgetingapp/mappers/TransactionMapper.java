@@ -17,9 +17,13 @@ import org.mapstruct.MappingTarget;
 @Mapper(config = MapperConfig.class)
 public interface TransactionMapper {
 
+    @Mapping(source = "accountId", target = "account.id")
+    @Mapping(source = "categoryId", target = "expenseCategory.id")
     @Mapping(target = "transactionDate", ignore = true)
     Expense toExpense(RequestTransactionDto requestTransactionDto);
 
+    @Mapping(source = "accountId", target = "account.id")
+    @Mapping(source = "categoryId", target = "incomeCategory.id")
     @Mapping(target = "transactionDate", ignore = true)
     Income toIncome(RequestTransactionDto requestTransactionDto);
 

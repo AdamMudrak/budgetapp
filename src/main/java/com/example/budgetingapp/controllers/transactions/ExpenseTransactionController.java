@@ -10,8 +10,8 @@ import static com.example.budgetingapp.constants.controllers.TransactionControll
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.DELETE_EXPENSE_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.EXPENSE;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.EXPENSE_TRANSACTIONS;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_ACCOUNT_EXPENSES;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_ACCOUNT_EXPENSES_SUMMARY;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_ACCOUNT_INCOMES;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_EXPENSES;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_EXPENSES_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_ADDED_EXPENSE;
@@ -81,7 +81,7 @@ public class ExpenseTransactionController {
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_RETRIEVED_ACCOUNT_EXPENSES)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @GetMapping(GET_ALL_ACCOUNT_INCOMES)
+    @GetMapping(GET_ALL_ACCOUNT_EXPENSES)
     public List<ResponseTransactionDto> getAllAccountExpenseTransactions(
             @AuthenticationPrincipal User user, @PathVariable Long accountId, Pageable pageable) {
         return expenseTransactionService.getAllAccountTransactions(

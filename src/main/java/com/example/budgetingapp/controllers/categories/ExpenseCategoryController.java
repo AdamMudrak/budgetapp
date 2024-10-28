@@ -76,7 +76,6 @@ public class ExpenseCategoryController {
     @Operation(summary = GET_ALL_CATEGORIES_SUMMARY)
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_RETRIEVED_CATEGORIES)
-    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @GetMapping(GET_ALL_CATEGORIES)
     public List<ResponseCategoryDto> getAllIncomeCategories(@AuthenticationPrincipal User user) {
         return expenseCategoryService.getAllCategoriesByUserId(user.getId());

@@ -11,7 +11,8 @@ public class TransactionControllerConstants {
 
     public static final String EXPENSE = "EXPENSE";
     public static final String ADD_EXPENSE = "/add-expense";
-    public static final String GET_ALL_EXPENSES = "/get-all-expenses/{accountId}";
+    public static final String GET_ALL_EXPENSES = "/get-all-expenses";
+    public static final String GET_ALL_ACCOUNT_EXPENSES = "/get-all-expenses/{accountId}";
     public static final String UPDATE_EXPENSE_BY_ID = "/update-expense/{transactionId}";
     public static final String DELETE_EXPENSE_BY_ID = "/delete-expense/{transactionId}";
 
