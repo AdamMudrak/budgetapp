@@ -13,6 +13,8 @@ import org.mapstruct.Mapping;
 public interface CategoryMapper {
     IncomeCategory toIncomeCategory(CreateCategoryDto createCategoryDto);
 
+    ExpenseCategory toExpenseCategory(CreateCategoryDto createCategoryDto);
+
     @Mapping(source = "user.id", target = "userId")
     ResponseCategoryDto toIncomeCategoryDto(IncomeCategory incomeCategory);
 
