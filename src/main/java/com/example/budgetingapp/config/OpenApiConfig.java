@@ -1,5 +1,7 @@
 package com.example.budgetingapp.config;
 
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSACTION_API_DESCRIPTION;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSACTION_API_NAME;
 import static com.example.budgetingapp.constants.security.SecurityConstants.SERVER_PATH;
 
 import com.example.budgetingapp.constants.config.ConfigConstants;
@@ -8,6 +10,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 //TODO NEEDS TO BE UNCOMMENTED BEFORE DEPLOY BUILD import io.swagger.v3.oas.models.servers.Server;
+import io.swagger.v3.oas.models.tags.Tag;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +22,8 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI customOpenApi() {
         return new OpenAPI()
+                .addTagsItem(new Tag().name(TRANSACTION_API_NAME)
+                        .description(TRANSACTION_API_DESCRIPTION))
                 .components(new Components()
                         .addSecuritySchemes(ConfigConstants.SECURITY_SCHEME_KEY,
                             new SecurityScheme()

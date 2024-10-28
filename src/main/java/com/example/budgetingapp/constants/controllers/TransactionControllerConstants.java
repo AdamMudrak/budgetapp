@@ -1,8 +1,7 @@
 package com.example.budgetingapp.constants.controllers;
 
 public class TransactionControllerConstants {
-    public static final String INCOME_TRANSACTION_API_NAME = "Income Transaction API";
-    public static final String EXPENSE_TRANSACTION_API_NAME = "Expense Transaction API";
+    public static final String TRANSACTION_API_NAME = "Expense & Income Transactions API";
     public static final String TRANSACTION_API_DESCRIPTION = """
             Here you'll find a comprehensive overview
             of how to work with transactions in this app
