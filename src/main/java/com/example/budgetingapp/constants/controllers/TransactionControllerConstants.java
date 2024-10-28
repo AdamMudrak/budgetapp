@@ -7,7 +7,8 @@ public class TransactionControllerConstants {
             Here you'll find a comprehensive overview
             of how to work with transactions in this app
             """;
-    public static final String TRANSACTIONS = "/transactions";
+    public static final String EXPENSE_TRANSACTIONS = "/expense-transactions";
+    public static final String INCOME_TRANSACTIONS = "/income-transactions";
 
     public static final String EXPENSE = "EXPENSE";
     public static final String ADD_EXPENSE = "/add-expense";

@@ -9,6 +9,7 @@ import static com.example.budgetingapp.constants.controllers.TransactionControll
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.DELETE_EXPENSE_BY_ID;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.DELETE_EXPENSE_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.EXPENSE;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.EXPENSE_TRANSACTIONS;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.EXPENSE_TRANSACTION_API_NAME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_ACCOUNT_EXPENSES_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_ACCOUNT_INCOMES;
@@ -19,7 +20,6 @@ import static com.example.budgetingapp.constants.controllers.TransactionControll
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_RETRIEVED_ACCOUNT_EXPENSES;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_RETRIEVED_EXPENSES;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_UPDATED_EXPENSE;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSACTIONS;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSACTION_API_DESCRIPTION;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.UPDATE_EXPENSE_BY_ID;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.UPDATE_EXPENSE_SUMMARY;
@@ -49,7 +49,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Tag(name = EXPENSE_TRANSACTION_API_NAME,
         description = TRANSACTION_API_DESCRIPTION)
-@RequestMapping(TRANSACTIONS)
+@RequestMapping(EXPENSE_TRANSACTIONS)
 public class ExpenseTransactionController {
     private final TransactionService expenseTransactionService;
 
@@ -84,7 +84,7 @@ public class ExpenseTransactionController {
             SUCCESSFULLY_RETRIEVED_ACCOUNT_EXPENSES)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @GetMapping(GET_ALL_ACCOUNT_INCOMES)
-    public List<ResponseTransactionDto> getAllAccountIncomeTransactions(
+    public List<ResponseTransactionDto> getAllAccountExpenseTransactions(
             @AuthenticationPrincipal User user, @PathVariable Long accountId, Pageable pageable) {
         return expenseTransactionService.getAllAccountTransactions(
                 user.getId(), accountId, pageable);
