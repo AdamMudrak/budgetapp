@@ -1,8 +1,7 @@
 package com.example.budgetingapp.constants.controllers;
 
 public class CategoryControllerConstants {
-    public static final String INCOME_CATEGORY_API_NAME = "Income Category API";
-    public static final String EXPENSE_CATEGORY_API_NAME = "Expense Category API";
+    public static final String CATEGORY_API_NAME = "Expense & Income Category API";
     public static final String CATEGORY_API_DESCRIPTION = """
             Here you'll find a comprehensive overview
             of how to work with categories of transactions

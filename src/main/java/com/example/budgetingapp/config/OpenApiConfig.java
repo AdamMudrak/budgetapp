@@ -1,5 +1,7 @@
 package com.example.budgetingapp.config;
 
+import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.CATEGORY_API_DESCRIPTION;
+import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.CATEGORY_API_NAME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSACTION_API_DESCRIPTION;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSACTION_API_NAME;
 import static com.example.budgetingapp.constants.security.SecurityConstants.SERVER_PATH;
@@ -24,6 +26,8 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .addTagsItem(new Tag().name(TRANSACTION_API_NAME)
                         .description(TRANSACTION_API_DESCRIPTION))
+                .addTagsItem(new Tag().name(CATEGORY_API_NAME)
+                        .description(CATEGORY_API_DESCRIPTION))
                 .components(new Components()
                         .addSecuritySchemes(ConfigConstants.SECURITY_SCHEME_KEY,
                             new SecurityScheme()

@@ -6,11 +6,10 @@ import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.ADD_CATEGORY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.ADD_CATEGORY_SUMMARY;
-import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.CATEGORY_API_DESCRIPTION;
+import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.CATEGORY_API_NAME;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.DELETE_CATEGORY_BY_ID;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.DELETE_CATEGORY_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.EXPENSE_CATEGORIES;
-import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.EXPENSE_CATEGORY_API_NAME;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.GET_ALL_CATEGORIES;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.GET_ALL_CATEGORIES_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.SUCCESSFULLY_ADDED_CATEGORY;
@@ -44,7 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize(ROLE_USER)
 @RestController
-@Tag(name = EXPENSE_CATEGORY_API_NAME, description = CATEGORY_API_DESCRIPTION)
+@Tag(name = CATEGORY_API_NAME)
 @RequestMapping(EXPENSE_CATEGORIES)
 public class ExpenseCategoryController {
     private final CategoryService expenseCategoryService;
