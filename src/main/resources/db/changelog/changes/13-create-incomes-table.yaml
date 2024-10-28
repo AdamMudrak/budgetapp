@@ -34,7 +34,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: income_date
+                  name: transaction_date
                   type: date
                   constraints:
                     nullable: false

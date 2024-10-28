@@ -35,7 +35,7 @@ public class Expense {
     @Column(nullable = false)
     private BigDecimal amount;
     @Column(nullable = false)
-    private LocalDate expenseDate;
+    private LocalDate transactionDate;
     @ManyToOne
     @JoinColumn(name = EXPENSE_CATEGORY_ID, nullable = false)
     private ExpenseCategory expenseCategory;
