@@ -1,9 +1,15 @@
 package com.example.budgetingapp.dtos.transactions.request;
 
 import java.math.BigDecimal;
+import lombok.Getter;
+import lombok.Setter;
 
-public record RequestTransactionDto(String comment,
-                                    BigDecimal amount,
-                                    String transactionDate, //TODO mark it down somehow
-                                    Long accountId,
-                                    Long categoryId){}
+@Getter
+@Setter
+public class RequestTransactionDto {
+    private String comment;
+    private BigDecimal amount;
+    private String transactionDate;
+    private Long accountId;
+    private Long categoryId;
+}

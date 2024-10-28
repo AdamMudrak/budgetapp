@@ -32,10 +32,11 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                                                   RequestTransactionDto requestTransactionDto) {
         Income income = transactionMapper.toIncome(requestTransactionDto);
         Account account = accountRepository
-                .findByIdAndUserId(requestTransactionDto.accountId(), userId)
+                .findByIdAndUserId(requestTransactionDto.getAccountId(), userId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "No account with id " + requestTransactionDto.accountId() + " was found"));
-        account.setBalance(account.getBalance().add(requestTransactionDto.amount()));
+                        "No account with id "
+                                + requestTransactionDto.getAccountId() + " was found"));
+        account.setBalance(account.getBalance().add(requestTransactionDto.getAmount()));
         accountRepository.save(account);
         incomeRepository.save(income);
         return transactionMapper.toIncomeDto(income);
@@ -84,7 +85,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
 
         Income newIncome = transactionMapper.toIncome(requestTransactionDto);
         newIncome.setId(transactionId);
-        account.setBalance(account.getBalance().add(requestTransactionDto.amount()));
+        account.setBalance(account.getBalance().add(requestTransactionDto.getAmount()));
         accountRepository.save(account);
         incomeRepository.save(previousIncome);
         return transactionMapper.toIncomeDto(newIncome);

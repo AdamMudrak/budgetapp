@@ -32,10 +32,11 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
                                                   RequestTransactionDto requestTransactionDto) {
         Expense expense = transactionMapper.toExpense(requestTransactionDto);
         Account account = accountRepository
-                .findByIdAndUserId(requestTransactionDto.accountId(), userId)
+                .findByIdAndUserId(requestTransactionDto.getAccountId(), userId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "No account with id " + requestTransactionDto.accountId() + " was found"));
-        account.setBalance(account.getBalance().add(requestTransactionDto.amount()));
+                        "No account with id "
+                                + requestTransactionDto.getAccountId() + " was found"));
+        account.setBalance(account.getBalance().add(requestTransactionDto.getAmount()));
         accountRepository.save(account);
         expenseRepository.save(expense);
         return transactionMapper.toExpenseDto(expense);
@@ -84,7 +85,7 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
 
         Expense newExpense = transactionMapper.toExpense(requestTransactionDto);
         newExpense.setId(transactionId);
-        account.setBalance(account.getBalance().add(requestTransactionDto.amount()));
+        account.setBalance(account.getBalance().add(requestTransactionDto.getAmount()));
         accountRepository.save(account);
         expenseRepository.save(previousExpense);
         return transactionMapper.toExpenseDto(newExpense);
