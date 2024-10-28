@@ -10,8 +10,6 @@ import lombok.Setter;
 public class ResponseTransactionDto {
     private Long id;
     private String comment;
-    private Long accountId;
     private BigDecimal amount;
     private LocalDate transactionDate;
-    private Long categoryId;
 }

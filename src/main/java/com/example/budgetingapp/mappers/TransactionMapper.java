@@ -37,12 +37,8 @@ public interface TransactionMapper {
                 DateTimeFormatter.ofPattern(DATE_PATTERN)));
     }
 
-    @Mapping(source = "account.id", target = "accountId")
-    @Mapping(source = "incomeCategory.id", target = "categoryId")
     ResponseTransactionDto toIncomeDto(Income income);
 
-    @Mapping(source = "account.id", target = "accountId")
-    @Mapping(source = "expenseCategory.id", target = "categoryId")
     ResponseTransactionDto toExpenseDto(Expense expense);
 
     @AfterMapping
