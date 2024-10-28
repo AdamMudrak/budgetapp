@@ -71,6 +71,16 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public AccountDto getAccountByIdAndUserId(Long userId, Long accountId) {
+        return accountMapper
+                .toDto(accountRepository
+                        .findByIdAndUserId(accountId,userId)
+                        .orElseThrow(() -> new EntityNotFoundException(
+                                "No account with id "
+                                        + accountId + " was found for user with id " + userId)));
+    }
+
+    @Override
     public AccountDto setAccountByDefault(Long userId, Long accountId) {
         Account account = accountRepository.findByIdAndUserId(accountId, userId)
                 .orElseThrow(() -> new EntityNotFoundException("No account with id "

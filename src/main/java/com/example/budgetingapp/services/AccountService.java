@@ -14,5 +14,7 @@ public interface AccountService {
 
     AccountDto getDefaultAccountByUserId(Long userId);
 
+    AccountDto getAccountByIdAndUserId(Long userId, Long accountId);
+
     AccountDto setAccountByDefault(Long userId, Long accountId);
 }

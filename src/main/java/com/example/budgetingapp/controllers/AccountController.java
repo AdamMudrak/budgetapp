@@ -11,12 +11,15 @@ import static com.example.budgetingapp.constants.controllers.AccountControllerCo
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.ADD_ACCOUNT_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.GET_ACCOUNT_BY_DEFAULT;
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.GET_ACCOUNT_BY_DEFAULT_SUMMARY;
+import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.GET_ACCOUNT_BY_ID;
+import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.GET_ACCOUNT_BY_ID_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.GET_ALL_ACCOUNTS;
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.GET_ALL_ACCOUNTS_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.SET_ACCOUNT_BY_DEFAULT;
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.SET_ACCOUNT_BY_DEFAULT_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.SUCCESSFULLY_ADDED;
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.SUCCESSFULLY_RETRIEVED;
+import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.SUCCESSFULLY_RETRIEVED_ACCOUNT_BY_ID;
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.SUCCESSFULLY_RETRIEVED_DEFAULT_ACCOUNT;
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.SUCCESSFULLY_SET;
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.SUCCESSFULLY_UPDATED;
@@ -84,6 +87,15 @@ public class AccountController {
     @GetMapping(GET_ACCOUNT_BY_DEFAULT)
     public AccountDto getDefaultAccount(@AuthenticationPrincipal User user) {
         return accountService.getDefaultAccountByUserId(user.getId());
+    }
+
+    @Operation(summary = GET_ACCOUNT_BY_ID_SUMMARY)
+    @ApiResponse(responseCode = CODE_200, description =
+            SUCCESSFULLY_RETRIEVED_ACCOUNT_BY_ID)
+    @GetMapping(GET_ACCOUNT_BY_ID)
+    public AccountDto getAccountById(@AuthenticationPrincipal User user,
+                                               @PathVariable Long accountId) {
+        return accountService.getAccountByIdAndUserId(user.getId(), accountId);
     }
 
     @Operation(summary = SET_ACCOUNT_BY_DEFAULT_SUMMARY)
