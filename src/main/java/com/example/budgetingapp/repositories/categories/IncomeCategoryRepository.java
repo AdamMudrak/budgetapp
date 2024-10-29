@@ -7,8 +7,13 @@ import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 public interface IncomeCategoryRepository extends JpaRepository<IncomeCategory, Long> {
+    @Query("SELECT COUNT(*) FROM IncomeCategory incomeCategory "
+            + " WHERE incomeCategory.user.id=:userId")
+    int countCategoriesByUserId(Long userId);
+
     boolean existsByNameAndUserId(String name, Long userId);
 
     List<IncomeCategory> getAllByUserId(Long userId, Pageable pageable);

@@ -1,6 +1,7 @@
 package com.example.budgetingapp.services.impl.categories;
 
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.CATEGORY_QUANTITY_THRESHOLD;
 
 import com.example.budgetingapp.dtos.categories.request.CreateCategoryDto;
 import com.example.budgetingapp.dtos.categories.request.UpdateCategoryDto;
@@ -30,6 +31,11 @@ public class IncomeCategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseCategoryDto saveCategory(Long userId, CreateCategoryDto createCategoryDto) {
+        if (incomeCategoryRepository.countCategoriesByUserId(userId)
+                >= CATEGORY_QUANTITY_THRESHOLD) {
+            throw new ConflictException("You can't have more than " + CATEGORY_QUANTITY_THRESHOLD
+                    + " income categories!");
+        }
         User currentUser = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No user with id " + userId + " found"));
