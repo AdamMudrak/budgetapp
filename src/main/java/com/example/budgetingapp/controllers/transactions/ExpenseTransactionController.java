@@ -3,8 +3,8 @@ package com.example.budgetingapp.controllers.transactions;
 import static com.example.budgetingapp.constants.Constants.CODE_200;
 import static com.example.budgetingapp.constants.Constants.CODE_400;
 import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
-import static com.example.budgetingapp.constants.Constants.PAGEABLE_EXAMPLE;
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
+import static com.example.budgetingapp.constants.Constants.TRANSACTION_PAGEABLE_EXAMPLE;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.ADD_EXPENSE;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.ADD_EXPENSE_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.DELETE_EXPENSE_BY_ID;
@@ -79,7 +79,7 @@ public class ExpenseTransactionController {
     @GetMapping(GET_ALL_EXPENSES)
     public List<ResponseTransactionDto> getAllExpenseTransactions(
             @AuthenticationPrincipal User user,
-            @Parameter(example = PAGEABLE_EXAMPLE) Pageable pageable) {
+            @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE) Pageable pageable) {
         return expenseTransactionService.getAllTransactions(user.getId(), pageable);
     }
 
@@ -91,7 +91,7 @@ public class ExpenseTransactionController {
     public List<ResponseTransactionDto> getAllAccountExpenseTransactions(
             @AuthenticationPrincipal User user,
             @PathVariable @Positive Long accountId,
-            @Parameter(example = PAGEABLE_EXAMPLE) Pageable pageable) {
+            @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE) Pageable pageable) {
         return expenseTransactionService.getAllAccountTransactions(
                 user.getId(), accountId, pageable);
     }

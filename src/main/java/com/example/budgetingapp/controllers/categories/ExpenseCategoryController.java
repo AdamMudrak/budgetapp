@@ -1,9 +1,9 @@
 package com.example.budgetingapp.controllers.categories;
 
+import static com.example.budgetingapp.constants.Constants.CATEGORY_PAGEABLE_EXAMPLE;
 import static com.example.budgetingapp.constants.Constants.CODE_200;
 import static com.example.budgetingapp.constants.Constants.CODE_400;
 import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
-import static com.example.budgetingapp.constants.Constants.PAGEABLE_EXAMPLE;
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.ADD_CATEGORY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.ADD_CATEGORY_SUMMARY;
@@ -86,7 +86,7 @@ public class ExpenseCategoryController {
             SUCCESSFULLY_RETRIEVED_CATEGORIES)
     @GetMapping(GET_ALL_CATEGORIES)
     public List<ResponseCategoryDto> getAllExpenseCategories(@AuthenticationPrincipal User user,
-                                         @Parameter(example = PAGEABLE_EXAMPLE) Pageable pageable) {
+                             @Parameter(example = CATEGORY_PAGEABLE_EXAMPLE) Pageable pageable) {
         return expenseCategoryService.getAllCategoriesByUserId(user.getId(), pageable);
     }
 
