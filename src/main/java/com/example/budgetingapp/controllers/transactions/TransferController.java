@@ -4,13 +4,13 @@ import static com.example.budgetingapp.constants.Constants.CODE_200;
 import static com.example.budgetingapp.constants.Constants.CODE_400;
 import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
+import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.ACCOUNT_API_NAME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.ADD_TRANSFER;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.ADD_TRANSFER_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_TRANSFERS;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_TRANSFERS_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_ADDED_TRANSFER;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_RETRIEVED_TRANSFERS;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSACTION_API_NAME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSFERS;
 
 import com.example.budgetingapp.dtos.transfers.request.TransferRequestDto;
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize(ROLE_USER)
 @RestController
-@Tag(name = TRANSACTION_API_NAME)
+@Tag(name = ACCOUNT_API_NAME)
 @RequestMapping(TRANSFERS)
 @RequiredArgsConstructor
 public class TransferController {

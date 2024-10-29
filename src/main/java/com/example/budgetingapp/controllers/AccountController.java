@@ -5,7 +5,6 @@ import static com.example.budgetingapp.constants.Constants.CODE_400;
 import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.ACCOUNT;
-import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.ACCOUNT_API_DESCRIPTION;
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.ACCOUNT_API_NAME;
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.ADD_ACCOUNT;
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.ADD_ACCOUNT_SUMMARY;
@@ -50,8 +49,7 @@ import org.springframework.web.bind.annotation.RestController;
 @PreAuthorize(ROLE_USER)
 @RequiredArgsConstructor
 @RestController
-@Tag(name = ACCOUNT_API_NAME,
-        description = ACCOUNT_API_DESCRIPTION)
+@Tag(name = ACCOUNT_API_NAME)
 @RequestMapping(ACCOUNT)
 public class AccountController {
     private final AccountService accountService;
