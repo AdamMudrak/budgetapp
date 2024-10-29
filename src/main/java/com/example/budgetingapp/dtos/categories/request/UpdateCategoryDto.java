@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record UpdateCategoryDto(
-        @Schema(name = CategoriesConstants.NAME,
+        @Schema(name = CategoriesConstants.NEW_NAME,
                 example = CategoriesConstants.NAME_EXAMPLE,
                 requiredMode = REQUIRED)
         @NotBlank
