@@ -3,6 +3,10 @@ package com.example.budgetingapp.constants.entities;
 import java.util.List;
 
 public class EntitiesConstants {
+    public static final String TRANSFERS = "transfers";
+    public static final String FROM_ACCOUNT_ID = "from_account_id";
+    public static final String TO_ACCOUNT_ID = "to_account_id";
+
     public static final String EXPENSES = "expenses";
     public static final String ACCOUNT_ID = "account_id";
     public static final String EXPENSE_CATEGORY_ID = "expense_category_id";

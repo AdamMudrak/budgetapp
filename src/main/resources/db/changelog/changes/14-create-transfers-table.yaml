@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-transfers-table
+      author: AdamMudrak
+      changes:
+        - createTable:
+            tableName: transfers
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: comment
+                  type: varchar(255)
+
+              - column:
+                  name: amount
+                  type: decimal(11,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: transaction_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: from_account_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_i_from_account_id
+                    references: accounts(id)
+              - column:
+                  name: to_account_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_i_to_account_id
+                    references: accounts(id)

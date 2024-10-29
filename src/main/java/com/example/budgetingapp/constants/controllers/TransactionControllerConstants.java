@@ -8,6 +8,12 @@ public class TransactionControllerConstants {
             """;
     public static final String EXPENSE_TRANSACTIONS = "/expense-transactions";
     public static final String INCOME_TRANSACTIONS = "/income-transactions";
+    public static final String TRANSFERS = "/transfers";
+
+    public static final String ADD_TRANSFER = "/add-transfer";
+    public static final String ADD_TRANSFER_SUMMARY = "Add transfer";
+    public static final String SUCCESSFULLY_ADDED_TRANSFER =
+            "Successfully added a transfer transaction";
 
     public static final String EXPENSE = "EXPENSE";
     public static final String ADD_EXPENSE = "/add-expense";
