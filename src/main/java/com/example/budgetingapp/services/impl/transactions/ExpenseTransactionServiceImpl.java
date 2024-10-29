@@ -13,6 +13,7 @@ import com.example.budgetingapp.exceptions.TransactionFailedException;
 import com.example.budgetingapp.mappers.TransactionMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.transactions.ExpenseRepository;
+import com.example.budgetingapp.repositories.transactions.transactionsspecs.expense.ExpenseSpecificationBuilder;
 import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.TransactionService;
 import jakarta.transaction.Transactional;
@@ -32,6 +33,7 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
     private final TransactionMapper transactionMapper;
     private final UserRepository userRepository;
     private final ExpenseRepository expenseRepository;
+    private final ExpenseSpecificationBuilder expenseSpecificationBuilder;
 
     @Transactional
     @Override
@@ -62,7 +64,7 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
     public List<ResponseTransactionDto> getAllTransactions(Long userId,
                                                            FilterTransactionsDto filterDto,
                                                            Pageable pageable) {
-        Specification<Expense> expenseSpecification = null;
+        Specification<Expense> expenseSpecification = expenseSpecificationBuilder.build(filterDto);
         return expenseRepository.findAll(expenseSpecification, pageable)
                 .stream()
                 .map(transactionMapper::toExpenseDto)
