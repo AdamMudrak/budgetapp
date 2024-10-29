@@ -3,6 +3,7 @@ package com.example.budgetingapp.controllers.transactions;
 import static com.example.budgetingapp.constants.Constants.CODE_200;
 import static com.example.budgetingapp.constants.Constants.CODE_400;
 import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
+import static com.example.budgetingapp.constants.Constants.PAGEABLE_EXAMPLE;
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.ACCOUNT_API_NAME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.ADD_TRANSFER;
@@ -18,6 +19,8 @@ import com.example.budgetingapp.dtos.transfers.response.TransferResponseDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.services.TransferService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
@@ -51,7 +54,7 @@ public class TransferController {
     @ApiResponse(responseCode = CODE_200, description = SUCCESSFULLY_RETRIEVED_TRANSFERS)
     @PostMapping(GET_ALL_TRANSFERS)
     public List<TransferResponseDto> getAllTransfers(@AuthenticationPrincipal User user,
-                                                     Pageable pageable) {
+                                         @Parameter(example = PAGEABLE_EXAMPLE) Pageable pageable) {
         return transferService.getAllTransfersByUserId(user.getId(), pageable);
     }
 }

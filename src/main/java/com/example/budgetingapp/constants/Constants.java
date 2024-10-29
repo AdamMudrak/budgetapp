@@ -25,4 +25,11 @@ public class Constants {
 
     public static final String ROLE_USER = "hasRole('ROLE_USER')";
     public static final String ROLE_ADMIN = "hasRole('ROLE_ADMIN')";
+
+    public static final String PAGEABLE_EXAMPLE = """
+            {
+              "page": 0,
+              "size": 10
+            }
+            """;
 }

@@ -3,6 +3,7 @@ package com.example.budgetingapp.controllers.categories;
 import static com.example.budgetingapp.constants.Constants.CODE_200;
 import static com.example.budgetingapp.constants.Constants.CODE_400;
 import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
+import static com.example.budgetingapp.constants.Constants.PAGEABLE_EXAMPLE;
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.ADD_CATEGORY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.ADD_CATEGORY_SUMMARY;
@@ -26,11 +27,13 @@ import com.example.budgetingapp.dtos.categories.response.ResponseCategoryDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.services.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -82,8 +85,9 @@ public class ExpenseCategoryController {
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_RETRIEVED_CATEGORIES)
     @GetMapping(GET_ALL_CATEGORIES)
-    public List<ResponseCategoryDto> getAllIncomeCategories(@AuthenticationPrincipal User user) {
-        return expenseCategoryService.getAllCategoriesByUserId(user.getId());
+    public List<ResponseCategoryDto> getAllExpenseCategories(@AuthenticationPrincipal User user,
+                                         @Parameter(example = PAGEABLE_EXAMPLE) Pageable pageable) {
+        return expenseCategoryService.getAllCategoriesByUserId(user.getId(), pageable);
     }
 
     @Operation(summary = DELETE_CATEGORY_SUMMARY)
