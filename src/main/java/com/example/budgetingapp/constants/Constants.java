@@ -1,7 +1,6 @@
 package com.example.budgetingapp.constants;
 
 public class Constants {
-    public static final String DATE_PATTERN = "dd.MM.yyyy";
 
     public static final String SPLITERATOR = "=";
 

@@ -12,10 +12,9 @@ import com.example.budgetingapp.mappers.AccountMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.AccountService;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
-
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

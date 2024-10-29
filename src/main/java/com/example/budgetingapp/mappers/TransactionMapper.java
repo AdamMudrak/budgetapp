@@ -1,14 +1,11 @@
 package com.example.budgetingapp.mappers;
 
-import static com.example.budgetingapp.constants.Constants.DATE_PATTERN;
-
 import com.example.budgetingapp.config.MapperConfig;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
 import com.example.budgetingapp.entities.transactions.Expense;
 import com.example.budgetingapp.entities.transactions.Income;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -30,34 +27,16 @@ public interface TransactionMapper {
     @AfterMapping
     default void setTransactionDate(@MappingTarget Expense expense,
                                    RequestTransactionDto requestTransactionDto) {
-        expense.setTransactionDate(LocalDate.parse(requestTransactionDto.getTransactionDate(),
-                DateTimeFormatter.ofPattern(DATE_PATTERN)));
+        expense.setTransactionDate(LocalDate.parse(requestTransactionDto.getTransactionDate()));
     }
 
     @AfterMapping
     default void setTransactionDate(@MappingTarget Income income,
                                     RequestTransactionDto requestTransactionDto) {
-        income.setTransactionDate(LocalDate.parse(requestTransactionDto.getTransactionDate(),
-                DateTimeFormatter.ofPattern(DATE_PATTERN)));
+        income.setTransactionDate(LocalDate.parse(requestTransactionDto.getTransactionDate()));
     }
 
     ResponseTransactionDto toIncomeDto(Income income);
 
     ResponseTransactionDto toExpenseDto(Expense expense);
-
-
-    //TODO somewhy not in use
-    @AfterMapping
-    default void setTransactionDateDto(@MappingTarget RequestTransactionDto requestTransactionDto,
-                                       Income income) {
-        requestTransactionDto.setTransactionDate(income.getTransactionDate()
-                .format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
-    }
-
-    @AfterMapping
-    default void setTransactionDateDto(@MappingTarget RequestTransactionDto requestTransactionDto,
-                                       Expense expense) {
-        requestTransactionDto.setTransactionDate(expense.getTransactionDate()
-                .format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
-    }
 }
