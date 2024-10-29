@@ -1,5 +1,6 @@
 package com.example.budgetingapp.services;
 
+import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
 import java.util.List;
@@ -14,10 +15,9 @@ public interface TransactionService {
                                              RequestTransactionDto requestTransactionDto,
                                              Long transactionId);
 
-    List<ResponseTransactionDto> getAllTransactions(Long userId, Pageable pageable);
-
-    List<ResponseTransactionDto> getAllAccountTransactions(
-            Long userId, Long accountId, Pageable pageable);
+    List<ResponseTransactionDto> getAllTransactions(Long userId,
+                                                    FilterTransactionsDto transactionsDto,
+                                                    Pageable pageable);
 
     void deleteByTransactionId(Long userId, Long transactionId);
 }

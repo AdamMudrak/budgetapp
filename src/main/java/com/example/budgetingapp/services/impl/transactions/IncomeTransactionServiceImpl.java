@@ -2,6 +2,7 @@ package com.example.budgetingapp.services.impl.transactions;
 
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME;
 
+import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
 import com.example.budgetingapp.entities.Account;
@@ -20,6 +21,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -53,24 +55,10 @@ public class IncomeTransactionServiceImpl implements TransactionService {
 
     @Override
     public List<ResponseTransactionDto> getAllTransactions(Long userId,
-                                                                  Pageable pageable) {
-        return incomeRepository
-                .findAllByUserId(userId, pageable)
-                .stream()
-                .map(transactionMapper::toIncomeDto)
-                .toList();
-    }
-
-    @Override
-    public List<ResponseTransactionDto> getAllAccountTransactions(Long userId,
-                                                                  Long accountId,
-                                                                  Pageable pageable) {
-        if (!accountRepository.existsByIdAndUserId(accountId, userId)) {
-            throw new EntityNotFoundException("No account with id " + accountId
-                    + " for user with id " + userId + " was found");
-        }
-        return incomeRepository
-                .findAllByAccountId(accountId, pageable)
+                                                           FilterTransactionsDto filterDto,
+                                                           Pageable pageable) {
+        Specification<Income> incomeSpecification = null;
+        return incomeRepository.findAll(incomeSpecification, pageable)
                 .stream()
                 .map(transactionMapper::toIncomeDto)
                 .toList();
