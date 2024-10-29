@@ -7,11 +7,13 @@ import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDt
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.transactions.Income;
 import com.example.budgetingapp.exceptions.EntityNotFoundException;
+import com.example.budgetingapp.exceptions.TransactionFailedException;
 import com.example.budgetingapp.mappers.TransactionMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.transactions.IncomeRepository;
 import com.example.budgetingapp.services.TransactionService;
 import jakarta.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -85,9 +87,13 @@ public class IncomeTransactionServiceImpl implements TransactionService {
 
         Income newIncome = transactionMapper.toIncome(requestTransactionDto);
         newIncome.setId(transactionId);
+        if (isSufficientAmount(account, previousIncome) < 0) {
+            throw new TransactionFailedException("Not enough money for transaction");
+        }
+        account.setBalance(account.getBalance().subtract(previousIncome.getAmount()));
         account.setBalance(account.getBalance().add(requestTransactionDto.getAmount()));
         accountRepository.save(account);
-        incomeRepository.save(previousIncome);
+        incomeRepository.save(newIncome);
         return transactionMapper.toIncomeDto(newIncome);
     }
 
@@ -104,8 +110,17 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No account with id " + income.getAccount().getId()
                                 + " was found for user with id " + userId));
+        if (isSufficientAmount(account, income) < 0) {
+            throw new TransactionFailedException("Not enough money for transaction");
+        }
         account.setBalance(account.getBalance().subtract(income.getAmount()));
         accountRepository.save(account);
         incomeRepository.deleteById(transactionId);
+    }
+
+    private int isSufficientAmount(Account account, Income income) {
+        return (account.getBalance()
+                .subtract(income.getAmount()))
+                .compareTo(BigDecimal.ZERO);
     }
 }
