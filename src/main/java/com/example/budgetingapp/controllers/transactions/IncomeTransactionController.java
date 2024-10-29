@@ -30,11 +30,13 @@ import com.example.budgetingapp.services.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Positive;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +46,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Validated
 @PreAuthorize(ROLE_USER)
 @RestController
 @Tag(name = TRANSACTION_API_NAME)
@@ -82,7 +85,8 @@ public class IncomeTransactionController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @GetMapping(GET_ALL_ACCOUNT_INCOMES)
     public List<ResponseTransactionDto> getAllAccountIncomeTransactions(
-            @AuthenticationPrincipal User user, @PathVariable Long accountId, Pageable pageable) {
+            @AuthenticationPrincipal User user,
+            @PathVariable @Positive Long accountId, Pageable pageable) {
         return incomeTransactionService.getAllAccountTransactions(
                 user.getId(), accountId, pageable);
     }
@@ -105,7 +109,7 @@ public class IncomeTransactionController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @DeleteMapping(DELETE_INCOME_BY_ID)
     public void deleteIncomeById(@AuthenticationPrincipal User user,
-                                 @PathVariable Long transactionId) {
+                                 @PathVariable @Positive Long transactionId) {
         incomeTransactionService.deleteByTransactionId(user.getId(), transactionId);
     }
 }

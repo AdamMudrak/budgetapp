@@ -28,10 +28,12 @@ import com.example.budgetingapp.services.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Positive;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +43,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Validated
 @PreAuthorize(ROLE_USER)
 @RestController
 @Tag(name = CATEGORY_API_NAME)
@@ -68,7 +71,8 @@ public class IncomeCategoryController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PutMapping(UPDATE_CATEGORY_BY_ID)
     public ResponseCategoryDto updateCategory(@AuthenticationPrincipal User user,
-                                           @PathVariable Long categoryId,
+                                              @PathVariable
+                                              @Positive Long categoryId,
                                            @RequestBody UpdateCategoryDto updateCategoryDto) {
         return incomeCategoryService.updateCategory(user.getId(), categoryId, updateCategoryDto);
     }
@@ -87,7 +91,8 @@ public class IncomeCategoryController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @DeleteMapping(DELETE_CATEGORY_BY_ID)
     public void deleteCategory(@AuthenticationPrincipal User user,
-                                       @PathVariable Long categoryId) {
+                               @PathVariable
+                               @Positive Long categoryId) {
         incomeCategoryService.deleteByCategoryIdAndUserId(user.getId(), categoryId);
     }
 }
