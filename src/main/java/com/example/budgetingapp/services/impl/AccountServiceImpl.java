@@ -1,5 +1,7 @@
 package com.example.budgetingapp.services.impl;
 
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.ACCOUNT_QUANTITY_THRESHOLD;
+
 import com.example.budgetingapp.dtos.account.request.CreateAccountDto;
 import com.example.budgetingapp.dtos.account.request.UpdateAccountDto;
 import com.example.budgetingapp.dtos.account.response.AccountDto;
@@ -27,6 +29,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDto saveAccount(Long userId, CreateAccountDto requestDto) {
+        if (accountRepository.countAccountsByUserId(userId) >= ACCOUNT_QUANTITY_THRESHOLD) {
+            throw new ConflictException("You can't have more than " + ACCOUNT_QUANTITY_THRESHOLD
+             + " accounts!");
+        }
         User currentUser = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No user with id " + userId + " found"));

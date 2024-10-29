@@ -4,8 +4,13 @@ import com.example.budgetingapp.entities.Account;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
+    @Query("SELECT COUNT(*) FROM Account account "
+            + " WHERE account.user.id=:userId")
+    int countAccountsByUserId(Long userId);
+
     List<Account> getAllByUserId(Long userId);
 
     boolean existsByIdAndUserId(Long id, Long userId);

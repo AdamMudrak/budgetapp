@@ -3,6 +3,9 @@ package com.example.budgetingapp.constants.entities;
 import java.util.List;
 
 public class EntitiesConstants {
+    public static final int ACCOUNT_QUANTITY_THRESHOLD = 5;
+    public static final int CATEGORY_QUANTITY_THRESHOLD = 20;
+
     public static final String TRANSFERS = "transfers";
     public static final String FROM_ACCOUNT_ID = "from_account_id";
     public static final String TO_ACCOUNT_ID = "to_account_id";
