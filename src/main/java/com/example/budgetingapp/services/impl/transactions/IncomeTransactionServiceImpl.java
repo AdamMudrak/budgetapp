@@ -5,12 +5,14 @@ import static com.example.budgetingapp.constants.controllers.TransactionControll
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
 import com.example.budgetingapp.entities.Account;
+import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.transactions.Income;
 import com.example.budgetingapp.exceptions.EntityNotFoundException;
 import com.example.budgetingapp.exceptions.TransactionFailedException;
 import com.example.budgetingapp.mappers.TransactionMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.transactions.IncomeRepository;
+import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.TransactionService;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class IncomeTransactionServiceImpl implements TransactionService {
     private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
     private final TransactionMapper transactionMapper;
     private final IncomeRepository incomeRepository;
 
@@ -40,6 +43,10 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                                 + requestTransactionDto.getAccountId() + " was found"));
         account.setBalance(account.getBalance().add(requestTransactionDto.getAmount()));
         accountRepository.save(account);
+        User currentUser = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "No user with id " + userId + " found"));
+        income.setUser(currentUser);
         incomeRepository.save(income);
         return transactionMapper.toIncomeDto(income);
     }

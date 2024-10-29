@@ -5,12 +5,14 @@ import static com.example.budgetingapp.constants.controllers.TransactionControll
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
 import com.example.budgetingapp.entities.Account;
+import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.transactions.Expense;
 import com.example.budgetingapp.exceptions.EntityNotFoundException;
 import com.example.budgetingapp.exceptions.TransactionFailedException;
 import com.example.budgetingapp.mappers.TransactionMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.transactions.ExpenseRepository;
+import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.TransactionService;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Service;
 public class ExpenseTransactionServiceImpl implements TransactionService {
     private final AccountRepository accountRepository;
     private final TransactionMapper transactionMapper;
+    private final UserRepository userRepository;
     private final ExpenseRepository expenseRepository;
 
     @Transactional
@@ -45,6 +48,10 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
         account.setBalance(account.getBalance().subtract(requestTransactionDto.getAmount()));
         accountRepository.save(account);
         Expense expense = transactionMapper.toExpense(requestTransactionDto);
+        User currentUser = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "No user with id " + userId + " found"));
+        expense.setUser(currentUser);
         expenseRepository.save(expense);
         return transactionMapper.toExpenseDto(expense);
     }
