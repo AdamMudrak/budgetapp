@@ -12,7 +12,9 @@ import com.example.budgetingapp.repositories.transfer.TransferRepository;
 import com.example.budgetingapp.services.TransferService;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -49,6 +51,15 @@ public class TransferServiceImpl implements TransferService {
         accountRepository.save(fromAccount);
         accountRepository.save(toAccount);
         return transferMapper.toTransferDto(transferRepository.save(transfer));
+    }
+
+    @Override
+    public List<TransferResponseDto> getAllTransfersByUserId(Long userId, Pageable pageable) {
+        return transferRepository
+                .findAllByUserId(userId, pageable)
+                .stream()
+                .map(transferMapper::toTransferDto)
+                .toList();
     }
 
     private int isSufficientAmount(Account account, TransferRequestDto requestDto) {

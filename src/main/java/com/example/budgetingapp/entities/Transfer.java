@@ -3,6 +3,7 @@ package com.example.budgetingapp.entities;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.FROM_ACCOUNT_ID;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.TO_ACCOUNT_ID;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.TRANSFERS;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.USER_ID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,6 +32,9 @@ public class Transfer {
     private BigDecimal amount;
     @Column(nullable = false)
     private LocalDate transactionDate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = USER_ID, nullable = false)
+    private User user;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = FROM_ACCOUNT_ID, nullable = false)
     private Account fromAccount;

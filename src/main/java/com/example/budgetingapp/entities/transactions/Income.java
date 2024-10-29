@@ -3,8 +3,10 @@ package com.example.budgetingapp.entities.transactions;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.ACCOUNT_ID;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.INCOMES;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.INCOME_CATEGORY_ID;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.USER_ID;
 
 import com.example.budgetingapp.entities.Account;
+import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.categories.IncomeCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,6 +32,9 @@ public class Income {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String comment;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = USER_ID, nullable = false)
+    private User user;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ACCOUNT_ID, nullable = false)
     private Account account;

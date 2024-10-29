@@ -28,6 +28,12 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_t_user_id
+                    references: users(id)
+              - column:
                   name: from_account_id
                   type: bigint
                   constraints:
