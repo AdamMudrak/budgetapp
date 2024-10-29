@@ -14,6 +14,8 @@ import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.AccountService;
 import java.util.List;
 import java.util.Optional;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -80,6 +82,7 @@ public class AccountServiceImpl implements AccountService {
                                         + accountId + " was found for user with id " + userId)));
     }
 
+    @Transactional
     @Override
     public AccountDto setAccountByDefault(Long userId, Long accountId) {
         Account account = accountRepository.findByIdAndUserId(accountId, userId)
