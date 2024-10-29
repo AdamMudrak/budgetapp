@@ -6,7 +6,10 @@ import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.ADD_TRANSFER;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.ADD_TRANSFER_SUMMARY;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_TRANSFERS;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_TRANSFERS_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_ADDED_TRANSFER;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_RETRIEVED_TRANSFERS;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSACTION_API_NAME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSFERS;
 
@@ -17,7 +20,9 @@ import com.example.budgetingapp.services.TransferService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,5 +45,13 @@ public class TransferController {
     public TransferResponseDto addTransfer(@AuthenticationPrincipal User user,
                                            @RequestBody TransferRequestDto requestDto) {
         return transferService.transfer(user.getId(), requestDto);
+    }
+
+    @Operation(summary = GET_ALL_TRANSFERS_SUMMARY)
+    @ApiResponse(responseCode = CODE_200, description = SUCCESSFULLY_RETRIEVED_TRANSFERS)
+    @PostMapping(GET_ALL_TRANSFERS)
+    public List<TransferResponseDto> getAllTransfers(@AuthenticationPrincipal User user,
+                                                     Pageable pageable) {
+        return transferService.getAllTransfersByUserId(user.getId(), pageable);
     }
 }

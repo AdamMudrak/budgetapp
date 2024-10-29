@@ -15,6 +15,11 @@ public class TransactionControllerConstants {
     public static final String SUCCESSFULLY_ADDED_TRANSFER =
             "Successfully added a transfer transaction";
 
+    public static final String GET_ALL_TRANSFERS = "/get-all-transfers";
+    public static final String GET_ALL_TRANSFERS_SUMMARY = "Retrieve all transfers";
+    public static final String SUCCESSFULLY_RETRIEVED_TRANSFERS =
+            "Successfully retrieved transfer transactions";
+
     public static final String EXPENSE = "EXPENSE";
     public static final String ADD_EXPENSE = "/add-expense";
     public static final String GET_ALL_EXPENSES = "/get-all-expenses";

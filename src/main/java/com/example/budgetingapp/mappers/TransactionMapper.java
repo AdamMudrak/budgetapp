@@ -45,6 +45,8 @@ public interface TransactionMapper {
 
     ResponseTransactionDto toExpenseDto(Expense expense);
 
+
+    //TODO somewhy not in use
     @AfterMapping
     default void setTransactionDateDto(@MappingTarget RequestTransactionDto requestTransactionDto,
                                        Income income) {
