@@ -17,6 +17,7 @@ import com.example.budgetingapp.services.CategoryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -61,10 +62,10 @@ public class IncomeCategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<ResponseCategoryDto> getAllCategoriesByUserId(Long userId) {
+    public List<ResponseCategoryDto> getAllCategoriesByUserId(Long userId, Pageable pageable) {
         return categoryMapper
                 .toIncomeCategoryDtoList(incomeCategoryRepository
-                        .getAllByUserId(userId));
+                        .getAllByUserId(userId, pageable));
     }
 
     @Override
