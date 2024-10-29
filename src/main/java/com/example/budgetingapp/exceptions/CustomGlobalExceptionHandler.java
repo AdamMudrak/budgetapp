@@ -71,6 +71,17 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
                 request);
     }
 
+    @ExceptionHandler(SpecificationProviderNotFoundException.class)
+    protected ResponseEntity<Object> handleSpecificationNotFound(
+            RuntimeException ex, WebRequest request) {
+        return handleExceptionInternal(
+                ex,
+                ex.getMessage(),
+                new HttpHeaders(),
+                NOT_FOUND,
+                request);
+    }
+
     @ExceptionHandler(RegistrationException.class)
     protected ResponseEntity<Object> handleRegistrationException(
             Exception ex, WebRequest request) {
