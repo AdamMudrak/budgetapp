@@ -12,6 +12,6 @@ public class TransferResponseDto {
     private String comment;
     private BigDecimal amount;
     private LocalDate transactionDate;
-    private String fromAccountName;
-    private String toAccountName;
+    private Long fromAccountId;
+    private Long toAccountId;
 }

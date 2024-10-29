@@ -15,6 +15,8 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(config = MapperConfig.class)
 public interface TransferMapper {
+
+    @Mapping(target = "transactionDate", ignore = true)
     @Mapping(source = "fromAccountId", target = "fromAccount.id")
     @Mapping(source = "toAccountId", target = "toAccount.id")
     Transfer toTransfer(TransferRequestDto requestTransactionDto);
@@ -26,12 +28,7 @@ public interface TransferMapper {
                 DateTimeFormatter.ofPattern(DATE_PATTERN)));
     }
 
+    @Mapping(source = "fromAccount.id", target = "fromAccountId")
+    @Mapping(source = "toAccount.id", target = "toAccountId")
     TransferResponseDto toTransferDto(Transfer transfer);
-
-    @AfterMapping
-    default void setAccountNames(@MappingTarget TransferResponseDto transferResponseDto,
-                                 Transfer transfer) {
-        transferResponseDto.setFromAccountName(transfer.getFromAccount().getName());
-        transferResponseDto.setToAccountName(transfer.getToAccount().getName());
-    }
 }
