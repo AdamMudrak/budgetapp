@@ -2,9 +2,9 @@ package com.example.budgetingapp.services.impl.categories;
 
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME;
 
-import com.example.budgetingapp.dtos.transactions.request.CreateCategoryDto;
-import com.example.budgetingapp.dtos.transactions.request.UpdateCategoryDto;
-import com.example.budgetingapp.dtos.transactions.response.ResponseCategoryDto;
+import com.example.budgetingapp.dtos.categories.request.CreateCategoryDto;
+import com.example.budgetingapp.dtos.categories.request.UpdateCategoryDto;
+import com.example.budgetingapp.dtos.categories.response.ResponseCategoryDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.categories.IncomeCategory;
 import com.example.budgetingapp.exceptions.AlreadyExistsException;

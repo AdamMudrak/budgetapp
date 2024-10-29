@@ -1,8 +1,8 @@
 package com.example.budgetingapp.mappers;
 
 import com.example.budgetingapp.config.MapperConfig;
-import com.example.budgetingapp.dtos.transactions.request.CreateCategoryDto;
-import com.example.budgetingapp.dtos.transactions.response.ResponseCategoryDto;
+import com.example.budgetingapp.dtos.categories.request.CreateCategoryDto;
+import com.example.budgetingapp.dtos.categories.response.ResponseCategoryDto;
 import com.example.budgetingapp.entities.categories.ExpenseCategory;
 import com.example.budgetingapp.entities.categories.IncomeCategory;
 import java.util.List;

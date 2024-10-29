@@ -1,8 +1,8 @@
 package com.example.budgetingapp.services;
 
-import com.example.budgetingapp.dtos.transactions.request.CreateCategoryDto;
-import com.example.budgetingapp.dtos.transactions.request.UpdateCategoryDto;
-import com.example.budgetingapp.dtos.transactions.response.ResponseCategoryDto;
+import com.example.budgetingapp.dtos.categories.request.CreateCategoryDto;
+import com.example.budgetingapp.dtos.categories.request.UpdateCategoryDto;
+import com.example.budgetingapp.dtos.categories.response.ResponseCategoryDto;
 import java.util.List;
 
 public interface CategoryService {

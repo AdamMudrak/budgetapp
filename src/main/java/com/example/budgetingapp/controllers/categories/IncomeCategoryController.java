@@ -20,9 +20,9 @@ import static com.example.budgetingapp.constants.controllers.CategoryControllerC
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.UPDATE_CATEGORY_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME;
 
-import com.example.budgetingapp.dtos.transactions.request.CreateCategoryDto;
-import com.example.budgetingapp.dtos.transactions.request.UpdateCategoryDto;
-import com.example.budgetingapp.dtos.transactions.response.ResponseCategoryDto;
+import com.example.budgetingapp.dtos.categories.request.CreateCategoryDto;
+import com.example.budgetingapp.dtos.categories.request.UpdateCategoryDto;
+import com.example.budgetingapp.dtos.categories.response.ResponseCategoryDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.services.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
