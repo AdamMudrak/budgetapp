@@ -65,7 +65,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
     public List<ResponseTransactionDto> getAllAccountTransactions(Long userId,
                                                                   Long accountId,
                                                                   Pageable pageable) {
-        if (accountRepository.existsByIdAndUserId(accountId, userId)) {
+        if (!accountRepository.existsByIdAndUserId(accountId, userId)) {
             throw new EntityNotFoundException("No account with id " + accountId
                     + " for user with id " + userId + " was found");
         }
