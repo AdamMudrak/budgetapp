@@ -31,7 +31,11 @@ public class Target {
     @Column(nullable = false)
     private BigDecimal expectedSum;
     @Column(nullable = false)
+    private BigDecimal currentSum = BigDecimal.ZERO;
+    @Column(nullable = false)
     private LocalDate achievedBefore;
+    @Column(nullable = false)
+    private String currency;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = USER_ID, nullable = false)
     private User user;

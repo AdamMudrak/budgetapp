@@ -1,5 +1,6 @@
 package com.example.budgetingapp.services;
 
+import com.example.budgetingapp.dtos.transfers.request.DeleteTargetRequestDto;
 import com.example.budgetingapp.dtos.transfers.request.TargetTransactionRequestDto;
 import com.example.budgetingapp.dtos.transfers.response.TargetTransactionResponseDto;
 import java.util.List;
@@ -12,5 +13,5 @@ public interface TargetService {
     List<TargetTransactionResponseDto> getAllTargets(Long userId,
                                                     Pageable pageable);
 
-    void deleteByTargetId(Long userId, Long targetId, Long accountId);
+    void deleteByTargetId(Long userId, DeleteTargetRequestDto deleteTargetRequestDto);
 }

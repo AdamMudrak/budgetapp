@@ -8,5 +8,7 @@ import java.time.LocalDate;
 public record TargetTransactionResponseDto(Long id,
                                            String name,
                                            BigDecimal expectedSum,
-                                           LocalDate achievedBefore) {
+                                           BigDecimal currentSum,
+                                           LocalDate achievedBefore,
+                                           String currency) {
 }
