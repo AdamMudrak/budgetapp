@@ -11,13 +11,10 @@ import static com.example.budgetingapp.constants.controllers.TransactionControll
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.DELETE_EXPENSE_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.EXPENSE;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.EXPENSE_TRANSACTIONS;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_ACCOUNT_EXPENSES;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_ACCOUNT_EXPENSES_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_EXPENSES;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_EXPENSES_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_ADDED_EXPENSE;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_DELETED_EXPENSE;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_RETRIEVED_ACCOUNT_EXPENSES;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_RETRIEVED_EXPENSES;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_UPDATED_EXPENSE;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSACTION_API_NAME;
@@ -85,19 +82,6 @@ public class ExpenseTransactionController {
         return expenseTransactionService.getAllTransactions(user.getId(),
                 filterTransactionsDto, pageable);
     }
-
-//    @Operation(summary = GET_ALL_ACCOUNT_EXPENSES_SUMMARY)
-//    @ApiResponse(responseCode = CODE_200, description =
-//            SUCCESSFULLY_RETRIEVED_ACCOUNT_EXPENSES)
-//    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-//    @GetMapping(GET_ALL_ACCOUNT_EXPENSES)
-//    public List<ResponseTransactionDto> getAllAccountExpenseTransactions(
-//            @AuthenticationPrincipal User user,
-//            @PathVariable @Positive Long accountId,
-//            @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE) Pageable pageable) {
-//        return expenseTransactionService.getAllAccountTransactions(
-//                user.getId(), accountId, pageable);
-//    }
 
     @Operation(summary = UPDATE_EXPENSE_SUMMARY)
     @ApiResponse(responseCode = CODE_200, description =

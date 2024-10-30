@@ -23,7 +23,6 @@ public class TransactionControllerConstants {
     public static final String EXPENSE = "EXPENSE";
     public static final String ADD_EXPENSE = "/add-expense";
     public static final String GET_ALL_EXPENSES = "/get-all-expenses";
-    public static final String GET_ALL_ACCOUNT_EXPENSES = "/get-all-expenses/{accountId}";
     public static final String UPDATE_EXPENSE_BY_ID = "/update-expense/{transactionId}";
     public static final String DELETE_EXPENSE_BY_ID = "/delete-expense/{transactionId}";
 
@@ -39,18 +38,14 @@ public class TransactionControllerConstants {
     public static final String SUCCESSFULLY_DELETED_EXPENSE =
             "Successfully deleted an expense transaction";
 
-    public static final String GET_ALL_EXPENSES_SUMMARY = "Retrieve all expenses";
+    public static final String GET_ALL_EXPENSES_SUMMARY = "Retrieve all expenses, or optionally"
+            + " filter them by: accountId, fromDate, toDate, categoryIds";
     public static final String SUCCESSFULLY_RETRIEVED_EXPENSES =
             "Successfully retrieved expenses";
-
-    public static final String GET_ALL_ACCOUNT_EXPENSES_SUMMARY = "Retrieve all account expenses";
-    public static final String SUCCESSFULLY_RETRIEVED_ACCOUNT_EXPENSES =
-            "Successfully retrieved account expenses";
 
     public static final String INCOME = "INCOME";
     public static final String ADD_INCOME = "/add-income";
     public static final String GET_ALL_INCOMES = "/get-all-incomes";
-    public static final String GET_ALL_ACCOUNT_INCOMES = "/get-all-incomes/{accountId}";
     public static final String UPDATE_INCOME_BY_ID = "/update-income/{transactionId}";
     public static final String DELETE_INCOME_BY_ID = "/delete-income/{transactionId}";
 
@@ -66,12 +61,9 @@ public class TransactionControllerConstants {
     public static final String SUCCESSFULLY_DELETED_INCOME =
             "Successfully deleted an income transaction";
 
-    public static final String GET_ALL_INCOMES_SUMMARY = "Retrieve all incomes";
+    public static final String GET_ALL_INCOMES_SUMMARY = "Retrieve all incomes, or optionally"
+            + " filter them by: accountId, fromDate, toDate, categoryIds";
     public static final String SUCCESSFULLY_RETRIEVED_INCOMES =
             "Successfully retrieved incomes";
-
-    public static final String GET_ALL_ACCOUNT_INCOMES_SUMMARY = "Retrieve all account incomes";
-    public static final String SUCCESSFULLY_RETRIEVED_ACCOUNT_INCOMES =
-            "Successfully retrieved account incomes";
 
 }

@@ -9,21 +9,19 @@ import static com.example.budgetingapp.constants.controllers.TransactionControll
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.ADD_INCOME_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.DELETE_INCOME_BY_ID;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.DELETE_INCOME_SUMMARY;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_ACCOUNT_INCOMES;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_ACCOUNT_INCOMES_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_INCOMES;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_INCOMES_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME_TRANSACTIONS;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_ADDED_INCOME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_DELETED_INCOME;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_RETRIEVED_ACCOUNT_INCOMES;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_RETRIEVED_INCOMES;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_UPDATED_INCOME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSACTION_API_NAME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.UPDATE_INCOME_BY_ID;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.UPDATE_INCOME_SUMMARY;
 
+import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
 import com.example.budgetingapp.entities.User;
@@ -71,28 +69,18 @@ public class IncomeTransactionController {
         return incomeTransactionService.saveTransaction(user.getId(), requestTransactionDto);
     }
 
-//    @Operation(summary = GET_ALL_INCOMES_SUMMARY)
-//    @ApiResponse(responseCode = CODE_200, description =
-//            SUCCESSFULLY_RETRIEVED_INCOMES)
-//    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-//    @GetMapping(GET_ALL_INCOMES)
-//    public List<ResponseTransactionDto> getAllIncomeTransactions(@AuthenticationPrincipal User user,
-//                             @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE)Pageable pageable) {
-//        return incomeTransactionService.getAllTransactions(user.getId(), pageable);
-//    }
-//
-//    @Operation(summary = GET_ALL_ACCOUNT_INCOMES_SUMMARY)
-//    @ApiResponse(responseCode = CODE_200, description =
-//            SUCCESSFULLY_RETRIEVED_ACCOUNT_INCOMES)
-//    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-//    @GetMapping(GET_ALL_ACCOUNT_INCOMES)
-//    public List<ResponseTransactionDto> getAllAccountIncomeTransactions(
-//            @AuthenticationPrincipal User user,
-//            @PathVariable @Positive Long accountId,
-//            @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE) Pageable pageable) {
-//        return incomeTransactionService.getAllAccountTransactions(
-//                user.getId(), accountId, pageable);
-//    }
+    @Operation(summary = GET_ALL_INCOMES_SUMMARY)
+    @ApiResponse(responseCode = CODE_200, description =
+            SUCCESSFULLY_RETRIEVED_INCOMES)
+    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
+    @GetMapping(GET_ALL_INCOMES)
+    public List<ResponseTransactionDto> getAllIncomesTransactions(
+            @AuthenticationPrincipal User user,
+            FilterTransactionsDto filterTransactionsDto,
+            @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE) Pageable pageable) {
+        return incomeTransactionService.getAllTransactions(user.getId(),
+                filterTransactionsDto, pageable);
+    }
 
     @Operation(summary = UPDATE_INCOME_SUMMARY)
     @ApiResponse(responseCode = CODE_200, description =
