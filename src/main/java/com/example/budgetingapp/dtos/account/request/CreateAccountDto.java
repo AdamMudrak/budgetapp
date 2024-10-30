@@ -20,6 +20,7 @@ public record CreateAccountDto(
         String name,
         @Schema(name = AccountDtoConstants.BALANCE,
                 example = AccountDtoConstants.BALANCE_EXAMPLE,
+                description = AccountDtoConstants.BALANCE_DESCRIPTION,
                 requiredMode = REQUIRED)
         @NotNull
         @Positive
