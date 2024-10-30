@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: create-transfers-table
+      id: create-targets-table
       author: AdamMudrak
       changes:
         - createTable:
-            tableName: transfers
+            tableName: targets
             columns:
               - column:
                   name: id
