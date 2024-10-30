@@ -1,6 +1,6 @@
-package com.example.budgetingapp.entities;
+package com.example.budgetingapp.entities.tokens;
 
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.PARAM_TOKENS;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.ACTION_TOKENS;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,13 +14,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = PARAM_TOKENS)
-public class ParamToken {
+@Table(name = ACTION_TOKENS)
+public class ActionToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, unique = true)
-    private String parameter;
     @Column(nullable = false, unique = true)
     private String actionToken;
 }

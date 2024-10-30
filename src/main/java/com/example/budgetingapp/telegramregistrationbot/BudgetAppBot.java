@@ -17,7 +17,7 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.TELE
 import static com.example.budgetingapp.constants.security.SecurityConstants.TOKEN;
 import static com.example.budgetingapp.constants.security.SecurityConstants.UNKNOWN_COMMAND;
 
-import com.example.budgetingapp.entities.ActionToken;
+import com.example.budgetingapp.entities.tokens.ActionToken;
 import com.example.budgetingapp.exceptions.LoginException;
 import com.example.budgetingapp.repositories.actiontoken.ActionTokenRepository;
 import com.example.budgetingapp.security.RandomStringUtil;
@@ -28,6 +28,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,6 +47,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Component
 public class BudgetAppBot extends TelegramLongPollingBot {
+    private static final Long TIME_OUT = 20L;
     private static final Set<Long> stoppedUserIds = new HashSet<>();
     private static final HttpClient httpClient = HttpClient.newHttpClient();
     private final RandomStringUtil randomStringUtil;
@@ -171,6 +174,7 @@ public class BudgetAppBot extends TelegramLongPollingBot {
                     .uri(URI.create(botToServerRequestUri))
                     .header(CONTENT_TYPE_HEADER, CONTENT_TYPE)
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .timeout(Duration.of(TIME_OUT, ChronoUnit.SECONDS))
                     .build();
         HttpResponse<String> response;
         try {

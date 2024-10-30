@@ -19,9 +19,6 @@ public class AuthControllerConstants {
     public static final String TELEGRAM_AUTH = "/telegram-auth";
     public static final String REFRESH_ACCESS_TOKEN = "/refreshAccessToken";
 
-    public static final String ROLE_USER = "hasRole('ROLE_USER')";
-    public static final String ROLE_ADMIN = "hasRole('ROLE_ADMIN')";
-
     public static final String REGISTER_SUMMARY = "Register a new user in the app";
     public static final String SUCCESSFULLY_REGISTERED = "Successfully registered";
 

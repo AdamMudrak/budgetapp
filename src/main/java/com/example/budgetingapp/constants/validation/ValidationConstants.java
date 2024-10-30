@@ -1,6 +1,9 @@
 package com.example.budgetingapp.constants.validation;
 
 public class ValidationConstants {
+    public static final String INVALID_DATE_FORMAT = "Invalid date format. Should be YYYY-MM-dd";
+    public static final String DATE_PATTERN = "^\\d{4}-\\d{2}-\\d{2}$";
+
     public static final String INVALID_EMAIL = "Invalid email";
     public static final String PATTERN_OF_EMAIL = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*"
             + "@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";

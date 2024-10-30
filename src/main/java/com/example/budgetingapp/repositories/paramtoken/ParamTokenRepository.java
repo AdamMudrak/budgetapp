@@ -1,6 +1,6 @@
 package com.example.budgetingapp.repositories.paramtoken;
 
-import com.example.budgetingapp.entities.ParamToken;
+import com.example.budgetingapp.entities.tokens.ParamToken;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -1,12 +1,8 @@
 package com.example.budgetingapp.constants;
 
 public class Constants {
-    public static final String SPLITERATOR = "=";
 
-    public static final String SUCCESSFULLY_RETRIEVED = "Successfully retrieved";
-    public static final String SUCCESSFULLY_CREATED = "Successfully created";
-    public static final String SUCCESSFULLY_UPDATED = "Successfully updated";
-    public static final String SUCCESSFULLY_ADDED = "Successfully added";
+    public static final String SPLITERATOR = "=";
 
     public static final String INVALID_ID_DESCRIPTION =
             "Either a negative or non-existing id provided. API will tell which one";
@@ -16,6 +12,7 @@ public class Constants {
     public static final String ACCESS_DENIED = "Access to this resource on the server is denied";
 
     public static final String CODE_200 = "200";
+    //TODO use them on controllers
     public static final String CODE_201 = "201";
     public static final String CODE_204 = "204";
     public static final String CODE_204_DESCRIPTION = "No content";
@@ -25,4 +22,23 @@ public class Constants {
 
     public static final String ID = "id";
     public static final String ID_EXAMPLE = "1";
+
+    public static final String ROLE_USER = "hasRole('ROLE_USER')";
+    public static final String ROLE_ADMIN = "hasRole('ROLE_ADMIN')";
+
+    public static final String CATEGORY_PAGEABLE_EXAMPLE = """
+            {
+              "page": 0,
+              "size": 10,
+              "sort":"name,DESC"
+            }
+            """;
+
+    public static final String TRANSACTION_PAGEABLE_EXAMPLE = """
+            {
+              "page": 0,
+              "size": 10,
+              "sort":"transactionDate,ASC"
+            }
+            """;
 }
