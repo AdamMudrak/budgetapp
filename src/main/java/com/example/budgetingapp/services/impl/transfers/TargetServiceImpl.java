@@ -1,17 +1,23 @@
 package com.example.budgetingapp.services.impl.transfers;
 
 import com.example.budgetingapp.dtos.transfers.request.DeleteTargetRequestDto;
+import com.example.budgetingapp.dtos.transfers.request.ReplenishTargetRequestDto;
 import com.example.budgetingapp.dtos.transfers.request.TargetTransactionRequestDto;
 import com.example.budgetingapp.dtos.transfers.response.TargetTransactionResponseDto;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.transfers.Target;
 import com.example.budgetingapp.exceptions.EntityNotFoundException;
+import com.example.budgetingapp.exceptions.TransactionFailedException;
 import com.example.budgetingapp.mappers.TargetMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.transfer.TargetRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.TargetService;
 import jakarta.transaction.Transactional;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +38,41 @@ public class TargetServiceImpl implements TargetService {
         newTarget.setUser(userRepository.findById(userId).orElseThrow(
                 () -> new EntityNotFoundException("No user with id " + userId + " was found")));
         return targetMapper.toTargetDto(targetRepository.save(newTarget));
+    }
+
+    @Transactional
+    @Override
+    public TargetTransactionResponseDto replenishTarget(Long userId,
+                                            ReplenishTargetRequestDto replenishTargetRequestDto) {
+        Account account = accountRepository.findByIdAndUserId(
+                replenishTargetRequestDto.fromAccountId(), userId).orElseThrow(
+                    () -> new EntityNotFoundException("No account with id "
+                        + replenishTargetRequestDto.fromAccountId() + " for user " + userId
+                        + " was found"));
+        Target target = targetRepository.findByIdAndUserId(replenishTargetRequestDto.toTargetId(),
+                userId).orElseThrow(() -> new EntityNotFoundException("No target with id "
+                + replenishTargetRequestDto.toTargetId() + " for user " + userId
+                + " was found"));
+        if (!account.getCurrency().equals(target.getCurrency())) {
+            throw new IllegalArgumentException(
+                    "You can't transfer money from account with currency " + account.getCurrency()
+                            + " to target with currency " + target.getCurrency());
+        }
+        if (isSufficientAmount(account, replenishTargetRequestDto) < 0) {
+            throw new TransactionFailedException("Not enough money for transaction");
+        }
+        account.setBalance(account.getBalance()
+                .subtract(replenishTargetRequestDto.sumOfReplenishment()));
+        target.setCurrentSum(target.getCurrentSum()
+                .add(replenishTargetRequestDto.sumOfReplenishment()));
+        accountRepository.save(account);
+        if (target.getCurrentSum().compareTo(target.getExpectedSum()) >= 0) {
+            target.setAchieved(true);
+            target.setMonthlyDownPayment(BigDecimal.ZERO);
+        } else {
+            calculateDownPayment(target);
+        }
+        return targetMapper.toTargetDto(targetRepository.save(target));
     }
 
     @Override
@@ -60,5 +101,19 @@ public class TargetServiceImpl implements TargetService {
         account.setBalance(account.getBalance().add(target.getCurrentSum()));
         accountRepository.save(account);
         targetRepository.deleteById(deleteTargetRequestDto.targetId());
+    }
+
+    private int isSufficientAmount(Account account, ReplenishTargetRequestDto requestDto) {
+        return (account.getBalance()
+                .subtract(requestDto.sumOfReplenishment()))
+                .compareTo(BigDecimal.ZERO);
+    }
+
+    private void calculateDownPayment(Target target) {
+        BigDecimal difference = target.getExpectedSum().subtract(target.getCurrentSum());
+        long monthsToAchieve = ChronoUnit.MONTHS.between(LocalDate.now(),
+                target.getAchievedBefore());
+        target.setMonthlyDownPayment(difference.divide(
+                BigDecimal.valueOf(monthsToAchieve), RoundingMode.CEILING));
     }
 }

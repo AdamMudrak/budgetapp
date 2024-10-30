@@ -9,6 +9,8 @@ public record TargetTransactionResponseDto(Long id,
                                            String name,
                                            BigDecimal expectedSum,
                                            BigDecimal currentSum,
+                                           BigDecimal monthlyDownPayment,
                                            LocalDate achievedBefore,
-                                           String currency) {
+                                           String currency,
+                                           boolean achieved) {
 }

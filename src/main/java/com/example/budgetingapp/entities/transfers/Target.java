@@ -1,5 +1,6 @@
 package com.example.budgetingapp.entities.transfers;
 
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.BOOLEAN_TO_INT;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGETS;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.USER_ID;
 
@@ -33,9 +34,13 @@ public class Target {
     @Column(nullable = false)
     private BigDecimal currentSum = BigDecimal.ZERO;
     @Column(nullable = false)
+    private BigDecimal monthlyDownPayment;
+    @Column(nullable = false)
     private LocalDate achievedBefore;
     @Column(nullable = false)
     private String currency;
+    @Column(nullable = false, columnDefinition = BOOLEAN_TO_INT)
+    private boolean achieved = false;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = USER_ID, nullable = false)
     private User user;
