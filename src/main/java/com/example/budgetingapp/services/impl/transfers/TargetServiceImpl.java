@@ -37,6 +37,7 @@ public class TargetServiceImpl implements TargetService {
         Target newTarget = targetMapper.toTarget(requestTransactionDto);
         newTarget.setUser(userRepository.findById(userId).orElseThrow(
                 () -> new EntityNotFoundException("No user with id " + userId + " was found")));
+        calculateDownPayment(newTarget);
         return targetMapper.toTargetDto(targetRepository.save(newTarget));
     }
 
