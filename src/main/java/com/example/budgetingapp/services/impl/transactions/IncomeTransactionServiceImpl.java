@@ -76,20 +76,34 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                 .orElseThrow(() ->
                         new EntityNotFoundException(
                                 "No income with id " + transactionId + " was found"));
-        Account account = accountRepository
+
+        Account previousAccount = accountRepository
                 .findByIdAndUserId(previousIncome.getAccount().getId(), userId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No account with id " + previousIncome.getAccount().getId()
                                 + " was found for user with id " + userId));
 
-        Income newIncome = transactionMapper.toIncome(requestTransactionDto);
-        newIncome.setId(transactionId);
-        if (isSufficientAmount(account, previousIncome) < 0) {
+        if (isSufficientAmount(previousAccount, previousIncome) < 0) {
             throw new TransactionFailedException("Not enough money for transaction");
         }
-        account.setBalance(account.getBalance().subtract(previousIncome.getAmount()));
-        account.setBalance(account.getBalance().add(requestTransactionDto.getAmount()));
-        accountRepository.save(account);
+        previousAccount.setBalance(previousAccount.getBalance()
+                .subtract(previousIncome.getAmount()));
+        accountRepository.save(previousAccount);
+
+        Account newAccount = accountRepository
+                .findByIdAndUserId(requestTransactionDto.getAccountId(), userId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "No account with id " + requestTransactionDto.getAccountId()
+                                + " was found for user with id " + userId));
+        newAccount.setBalance(newAccount.getBalance().add(requestTransactionDto.getAmount()));
+        accountRepository.save(newAccount);
+
+        Income newIncome = transactionMapper.toIncome(requestTransactionDto);
+        newIncome.setId(transactionId);
+        User currentUser = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "No user with id " + userId + " found"));
+        newIncome.setUser(currentUser);
         incomeRepository.save(newIncome);
         return transactionMapper.toIncomeDto(newIncome);
     }

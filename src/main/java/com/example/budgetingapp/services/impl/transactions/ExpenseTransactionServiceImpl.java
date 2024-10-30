@@ -81,20 +81,32 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
                 .orElseThrow(() ->
                         new EntityNotFoundException(
                                 "No expense with id " + transactionId + " was found"));
-        Account account = accountRepository
+
+        Account previousAccount = accountRepository
                 .findByIdAndUserId(previousExpense.getAccount().getId(), userId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No account with id " + previousExpense.getAccount().getId()
                                 + " was found for user with id " + userId));
+        previousAccount.setBalance(previousAccount.getBalance().add(previousExpense.getAmount()));
+        accountRepository.save(previousAccount);
+
+        Account newAccount = accountRepository
+                .findByIdAndUserId(requestTransactionDto.getAccountId(), userId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "No account with id " + requestTransactionDto.getAccountId()
+                                + " was found for user with id " + userId));
+        if (isSufficientAmount(newAccount, requestTransactionDto) < 0) {
+            throw new TransactionFailedException("Not enough money for transaction");
+        }
+        newAccount.setBalance(newAccount.getBalance().subtract(requestTransactionDto.getAmount()));
+        accountRepository.save(newAccount);
 
         Expense newExpense = transactionMapper.toExpense(requestTransactionDto);
         newExpense.setId(transactionId);
-        account.setBalance(account.getBalance().add(previousExpense.getAmount()));
-        if (isSufficientAmount(account, requestTransactionDto) < 0) {
-            throw new TransactionFailedException("Not enough money for transaction");
-        }
-        account.setBalance(account.getBalance().subtract(requestTransactionDto.getAmount()));
-        accountRepository.save(account);
+        User currentUser = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "No user with id " + userId + " found"));
+        newExpense.setUser(currentUser);
         expenseRepository.save(newExpense);
         return transactionMapper.toExpenseDto(newExpense);
     }
