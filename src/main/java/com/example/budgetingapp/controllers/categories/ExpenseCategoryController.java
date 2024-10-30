@@ -2,6 +2,8 @@ package com.example.budgetingapp.controllers.categories;
 
 import static com.example.budgetingapp.constants.Constants.CATEGORY_PAGEABLE_EXAMPLE;
 import static com.example.budgetingapp.constants.Constants.CODE_200;
+import static com.example.budgetingapp.constants.Constants.CODE_201;
+import static com.example.budgetingapp.constants.Constants.CODE_204;
 import static com.example.budgetingapp.constants.Constants.CODE_400;
 import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
@@ -34,6 +36,7 @@ import jakarta.validation.constraints.Positive;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -44,6 +47,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @Validated
@@ -59,10 +63,11 @@ public class ExpenseCategoryController {
     }
 
     @Operation(summary = ADD_CATEGORY_SUMMARY)
-    @ApiResponse(responseCode = CODE_200, description =
+    @ApiResponse(responseCode = CODE_201, description =
             SUCCESSFULLY_ADDED_CATEGORY)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PostMapping(ADD_CATEGORY)
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseCategoryDto addCategory(@AuthenticationPrincipal User user,
                                            @RequestBody CreateCategoryDto createCategoryDto) {
         return expenseCategoryService.saveCategory(user.getId(), createCategoryDto);
@@ -91,10 +96,10 @@ public class ExpenseCategoryController {
     }
 
     @Operation(summary = DELETE_CATEGORY_SUMMARY)
-    @ApiResponse(responseCode = CODE_200, description =
+    @ApiResponse(responseCode = CODE_204, description =
             SUCCESSFULLY_DELETE_CATEGORY)
-    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @DeleteMapping(DELETE_CATEGORY_BY_ID)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategory(@AuthenticationPrincipal User user,
                                @PathVariable
                                @Positive Long categoryId) {
