@@ -1,4 +1,4 @@
-package com.example.budgetingapp.dtos.transactions.request;
+package com.example.budgetingapp.dtos.transfers.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;

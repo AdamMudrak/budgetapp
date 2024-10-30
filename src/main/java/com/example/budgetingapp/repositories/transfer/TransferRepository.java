@@ -1,6 +1,6 @@
 package com.example.budgetingapp.repositories.transfer;
 
-import com.example.budgetingapp.entities.Transfer;
+import com.example.budgetingapp.entities.transfers.Transfer;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

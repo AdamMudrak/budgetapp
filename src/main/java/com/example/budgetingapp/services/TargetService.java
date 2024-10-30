@@ -1,7 +1,7 @@
 package com.example.budgetingapp.services;
 
-import com.example.budgetingapp.dtos.transactions.request.TargetTransactionRequestDto;
-import com.example.budgetingapp.dtos.transactions.request.TargetTransactionResponseDto;
+import com.example.budgetingapp.dtos.transfers.request.TargetTransactionRequestDto;
+import com.example.budgetingapp.dtos.transfers.response.TargetTransactionResponseDto;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 

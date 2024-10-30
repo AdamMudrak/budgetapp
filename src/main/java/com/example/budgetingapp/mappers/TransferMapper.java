@@ -3,7 +3,7 @@ package com.example.budgetingapp.mappers;
 import com.example.budgetingapp.config.MapperConfig;
 import com.example.budgetingapp.dtos.transfers.request.TransferRequestDto;
 import com.example.budgetingapp.dtos.transfers.response.TransferResponseDto;
-import com.example.budgetingapp.entities.Transfer;
+import com.example.budgetingapp.entities.transfers.Transfer;
 import java.time.LocalDate;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;

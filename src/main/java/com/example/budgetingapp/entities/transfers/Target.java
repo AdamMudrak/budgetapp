@@ -1,10 +1,9 @@
-package com.example.budgetingapp.entities;
+package com.example.budgetingapp.entities.transfers;
 
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.FROM_ACCOUNT_ID;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.TO_ACCOUNT_ID;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.TRANSFERS;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGETS;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.USER_ID;
 
+import com.example.budgetingapp.entities.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -22,23 +21,18 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = TRANSFERS)
-public class Transfer {
+@Table(name = TARGETS)
+public class Target {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String comment;
+    @Column(nullable = false, unique = true)
+    private String name;
     @Column(nullable = false)
-    private BigDecimal amount;
+    private BigDecimal expectedSum;
     @Column(nullable = false)
-    private LocalDate transactionDate;
+    private LocalDate achievedBefore;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = USER_ID, nullable = false)
     private User user;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = FROM_ACCOUNT_ID, nullable = false)
-    private Account fromAccount;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = TO_ACCOUNT_ID, nullable = false)
-    private Account toAccount;
 }

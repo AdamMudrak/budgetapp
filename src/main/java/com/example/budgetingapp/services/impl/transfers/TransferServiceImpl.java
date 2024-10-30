@@ -1,9 +1,9 @@
-package com.example.budgetingapp.services.impl.transactions;
+package com.example.budgetingapp.services.impl.transfers;
 
 import com.example.budgetingapp.dtos.transfers.request.TransferRequestDto;
 import com.example.budgetingapp.dtos.transfers.response.TransferResponseDto;
 import com.example.budgetingapp.entities.Account;
-import com.example.budgetingapp.entities.Transfer;
+import com.example.budgetingapp.entities.transfers.Transfer;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.exceptions.ConflictException;
 import com.example.budgetingapp.exceptions.EntityNotFoundException;

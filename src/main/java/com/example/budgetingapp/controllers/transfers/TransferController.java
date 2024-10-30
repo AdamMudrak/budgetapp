@@ -1,4 +1,4 @@
-package com.example.budgetingapp.controllers.transactions;
+package com.example.budgetingapp.controllers.transfers;
 
 import static com.example.budgetingapp.constants.Constants.CODE_200;
 import static com.example.budgetingapp.constants.Constants.CODE_201;
