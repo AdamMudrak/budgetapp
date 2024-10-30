@@ -71,28 +71,28 @@ public class IncomeTransactionController {
         return incomeTransactionService.saveTransaction(user.getId(), requestTransactionDto);
     }
 
-    @Operation(summary = GET_ALL_INCOMES_SUMMARY)
-    @ApiResponse(responseCode = CODE_200, description =
-            SUCCESSFULLY_RETRIEVED_INCOMES)
-    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @GetMapping(GET_ALL_INCOMES)
-    public List<ResponseTransactionDto> getAllIncomeTransactions(@AuthenticationPrincipal User user,
-                             @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE)Pageable pageable) {
-        return incomeTransactionService.getAllTransactions(user.getId(), pageable);
-    }
-
-    @Operation(summary = GET_ALL_ACCOUNT_INCOMES_SUMMARY)
-    @ApiResponse(responseCode = CODE_200, description =
-            SUCCESSFULLY_RETRIEVED_ACCOUNT_INCOMES)
-    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @GetMapping(GET_ALL_ACCOUNT_INCOMES)
-    public List<ResponseTransactionDto> getAllAccountIncomeTransactions(
-            @AuthenticationPrincipal User user,
-            @PathVariable @Positive Long accountId,
-            @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE) Pageable pageable) {
-        return incomeTransactionService.getAllAccountTransactions(
-                user.getId(), accountId, pageable);
-    }
+//    @Operation(summary = GET_ALL_INCOMES_SUMMARY)
+//    @ApiResponse(responseCode = CODE_200, description =
+//            SUCCESSFULLY_RETRIEVED_INCOMES)
+//    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
+//    @GetMapping(GET_ALL_INCOMES)
+//    public List<ResponseTransactionDto> getAllIncomeTransactions(@AuthenticationPrincipal User user,
+//                             @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE)Pageable pageable) {
+//        return incomeTransactionService.getAllTransactions(user.getId(), pageable);
+//    }
+//
+//    @Operation(summary = GET_ALL_ACCOUNT_INCOMES_SUMMARY)
+//    @ApiResponse(responseCode = CODE_200, description =
+//            SUCCESSFULLY_RETRIEVED_ACCOUNT_INCOMES)
+//    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
+//    @GetMapping(GET_ALL_ACCOUNT_INCOMES)
+//    public List<ResponseTransactionDto> getAllAccountIncomeTransactions(
+//            @AuthenticationPrincipal User user,
+//            @PathVariable @Positive Long accountId,
+//            @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE) Pageable pageable) {
+//        return incomeTransactionService.getAllAccountTransactions(
+//                user.getId(), accountId, pageable);
+//    }
 
     @Operation(summary = UPDATE_INCOME_SUMMARY)
     @ApiResponse(responseCode = CODE_200, description =

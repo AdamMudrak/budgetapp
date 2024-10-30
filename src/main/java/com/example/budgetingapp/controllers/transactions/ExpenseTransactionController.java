@@ -24,6 +24,7 @@ import static com.example.budgetingapp.constants.controllers.TransactionControll
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.UPDATE_EXPENSE_BY_ID;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.UPDATE_EXPENSE_SUMMARY;
 
+import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
 import com.example.budgetingapp.entities.User;
@@ -79,22 +80,24 @@ public class ExpenseTransactionController {
     @GetMapping(GET_ALL_EXPENSES)
     public List<ResponseTransactionDto> getAllExpenseTransactions(
             @AuthenticationPrincipal User user,
+            FilterTransactionsDto filterTransactionsDto,
             @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE) Pageable pageable) {
-        return expenseTransactionService.getAllTransactions(user.getId(), pageable);
+        return expenseTransactionService.getAllTransactions(user.getId(),
+                filterTransactionsDto, pageable);
     }
 
-    @Operation(summary = GET_ALL_ACCOUNT_EXPENSES_SUMMARY)
-    @ApiResponse(responseCode = CODE_200, description =
-            SUCCESSFULLY_RETRIEVED_ACCOUNT_EXPENSES)
-    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @GetMapping(GET_ALL_ACCOUNT_EXPENSES)
-    public List<ResponseTransactionDto> getAllAccountExpenseTransactions(
-            @AuthenticationPrincipal User user,
-            @PathVariable @Positive Long accountId,
-            @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE) Pageable pageable) {
-        return expenseTransactionService.getAllAccountTransactions(
-                user.getId(), accountId, pageable);
-    }
+//    @Operation(summary = GET_ALL_ACCOUNT_EXPENSES_SUMMARY)
+//    @ApiResponse(responseCode = CODE_200, description =
+//            SUCCESSFULLY_RETRIEVED_ACCOUNT_EXPENSES)
+//    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
+//    @GetMapping(GET_ALL_ACCOUNT_EXPENSES)
+//    public List<ResponseTransactionDto> getAllAccountExpenseTransactions(
+//            @AuthenticationPrincipal User user,
+//            @PathVariable @Positive Long accountId,
+//            @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE) Pageable pageable) {
+//        return expenseTransactionService.getAllAccountTransactions(
+//                user.getId(), accountId, pageable);
+//    }
 
     @Operation(summary = UPDATE_EXPENSE_SUMMARY)
     @ApiResponse(responseCode = CODE_200, description =

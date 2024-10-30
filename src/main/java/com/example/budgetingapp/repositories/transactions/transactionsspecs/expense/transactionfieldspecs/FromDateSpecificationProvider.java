@@ -2,10 +2,17 @@ package com.example.budgetingapp.repositories.transactions.transactionsspecs.exp
 
 import com.example.budgetingapp.entities.transactions.Expense;
 import com.example.budgetingapp.repositories.specifications.SpecificationProvider;
+import com.example.budgetingapp.repositories.transactions.transactionsspecs.utils.FromDateParseUtil;
 import java.time.LocalDate;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
 
+@Component
+@RequiredArgsConstructor
 public class FromDateSpecificationProvider implements SpecificationProvider<Expense> {
+    private final FromDateParseUtil fromDateParseUtil;
+
     @Override
     public String getKey() {
         return "fromDate";
@@ -13,8 +20,8 @@ public class FromDateSpecificationProvider implements SpecificationProvider<Expe
 
     @Override
     public Specification<Expense> getSpecification(String[] params) {
-        LocalDate fromDate = LocalDate.parse(params[0]);
+        LocalDate fromDate = fromDateParseUtil.parseDate(params);
         return ((root, query, criteriaBuilder) ->
-                criteriaBuilder.lessThanOrEqualTo(root.get("transactionDate"), fromDate));
+                criteriaBuilder.greaterThanOrEqualTo(root.get("transactionDate"), fromDate));
     }
 }

@@ -16,40 +16,31 @@ public class ExpenseSpecificationBuilder implements SpecificationBuilder<Expense
     @Override
     public Specification<Expense> build(FilterTransactionsDto transactionsDto) {
         Specification<Expense> specification = Specification.where(null);
-        if (transactionsDto.getAccountId() == null
-                && transactionsDto.getCategoryIds() == null
-                && transactionsDto.getFromDate() == null
-                && transactionsDto.getToDate() == null) {
-            throw new RuntimeException("Can't build specification because " //TODO заменить runtime
-                    + " all of the parameters are typed null");
+        if (transactionsDto.getAccountId().isBlank()
+                && transactionsDto.getFromDate().isBlank()
+                && transactionsDto.getToDate().isBlank()
+                && transactionsDto.getCategoryIds().length == 0) {
+            return null;
         }
-        if (transactionsDto.getAccountId() != null) {
+        if (!transactionsDto.getAccountId().isBlank()) {
             specification = specification.and(expenseSpecificationProviderManager
                     .getSpecificationProvider("accountId")
-                    .getSpecification(new String[]{
-                            String.valueOf(transactionsDto.getAccountId())}));
+                    .getSpecification(new String[]{transactionsDto.getAccountId()}));
         }
-        if (transactionsDto.getCategoryIds() != null) {
-            String[] categoryIds = new String[transactionsDto.getCategoryIds().size()];
-            int counter = 0;
-            for (Long id : transactionsDto.getCategoryIds()) {
-                categoryIds[counter++] = String.valueOf(id);
-            }
-            specification = specification.and(expenseSpecificationProviderManager
-                    .getSpecificationProvider("categoryIds")
-                    .getSpecification(categoryIds));
-        }
-        if (transactionsDto.getFromDate() != null) {
+        if (!transactionsDto.getFromDate().isBlank()) {
             specification = specification.and(expenseSpecificationProviderManager
                     .getSpecificationProvider("fromDate")
-                    .getSpecification(new String[]{
-                            String.valueOf(transactionsDto.getFromDate())}));
+                    .getSpecification(new String[]{transactionsDto.getFromDate()}));
         }
-        if (transactionsDto.getToDate() != null) {
+        if (!transactionsDto.getToDate().isBlank()) {
             specification = specification.and(expenseSpecificationProviderManager
                     .getSpecificationProvider("toDate")
-                    .getSpecification(new String[]{
-                            String.valueOf(transactionsDto.getToDate())}));
+                    .getSpecification(new String[]{transactionsDto.getToDate()}));
+        }
+        if (transactionsDto.getCategoryIds().length != 0) {
+            specification = specification.and(expenseSpecificationProviderManager
+                    .getSpecificationProvider("categoryIds")
+                    .getSpecification(transactionsDto.getCategoryIds()));
         }
         return specification;
     }
