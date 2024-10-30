@@ -46,6 +46,10 @@ public class TransferServiceImpl implements TransferService {
                 .orElseThrow(() -> new EntityNotFoundException("No account with id "
                         + requestDto.getToAccountId()
                         + " was found for user with id " + userId));
+        if (!fromAccount.getCurrency().equals(toAccount.getCurrency())) {
+            throw new IllegalArgumentException(
+                    "You can't transfer between accounts with different currencies");
+        }
         if (isSufficientAmount(fromAccount, requestDto) < 0) {
             throw new TransactionFailedException("Not enough money for transaction");
         }

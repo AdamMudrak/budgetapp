@@ -148,6 +148,28 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
                 request);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    protected ResponseEntity<Object> handleIllegalArgumentException(
+            Exception ex, WebRequest request) {
+        return handleExceptionInternal(
+                ex,
+                ex.getMessage(),
+                new HttpHeaders(),
+                BAD_REQUEST,
+                request);
+    }
+
+    @ExceptionHandler(NumberFormatException.class)
+    protected ResponseEntity<Object> handleNumberFormatException(
+            Exception ex, WebRequest request) {
+        return handleExceptionInternal(
+                ex,
+                ex.getMessage(),
+                new HttpHeaders(),
+                BAD_REQUEST,
+                request);
+    }
+
     @ExceptionHandler(ConflictException.class)
     protected ResponseEntity<Object> handleConflict(
             Exception ex, WebRequest request) {
