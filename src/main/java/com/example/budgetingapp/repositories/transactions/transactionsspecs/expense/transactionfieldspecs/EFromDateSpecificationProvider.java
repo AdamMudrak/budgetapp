@@ -1,6 +1,6 @@
-package com.example.budgetingapp.repositories.transactions.transactionsspecs.income.transactionfieldspecs;
+package com.example.budgetingapp.repositories.transactions.transactionsspecs.expense.transactionfieldspecs;
 
-import com.example.budgetingapp.entities.transactions.Income;
+import com.example.budgetingapp.entities.transactions.Expense;
 import com.example.budgetingapp.repositories.specifications.SpecificationProvider;
 import com.example.budgetingapp.repositories.transactions.transactionsspecs.utils.FromDateParseUtil;
 import java.time.LocalDate;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class FromDateSpecificationProvider implements SpecificationProvider<Income> {
+public class EFromDateSpecificationProvider implements SpecificationProvider<Expense> {
     private final FromDateParseUtil fromDateParseUtil;
 
     @Override
@@ -19,7 +19,7 @@ public class FromDateSpecificationProvider implements SpecificationProvider<Inco
     }
 
     @Override
-    public Specification<Income> getSpecification(String[] params) {
+    public Specification<Expense> getSpecification(String[] params) {
         LocalDate fromDate = fromDateParseUtil.parseDate(params);
         return ((root, query, criteriaBuilder) ->
                 criteriaBuilder.greaterThanOrEqualTo(root.get("transactionDate"), fromDate));

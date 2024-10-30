@@ -8,7 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AccountIdSpecificationProvider implements SpecificationProvider<Expense> {
+public class EAccountIdSpecificationProvider implements SpecificationProvider<Expense> {
     @Override
     public String getKey() {
         return "accountId";

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ToDateSpecificationProvider implements SpecificationProvider<Income> {
+public class IToDateSpecificationProvider implements SpecificationProvider<Income> {
     private final ToDateParseUtil toDateParseUtil;
 
     @Override

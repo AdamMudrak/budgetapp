@@ -9,7 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CategoryIdsSpecificationProvider implements SpecificationProvider<Expense> {
+public class ECategoryIdsSpecificationProvider implements SpecificationProvider<Expense> {
     @Override
     public String getKey() {
         return "categoryIds";
