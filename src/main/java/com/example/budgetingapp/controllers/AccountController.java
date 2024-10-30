@@ -1,6 +1,7 @@
 package com.example.budgetingapp.controllers;
 
 import static com.example.budgetingapp.constants.Constants.CODE_200;
+import static com.example.budgetingapp.constants.Constants.CODE_201;
 import static com.example.budgetingapp.constants.Constants.CODE_400;
 import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
@@ -37,6 +38,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -46,6 +48,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @Validated
@@ -58,9 +61,10 @@ public class AccountController {
     private final AccountService accountService;
 
     @Operation(summary = ADD_ACCOUNT_SUMMARY)
-    @ApiResponse(responseCode = CODE_200, description = SUCCESSFULLY_ADDED)
+    @ApiResponse(responseCode = CODE_201, description = SUCCESSFULLY_ADDED)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PostMapping(ADD_ACCOUNT)
+    @ResponseStatus(HttpStatus.CREATED)
     public AccountDto addAccount(@AuthenticationPrincipal User user,
             @RequestBody @Valid CreateAccountDto createAccountDto) {
         return accountService.saveAccount(user.getId(), createAccountDto);

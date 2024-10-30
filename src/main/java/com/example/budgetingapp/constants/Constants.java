@@ -12,10 +12,8 @@ public class Constants {
     public static final String ACCESS_DENIED = "Access to this resource on the server is denied";
 
     public static final String CODE_200 = "200";
-    //TODO use them on controllers
     public static final String CODE_201 = "201";
     public static final String CODE_204 = "204";
-    public static final String CODE_204_DESCRIPTION = "No content";
     public static final String CODE_400 = "400";
     public static final String CODE_401 = "401";
     public static final String CODE_403 = "403";
