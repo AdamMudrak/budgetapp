@@ -1,11 +1,14 @@
 package com.example.budgetingapp.services.impl.transfers;
 
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGET_QUANTITY_THRESHOLD;
+
 import com.example.budgetingapp.dtos.transfers.request.DeleteTargetRequestDto;
 import com.example.budgetingapp.dtos.transfers.request.ReplenishTargetRequestDto;
 import com.example.budgetingapp.dtos.transfers.request.TargetTransactionRequestDto;
 import com.example.budgetingapp.dtos.transfers.response.TargetTransactionResponseDto;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.transfers.Target;
+import com.example.budgetingapp.exceptions.ConflictException;
 import com.example.budgetingapp.exceptions.EntityNotFoundException;
 import com.example.budgetingapp.exceptions.TransactionFailedException;
 import com.example.budgetingapp.mappers.TargetMapper;
@@ -34,6 +37,10 @@ public class TargetServiceImpl implements TargetService {
     @Override
     public TargetTransactionResponseDto saveTarget(Long userId,
                                                TargetTransactionRequestDto requestTransactionDto) {
+        if (targetRepository.countTargetsByUserId(userId) >= TARGET_QUANTITY_THRESHOLD) {
+            throw new ConflictException("You can't have more than " + TARGET_QUANTITY_THRESHOLD
+                    + " targets!");
+        }
         Target newTarget = targetMapper.toTarget(requestTransactionDto);
         newTarget.setUser(userRepository.findById(userId).orElseThrow(
                 () -> new EntityNotFoundException("No user with id " + userId + " was found")));
