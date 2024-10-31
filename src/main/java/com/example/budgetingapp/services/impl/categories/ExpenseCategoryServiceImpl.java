@@ -76,6 +76,11 @@ public class ExpenseCategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteByCategoryIdAndUserId(Long userId, Long categoryId) {
-        expenseCategoryRepository.deleteByIdAndUserId(categoryId, userId);
+        if (expenseCategoryRepository.existsByIdAndUserId(categoryId, userId)) {
+            expenseCategoryRepository.deleteByIdAndUserId(categoryId, userId);
+        } else {
+            throw new EntityNotFoundException("No category found with id " + categoryId
+                + " for user with id " + userId);
+        }
     }
 }
