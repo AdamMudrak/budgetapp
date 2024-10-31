@@ -8,6 +8,7 @@ import com.example.budgetingapp.dtos.transfers.request.TargetTransactionRequestD
 import com.example.budgetingapp.dtos.transfers.response.TargetTransactionResponseDto;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.transfers.Target;
+import com.example.budgetingapp.exceptions.AlreadyExistsException;
 import com.example.budgetingapp.exceptions.ConflictException;
 import com.example.budgetingapp.exceptions.EntityNotFoundException;
 import com.example.budgetingapp.exceptions.TransactionFailedException;
@@ -40,6 +41,10 @@ public class TargetServiceImpl implements TargetService {
         if (targetRepository.countTargetsByUserId(userId) >= TARGET_QUANTITY_THRESHOLD) {
             throw new ConflictException("You can't have more than " + TARGET_QUANTITY_THRESHOLD
                     + " targets!");
+        }
+        if (targetRepository.existsByUserIdAndName(userId, requestTransactionDto.name())) {
+            throw new AlreadyExistsException("You already have a target named "
+                    + requestTransactionDto.name());
         }
         Target newTarget = targetMapper.toTarget(requestTransactionDto);
         newTarget.setUser(userRepository.findById(userId).orElseThrow(
