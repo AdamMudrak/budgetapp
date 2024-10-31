@@ -1,11 +1,13 @@
 package com.example.budgetingapp.mappers;
 
+import static com.example.budgetingapp.constants.Constants.MONTHS_IN_A_YEAR;
+
 import com.example.budgetingapp.config.MapperConfig;
 import com.example.budgetingapp.dtos.transfers.request.TargetTransactionRequestDto;
 import com.example.budgetingapp.dtos.transfers.response.TargetTransactionResponseDto;
 import com.example.budgetingapp.entities.transfers.Target;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.time.Period;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,15 +18,17 @@ public interface TargetMapper {
     @Mapping(target = "achievedBefore", ignore = true)
     Target toTarget(TargetTransactionRequestDto targetTransactionRequestDto);
 
-    @Mapping(target = "monthLeft", ignore = true)
+    @Mapping(target = "periodLeft", ignore = true)
     TargetTransactionResponseDto toTargetDto(Target target);
 
     @AfterMapping
     default void setMonthLeft(@MappingTarget
                               TargetTransactionResponseDto targetTransactionResponseDto,
                               Target target) {
-        Long monthLeft = ChronoUnit.MONTHS.between(LocalDate.now(), target.getAchievedBefore());
-        targetTransactionResponseDto.setMonthLeft(monthLeft);
+        Period period = Period.between(LocalDate.now(), target.getAchievedBefore());
+        int months = period.getMonths() + (period.getYears() * MONTHS_IN_A_YEAR);
+        targetTransactionResponseDto.setPeriodLeft(months + " months and "
+                + period.getDays() + " days left");
     }
 
     @AfterMapping
