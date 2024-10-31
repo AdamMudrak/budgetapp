@@ -27,13 +27,13 @@ public interface TransactionMapper {
     @AfterMapping
     default void setTransactionDate(@MappingTarget Expense expense,
                                    RequestTransactionDto requestTransactionDto) {
-        expense.setTransactionDate(LocalDate.parse(requestTransactionDto.getTransactionDate()));
+        expense.setTransactionDate(LocalDate.parse(requestTransactionDto.transactionDate()));
     }
 
     @AfterMapping
     default void setTransactionDate(@MappingTarget Income income,
                                     RequestTransactionDto requestTransactionDto) {
-        income.setTransactionDate(LocalDate.parse(requestTransactionDto.getTransactionDate()));
+        income.setTransactionDate(LocalDate.parse(requestTransactionDto.transactionDate()));
     }
 
     ResponseTransactionDto toIncomeDto(Income income);

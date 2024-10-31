@@ -32,19 +32,19 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public TransferResponseDto transfer(Long userId,
                                         TransferRequestDto requestDto) {
-        if (requestDto.getFromAccountId().equals(requestDto.getToAccountId())) {
+        if (requestDto.fromAccountId().equals(requestDto.toAccountId())) {
             throw new ConflictException("You can't transfer to the same account you transfer from");
         }
         Account fromAccount = accountRepository.findByIdAndUserId(
-                requestDto.getFromAccountId(), userId)
+                requestDto.fromAccountId(), userId)
                 .orElseThrow(() -> new EntityNotFoundException("No account with id "
-                        + requestDto.getFromAccountId()
+                        + requestDto.fromAccountId()
                         + " was found for user with id " + userId));
 
         Account toAccount = accountRepository.findByIdAndUserId(
-                        requestDto.getToAccountId(), userId)
+                        requestDto.toAccountId(), userId)
                 .orElseThrow(() -> new EntityNotFoundException("No account with id "
-                        + requestDto.getToAccountId()
+                        + requestDto.toAccountId()
                         + " was found for user with id " + userId));
         if (!fromAccount.getCurrency().equals(toAccount.getCurrency())) {
             throw new IllegalArgumentException(
@@ -54,8 +54,8 @@ public class TransferServiceImpl implements TransferService {
             throw new TransactionFailedException("Not enough money for transaction");
         }
         fromAccount.setBalance(fromAccount.getBalance()
-                .subtract(requestDto.getAmount()));
-        toAccount.setBalance(toAccount.getBalance().add(requestDto.getAmount()));
+                .subtract(requestDto.amount()));
+        toAccount.setBalance(toAccount.getBalance().add(requestDto.amount()));
 
         Transfer transfer = transferMapper.toTransfer(requestDto);
         User currentUser = userRepository.findById(userId)
@@ -79,7 +79,7 @@ public class TransferServiceImpl implements TransferService {
 
     private int isSufficientAmount(Account account, TransferRequestDto requestDto) {
         return (account.getBalance()
-                .subtract(requestDto.getAmount()))
+                .subtract(requestDto.amount()))
                 .compareTo(BigDecimal.ZERO);
     }
 }

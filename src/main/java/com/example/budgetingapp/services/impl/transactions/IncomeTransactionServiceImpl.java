@@ -41,11 +41,11 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                                                   RequestTransactionDto requestTransactionDto) {
         Income income = transactionMapper.toIncome(requestTransactionDto);
         Account account = accountRepository
-                .findByIdAndUserId(requestTransactionDto.getAccountId(), userId)
+                .findByIdAndUserId(requestTransactionDto.accountId(), userId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No account with id "
-                                + requestTransactionDto.getAccountId() + " was found"));
-        account.setBalance(account.getBalance().add(requestTransactionDto.getAmount()));
+                                + requestTransactionDto.accountId() + " was found"));
+        account.setBalance(account.getBalance().add(requestTransactionDto.amount()));
         accountRepository.save(account);
         User currentUser = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -91,11 +91,11 @@ public class IncomeTransactionServiceImpl implements TransactionService {
         accountRepository.save(previousAccount);
 
         Account newAccount = accountRepository
-                .findByIdAndUserId(requestTransactionDto.getAccountId(), userId)
+                .findByIdAndUserId(requestTransactionDto.accountId(), userId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "No account with id " + requestTransactionDto.getAccountId()
+                        "No account with id " + requestTransactionDto.accountId()
                                 + " was found for user with id " + userId));
-        newAccount.setBalance(newAccount.getBalance().add(requestTransactionDto.getAmount()));
+        newAccount.setBalance(newAccount.getBalance().add(requestTransactionDto.amount()));
         accountRepository.save(newAccount);
 
         Income newIncome = transactionMapper.toIncome(requestTransactionDto);

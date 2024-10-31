@@ -10,40 +10,36 @@ import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TransferRequestDto {
-    @Schema(name = TransactionDtoConstants.COMMENT,
-            example = TransactionDtoConstants.COMMENT_EXAMPLE)
-    private String comment;
-    @Schema(name = TransactionDtoConstants.AMOUNT,
-            example = TransactionDtoConstants.AMOUNT_EXAMPLE,
-            requiredMode = REQUIRED)
-    @NotNull
-    @Positive
-    @Digits(integer = 9, fraction = 2)
-    private BigDecimal amount;
-    @Schema(name = TransactionDtoConstants.DATE,
-            example = TransactionDtoConstants.DATE_EXAMPLE,
-            requiredMode = REQUIRED)
-    @Date
-    private String transactionDate;
-    @Schema(name = TransactionDtoConstants.FROM_ACCOUNT_ID,
-            example = TransactionDtoConstants.FROM_ACCOUNT_ID_EXAMPLE,
-            requiredMode = REQUIRED)
-    @NotNull
-    @Positive
-    @Digits(integer = 9, fraction = 0)
-    private Long fromAccountId;
-    @Schema(name = TransactionDtoConstants.TO_ACCOUNT_ID,
-            example = TransactionDtoConstants.TO_ACCOUNT_ID_EXAMPLE,
-            requiredMode = REQUIRED)
-    @NotNull
-    @Positive
-    @Digits(integer = 9, fraction = 0)
-    private Long toAccountId;
+public record TransferRequestDto(
+        @Schema(name = TransactionDtoConstants.COMMENT,
+                example = TransactionDtoConstants.COMMENT_EXAMPLE)
+        String comment,
+        @Schema(name = TransactionDtoConstants.AMOUNT,
+                example = TransactionDtoConstants.AMOUNT_EXAMPLE,
+                requiredMode = REQUIRED)
+        @NotNull
+        @Positive
+        @Digits(integer = 9, fraction = 2)
+        BigDecimal amount,
+        @Schema(name = TransactionDtoConstants.DATE,
+                example = TransactionDtoConstants.DATE_EXAMPLE,
+                requiredMode = REQUIRED)
+        @Date
+        String transactionDate,
+        @Schema(name = TransactionDtoConstants.FROM_ACCOUNT_ID,
+                example = TransactionDtoConstants.FROM_ACCOUNT_ID_EXAMPLE,
+                requiredMode = REQUIRED)
+        @NotNull
+        @Positive
+        @Digits(integer = 9, fraction = 0)
+        Long fromAccountId,
+        @Schema(name = TransactionDtoConstants.TO_ACCOUNT_ID,
+                example = TransactionDtoConstants.TO_ACCOUNT_ID_EXAMPLE,
+                requiredMode = REQUIRED)
+        @NotNull
+        @Positive
+        @Digits(integer = 9, fraction = 0)
+        Long toAccountId) {
 }

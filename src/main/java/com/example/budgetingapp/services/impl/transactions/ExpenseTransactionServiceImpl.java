@@ -41,15 +41,15 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
                                                   RequestTransactionDto requestTransactionDto) {
 
         Account account = accountRepository
-                .findByIdAndUserId(requestTransactionDto.getAccountId(), userId)
+                .findByIdAndUserId(requestTransactionDto.accountId(), userId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No account with id "
-                                + requestTransactionDto.getAccountId() + " was found"
+                                + requestTransactionDto.accountId() + " was found"
                                 + " for user with id " + userId));
         if (isSufficientAmount(account, requestTransactionDto) < 0) {
             throw new TransactionFailedException("Not enough money for transaction");
         }
-        account.setBalance(account.getBalance().subtract(requestTransactionDto.getAmount()));
+        account.setBalance(account.getBalance().subtract(requestTransactionDto.amount()));
         accountRepository.save(account);
         Expense expense = transactionMapper.toExpense(requestTransactionDto);
         User currentUser = userRepository.findById(userId)
@@ -91,14 +91,14 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
         accountRepository.save(previousAccount);
 
         Account newAccount = accountRepository
-                .findByIdAndUserId(requestTransactionDto.getAccountId(), userId)
+                .findByIdAndUserId(requestTransactionDto.accountId(), userId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "No account with id " + requestTransactionDto.getAccountId()
+                        "No account with id " + requestTransactionDto.accountId()
                                 + " was found for user with id " + userId));
         if (isSufficientAmount(newAccount, requestTransactionDto) < 0) {
             throw new TransactionFailedException("Not enough money for transaction");
         }
-        newAccount.setBalance(newAccount.getBalance().subtract(requestTransactionDto.getAmount()));
+        newAccount.setBalance(newAccount.getBalance().subtract(requestTransactionDto.amount()));
         accountRepository.save(newAccount);
 
         Expense newExpense = transactionMapper.toExpense(requestTransactionDto);
@@ -131,7 +131,7 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
 
     private int isSufficientAmount(Account account, RequestTransactionDto requestTransactionDto) {
         return (account.getBalance()
-                .subtract(requestTransactionDto.getAmount()))
+                .subtract(requestTransactionDto.amount()))
                 .compareTo(BigDecimal.ZERO);
     }
 }
