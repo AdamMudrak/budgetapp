@@ -34,8 +34,19 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: current_sum
+                  type: decimal(11,2)
+                  constraints:
+                    nullable: false
+              - column:
                   name: user_id
                   type: bigint
                   constraints:
                     foreignKeyName: fk_b_user_id
                     references: users(id)
+              - column:
+                  name: is_exceeded
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false

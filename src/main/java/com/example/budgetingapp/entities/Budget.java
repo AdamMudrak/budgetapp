@@ -1,5 +1,6 @@
 package com.example.budgetingapp.entities;
 
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.BOOLEAN_TO_INT;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.BUDGETS;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.USER_ID;
 
@@ -44,7 +45,11 @@ public class Budget {
     private Set<ExpenseCategory> expenseCategories = new HashSet<>();
     @Column(nullable = false)
     private BigDecimal limit;
+    @Column(nullable = false)
+    private BigDecimal currentSum = BigDecimal.ZERO;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = USER_ID, nullable = false)
     private User user;
+    @Column(nullable = false, columnDefinition = BOOLEAN_TO_INT)
+    private boolean isExceeded = false;
 }

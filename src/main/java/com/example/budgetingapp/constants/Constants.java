@@ -1,6 +1,8 @@
 package com.example.budgetingapp.constants;
 
 public class Constants {
+    public static final String NO_ACCOUNT = "";
+
     public static final int MONTHS_IN_A_YEAR = 12;
 
     public static final String SPLITERATOR = "=";
