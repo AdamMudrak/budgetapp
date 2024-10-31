@@ -31,6 +31,7 @@ import com.example.budgetingapp.services.TargetService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -59,7 +60,7 @@ public class TargetController {
     @PostMapping(ADD_TARGET)
     @ResponseStatus(HttpStatus.CREATED)
     public TargetTransactionResponseDto addTarget(@AuthenticationPrincipal User user,
-                                              @RequestBody TargetTransactionRequestDto requestDto) {
+                                      @Valid @RequestBody TargetTransactionRequestDto requestDto) {
         return targetService.saveTarget(user.getId(), requestDto);
     }
 
@@ -68,7 +69,7 @@ public class TargetController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PostMapping(REPLENISH_TARGET)
     public TargetTransactionResponseDto replenishTarget(@AuthenticationPrincipal User user,
-                                          @RequestBody ReplenishTargetRequestDto requestDto) {
+                                        @Valid @RequestBody ReplenishTargetRequestDto requestDto) {
         return targetService.replenishTarget(user.getId(), requestDto);
     }
 
@@ -85,7 +86,7 @@ public class TargetController {
     @DeleteMapping(DESTROY_TARGET)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTarget(@AuthenticationPrincipal User user,
-                             @RequestBody DeleteTargetRequestDto requestDto) {
+                             @Valid @RequestBody DeleteTargetRequestDto requestDto) {
         targetService.deleteByTargetId(user.getId(), requestDto);
     }
 }

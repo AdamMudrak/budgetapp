@@ -32,6 +32,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -71,7 +72,7 @@ public class ExpenseTransactionController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseTransactionDto addExpenseTransaction(
             @AuthenticationPrincipal User user,
-            @RequestBody RequestTransactionDto requestTransactionDto) {
+            @Valid @RequestBody RequestTransactionDto requestTransactionDto) {
         return expenseTransactionService.saveTransaction(user.getId(), requestTransactionDto);
     }
 
@@ -95,7 +96,7 @@ public class ExpenseTransactionController {
     @PutMapping(UPDATE_EXPENSE_BY_ID)
     public ResponseTransactionDto updateExpenseTransaction(
             @AuthenticationPrincipal User user,
-            @RequestBody RequestTransactionDto requestTransactionDto,
+            @Valid @RequestBody RequestTransactionDto requestTransactionDto,
             @PathVariable @Positive Long transactionId) {
         return expenseTransactionService.updateTransaction(
                 user.getId(), requestTransactionDto, transactionId);

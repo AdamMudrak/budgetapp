@@ -32,6 +32,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -70,7 +71,7 @@ public class IncomeTransactionController {
     @PostMapping(ADD_INCOME)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseTransactionDto addIncomeTransaction(@AuthenticationPrincipal User user,
-            @RequestBody RequestTransactionDto requestTransactionDto) {
+                               @Valid @RequestBody RequestTransactionDto requestTransactionDto) {
         return incomeTransactionService.saveTransaction(user.getId(), requestTransactionDto);
     }
 
@@ -93,7 +94,7 @@ public class IncomeTransactionController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PutMapping(UPDATE_INCOME_BY_ID)
     public ResponseTransactionDto updateIncomeTransaction(@AuthenticationPrincipal User user,
-            @RequestBody RequestTransactionDto requestTransactionDto,
+            @Valid @RequestBody RequestTransactionDto requestTransactionDto,
             @PathVariable Long transactionId) {
         return incomeTransactionService.updateTransaction(user.getId(),
                 requestTransactionDto, transactionId);

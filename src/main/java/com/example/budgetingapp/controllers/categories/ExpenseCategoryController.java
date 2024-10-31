@@ -32,6 +32,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -69,7 +70,7 @@ public class ExpenseCategoryController {
     @PostMapping(ADD_CATEGORY)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseCategoryDto addCategory(@AuthenticationPrincipal User user,
-                                           @RequestBody CreateCategoryDto createCategoryDto) {
+                                       @Valid @RequestBody CreateCategoryDto createCategoryDto) {
         return expenseCategoryService.saveCategory(user.getId(), createCategoryDto);
     }
 
@@ -82,7 +83,7 @@ public class ExpenseCategoryController {
                                               @PathVariable
                                               @Positive
                                               Long categoryId,
-                                              @RequestBody UpdateCategoryDto updateCategoryDto) {
+                                          @Valid @RequestBody UpdateCategoryDto updateCategoryDto) {
         return expenseCategoryService.updateCategory(user.getId(), categoryId, updateCategoryDto);
     }
 
