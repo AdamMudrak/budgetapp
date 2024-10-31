@@ -15,8 +15,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: comment
-                  type: varchar(255)
-
+                  type: varchar(512)
               - column:
                   name: amount
                   type: decimal(11,2)

@@ -15,7 +15,9 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: name
-                  type: varchar(255)
+                  type: varchar(64)
+                  constraints:
+                    nullable: false
               - column:
                   name: expected_sum
                   type: decimal(11,2)
@@ -39,6 +41,8 @@ databaseChangeLog:
               - column:
                   name: currency
                   type: varchar(64)
+                  constraints:
+                    nullable: false
               - column:
                   name: achieved
                   type: boolean
