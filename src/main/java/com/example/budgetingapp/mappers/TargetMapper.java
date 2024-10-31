@@ -13,7 +13,7 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(config = MapperConfig.class)
 public interface TargetMapper {
-
+    @Mapping(target = "achievedBefore", ignore = true)
     Target toTarget(TargetTransactionRequestDto targetTransactionRequestDto);
 
     @Mapping(target = "monthLeft", ignore = true)
@@ -25,5 +25,11 @@ public interface TargetMapper {
                               Target target) {
         Long monthLeft = ChronoUnit.MONTHS.between(LocalDate.now(), target.getAchievedBefore());
         targetTransactionResponseDto.setMonthLeft(monthLeft);
+    }
+
+    @AfterMapping
+    default void setAchievedBefore(@MappingTarget Target target,
+                                   TargetTransactionRequestDto targetTransactionRequestDto) {
+        target.setAchievedBefore(LocalDate.parse(targetTransactionRequestDto.achievedBefore()));
     }
 }

@@ -11,7 +11,6 @@ import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record TargetTransactionRequestDto(
@@ -31,7 +30,7 @@ public record TargetTransactionRequestDto(
                 requiredMode = REQUIRED)
         @Date
         @DateAfterToday
-        LocalDate achievedBefore,
+        String achievedBefore,
         @Schema(name = TransactionDtoConstants.CURRENCY,
                 example = TransactionDtoConstants.CURRENCY_EXAMPLE,
                 requiredMode = REQUIRED)
