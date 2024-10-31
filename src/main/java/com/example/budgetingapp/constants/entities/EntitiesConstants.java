@@ -5,7 +5,10 @@ import java.util.List;
 public class EntitiesConstants {
     public static final int ACCOUNT_QUANTITY_THRESHOLD = 5;
     public static final int TARGET_QUANTITY_THRESHOLD = 10;
+    public static final int BUDGET_QUANTITY_THRESHOLD = 10;
     public static final int CATEGORY_QUANTITY_THRESHOLD = 20;
+
+    public static final String BUDGETS = "budgets";
 
     public static final String TARGETS = "targets";
 
