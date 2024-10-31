@@ -70,8 +70,6 @@ public class TargetServiceImpl implements TargetService {
         if (target.getCurrentSum().compareTo(target.getExpectedSum()) >= 0) {
             target.setAchieved(true);
             target.setMonthlyDownPayment(BigDecimal.ZERO);
-        } else {
-            calculateDownPayment(target);
         }
         return targetMapper.toTargetDto(targetRepository.save(target));
     }
@@ -110,7 +108,6 @@ public class TargetServiceImpl implements TargetService {
                 .compareTo(BigDecimal.ZERO);
     }
 
-    //problems with negative dates
     private void calculateDownPayment(Target target) {
         BigDecimal difference = target.getExpectedSum().subtract(target.getCurrentSum());
         long monthsToAchieve = ChronoUnit.MONTHS.between(LocalDate.now(),
