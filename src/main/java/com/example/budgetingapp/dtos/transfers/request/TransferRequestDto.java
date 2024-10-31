@@ -3,7 +3,7 @@ package com.example.budgetingapp.dtos.transfers.request;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import com.example.budgetingapp.constants.dtos.TransactionDtoConstants;
-import com.example.budgetingapp.validation.Date;
+import com.example.budgetingapp.validation.date.Date;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Digits;
@@ -32,10 +32,16 @@ public class TransferRequestDto {
             requiredMode = REQUIRED)
     @Date
     private String transactionDate;
+    @Schema(name = TransactionDtoConstants.FROM_ACCOUNT_ID,
+            example = TransactionDtoConstants.FROM_ACCOUNT_ID_EXAMPLE,
+            requiredMode = REQUIRED)
     @NotNull
     @Positive
     @Digits(integer = 9, fraction = 0)
     private Long fromAccountId;
+    @Schema(name = TransactionDtoConstants.TO_ACCOUNT_ID,
+            example = TransactionDtoConstants.TO_ACCOUNT_ID_EXAMPLE,
+            requiredMode = REQUIRED)
     @NotNull
     @Positive
     @Digits(integer = 9, fraction = 0)

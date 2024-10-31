@@ -110,6 +110,7 @@ public class TargetServiceImpl implements TargetService {
                 .compareTo(BigDecimal.ZERO);
     }
 
+    //problems with negative dates
     private void calculateDownPayment(Target target) {
         BigDecimal difference = target.getExpectedSum().subtract(target.getCurrentSum());
         long monthsToAchieve = ChronoUnit.MONTHS.between(LocalDate.now(),
