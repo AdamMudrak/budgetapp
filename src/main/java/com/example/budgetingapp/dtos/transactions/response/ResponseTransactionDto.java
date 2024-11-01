@@ -7,5 +7,8 @@ public record ResponseTransactionDto(
         Long id,
         String comment,
         BigDecimal amount,
-        LocalDate transactionDate) {
+        LocalDate transactionDate,
+        Long accountId,
+        Long categoryId
+) {
 }

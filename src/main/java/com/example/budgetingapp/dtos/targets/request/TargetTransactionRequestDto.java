@@ -1,4 +1,4 @@
-package com.example.budgetingapp.dtos.transfers.request;
+package com.example.budgetingapp.dtos.targets.request;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
@@ -8,6 +8,7 @@ import com.example.budgetingapp.validation.date.DateAfterToday;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
@@ -17,6 +18,7 @@ public record TargetTransactionRequestDto(
         @Schema(name = TransactionDtoConstants.NAME,
                 example = TransactionDtoConstants.NAME_EXAMPLE,
                 requiredMode = REQUIRED)
+        @NotBlank
         String name,
         @Schema(name = TransactionDtoConstants.EXPECTED_SUM,
                 example = TransactionDtoConstants.EXPECTED_SUM_EXAMPLE,
@@ -30,8 +32,10 @@ public record TargetTransactionRequestDto(
                 requiredMode = REQUIRED)
         @Date
         @DateAfterToday
+        @NotBlank
         String achievedBefore,
         @Schema(name = TransactionDtoConstants.CURRENCY,
                 example = TransactionDtoConstants.CURRENCY_EXAMPLE,
                 requiredMode = REQUIRED)
+        @NotBlank
         String currency){}
