@@ -2,8 +2,8 @@ package com.example.budgetingapp.controllers;
 
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
 
-import com.example.budgetingapp.dtos.budget.request.BudgetRequestDto;
-import com.example.budgetingapp.dtos.budget.response.BudgetResponseDto;
+import com.example.budgetingapp.dtos.budgets.request.BudgetRequestDto;
+import com.example.budgetingapp.dtos.budgets.response.BudgetResponseDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.services.BudgetService;
 import java.util.List;

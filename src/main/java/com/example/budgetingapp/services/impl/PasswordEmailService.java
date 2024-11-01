@@ -12,7 +12,7 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.RAND
 import static com.example.budgetingapp.constants.security.SecurityConstants.RESET;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RESET_PATH;
 
-import com.example.budgetingapp.exceptions.ActionNotFoundException;
+import com.example.budgetingapp.exceptions.notfoundexceptions.ActionNotFoundException;
 import com.example.budgetingapp.security.EmailLinkParameterProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

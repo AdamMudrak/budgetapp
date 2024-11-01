@@ -1,9 +1,9 @@
 package com.example.budgetingapp.services;
 
-import com.example.budgetingapp.dtos.transfers.request.DeleteTargetRequestDto;
-import com.example.budgetingapp.dtos.transfers.request.ReplenishTargetRequestDto;
-import com.example.budgetingapp.dtos.transfers.request.TargetTransactionRequestDto;
-import com.example.budgetingapp.dtos.transfers.response.TargetTransactionResponseDto;
+import com.example.budgetingapp.dtos.targets.request.DeleteTargetRequestDto;
+import com.example.budgetingapp.dtos.targets.request.ReplenishTargetRequestDto;
+import com.example.budgetingapp.dtos.targets.request.TargetTransactionRequestDto;
+import com.example.budgetingapp.dtos.targets.response.TargetTransactionResponseDto;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 

@@ -9,16 +9,16 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.CONF
 import static com.example.budgetingapp.constants.security.SecurityConstants.REGISTERED;
 import static com.example.budgetingapp.constants.security.SecurityConstants.REGISTERED_AND_CONFIRMED;
 
-import com.example.budgetingapp.dtos.user.request.UserRegistrationRequestDto;
-import com.example.budgetingapp.dtos.user.response.UserRegistrationResponseDto;
+import com.example.budgetingapp.dtos.users.request.UserRegistrationRequestDto;
+import com.example.budgetingapp.dtos.users.response.UserRegistrationResponseDto;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.Role;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.categories.ExpenseCategory;
 import com.example.budgetingapp.entities.categories.IncomeCategory;
 import com.example.budgetingapp.entities.tokens.ParamToken;
-import com.example.budgetingapp.exceptions.EntityNotFoundException;
-import com.example.budgetingapp.exceptions.RegistrationException;
+import com.example.budgetingapp.exceptions.badrequest.RegistrationException;
+import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
 import com.example.budgetingapp.mappers.UserMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.categories.ExpenseCategoryRepository;

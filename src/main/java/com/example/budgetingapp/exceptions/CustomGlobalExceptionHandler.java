@@ -3,10 +3,21 @@ package com.example.budgetingapp.exceptions;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.GONE;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
+import com.example.budgetingapp.exceptions.badrequest.RegistrationException;
+import com.example.budgetingapp.exceptions.conflictexpections.AlreadyExistsException;
+import com.example.budgetingapp.exceptions.conflictexpections.ConflictException;
+import com.example.budgetingapp.exceptions.conflictexpections.TransactionFailedException;
+import com.example.budgetingapp.exceptions.forbidden.LoginException;
+import com.example.budgetingapp.exceptions.gone.LinkExpiredException;
+import com.example.budgetingapp.exceptions.notfoundexceptions.ActionNotFoundException;
+import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
+import com.example.budgetingapp.exceptions.notfoundexceptions.SpecificationProviderNotFoundException;
+import com.example.budgetingapp.exceptions.unauthorized.PasswordMismatch;
 import jakarta.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
@@ -111,7 +122,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
                 ex,
                 ex.getMessage(),
                 new HttpHeaders(),
-                BAD_REQUEST,
+                GONE,
                 request);
     }
 
@@ -133,7 +144,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
                 ex,
                 ex.getMessage(),
                 new HttpHeaders(),
-                BAD_REQUEST,
+                NOT_FOUND,
                 request);
     }
 
@@ -144,7 +155,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
                 ex,
                 ex.getMessage(),
                 new HttpHeaders(),
-                BAD_REQUEST,
+                CONFLICT,
                 request);
     }
 

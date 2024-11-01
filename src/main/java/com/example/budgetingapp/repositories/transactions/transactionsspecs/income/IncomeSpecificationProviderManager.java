@@ -1,7 +1,7 @@
 package com.example.budgetingapp.repositories.transactions.transactionsspecs.income;
 
 import com.example.budgetingapp.entities.transactions.Income;
-import com.example.budgetingapp.exceptions.SpecificationProviderNotFoundException;
+import com.example.budgetingapp.exceptions.notfoundexceptions.SpecificationProviderNotFoundException;
 import com.example.budgetingapp.repositories.specifications.SpecificationProvider;
 import com.example.budgetingapp.repositories.specifications.SpecificationProviderManager;
 import java.util.List;

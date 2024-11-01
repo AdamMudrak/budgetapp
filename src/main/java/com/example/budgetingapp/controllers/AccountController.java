@@ -26,9 +26,9 @@ import static com.example.budgetingapp.constants.controllers.AccountControllerCo
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.UPDATE_ACCOUNT;
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.UPDATE_ACCOUNT_SUMMARY;
 
-import com.example.budgetingapp.dtos.account.request.CreateAccountDto;
-import com.example.budgetingapp.dtos.account.request.UpdateAccountDto;
-import com.example.budgetingapp.dtos.account.response.AccountDto;
+import com.example.budgetingapp.dtos.accounts.request.CreateAccountDto;
+import com.example.budgetingapp.dtos.accounts.request.UpdateAccountDto;
+import com.example.budgetingapp.dtos.accounts.response.AccountDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.services.AccountService;
 import io.swagger.v3.oas.annotations.Operation;

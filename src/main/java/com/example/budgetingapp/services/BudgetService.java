@@ -1,7 +1,7 @@
 package com.example.budgetingapp.services;
 
-import com.example.budgetingapp.dtos.budget.request.BudgetRequestDto;
-import com.example.budgetingapp.dtos.budget.response.BudgetResponseDto;
+import com.example.budgetingapp.dtos.budgets.request.BudgetRequestDto;
+import com.example.budgetingapp.dtos.budgets.response.BudgetResponseDto;
 import java.util.List;
 
 public interface BudgetService {

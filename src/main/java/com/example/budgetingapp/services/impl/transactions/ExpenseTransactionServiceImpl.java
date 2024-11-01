@@ -8,8 +8,8 @@ import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDt
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.transactions.Expense;
-import com.example.budgetingapp.exceptions.EntityNotFoundException;
-import com.example.budgetingapp.exceptions.TransactionFailedException;
+import com.example.budgetingapp.exceptions.conflictexpections.TransactionFailedException;
+import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
 import com.example.budgetingapp.mappers.TransactionMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.transactions.ExpenseRepository;

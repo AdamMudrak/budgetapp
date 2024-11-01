@@ -37,17 +37,17 @@ import static com.example.budgetingapp.constants.controllers.AuthControllerConst
 import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.TELEGRAM_AUTH_SUMMARY;
 
 import com.example.budgetingapp.constants.Constants;
-import com.example.budgetingapp.dtos.user.request.TelegramAuthenticationRequestDto;
-import com.example.budgetingapp.dtos.user.request.UserGetLinkToSetRandomPasswordRequestDto;
-import com.example.budgetingapp.dtos.user.request.UserLoginRequestDto;
-import com.example.budgetingapp.dtos.user.request.UserRegistrationRequestDto;
-import com.example.budgetingapp.dtos.user.request.UserSetNewPasswordRequestDto;
-import com.example.budgetingapp.dtos.user.response.AccessTokenResponseDto;
-import com.example.budgetingapp.dtos.user.response.TelegramAuthenticationResponseDto;
-import com.example.budgetingapp.dtos.user.response.UserLoginResponseDto;
-import com.example.budgetingapp.dtos.user.response.UserPasswordResetResponseDto;
-import com.example.budgetingapp.dtos.user.response.UserRegistrationResponseDto;
-import com.example.budgetingapp.exceptions.RegistrationException;
+import com.example.budgetingapp.dtos.users.request.TelegramAuthenticationRequestDto;
+import com.example.budgetingapp.dtos.users.request.UserGetLinkToSetRandomPasswordRequestDto;
+import com.example.budgetingapp.dtos.users.request.UserLoginRequestDto;
+import com.example.budgetingapp.dtos.users.request.UserRegistrationRequestDto;
+import com.example.budgetingapp.dtos.users.request.UserSetNewPasswordRequestDto;
+import com.example.budgetingapp.dtos.users.response.AccessTokenResponseDto;
+import com.example.budgetingapp.dtos.users.response.TelegramAuthenticationResponseDto;
+import com.example.budgetingapp.dtos.users.response.UserLoginResponseDto;
+import com.example.budgetingapp.dtos.users.response.UserPasswordResetResponseDto;
+import com.example.budgetingapp.dtos.users.response.UserRegistrationResponseDto;
+import com.example.budgetingapp.exceptions.badrequest.RegistrationException;
 import com.example.budgetingapp.security.RandomParamFromHttpRequestUtil;
 import com.example.budgetingapp.security.services.AuthenticationService;
 import com.example.budgetingapp.security.services.TelegramAuthenticationService;

@@ -1,8 +1,8 @@
 package com.example.budgetingapp.services;
 
-import com.example.budgetingapp.dtos.account.request.CreateAccountDto;
-import com.example.budgetingapp.dtos.account.request.UpdateAccountDto;
-import com.example.budgetingapp.dtos.account.response.AccountDto;
+import com.example.budgetingapp.dtos.accounts.request.CreateAccountDto;
+import com.example.budgetingapp.dtos.accounts.request.UpdateAccountDto;
+import com.example.budgetingapp.dtos.accounts.response.AccountDto;
 import java.util.List;
 
 public interface AccountService {

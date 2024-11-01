@@ -3,9 +3,9 @@ package com.example.budgetingapp.mappers;
 import static com.example.budgetingapp.constants.Constants.MONTHS_IN_A_YEAR;
 
 import com.example.budgetingapp.config.MapperConfig;
-import com.example.budgetingapp.dtos.transfers.request.TargetTransactionRequestDto;
-import com.example.budgetingapp.dtos.transfers.response.TargetTransactionResponseDto;
-import com.example.budgetingapp.entities.transfers.Target;
+import com.example.budgetingapp.dtos.targets.request.TargetTransactionRequestDto;
+import com.example.budgetingapp.dtos.targets.response.TargetTransactionResponseDto;
+import com.example.budgetingapp.entities.Target;
 import java.time.LocalDate;
 import java.time.Period;
 import org.mapstruct.AfterMapping;
