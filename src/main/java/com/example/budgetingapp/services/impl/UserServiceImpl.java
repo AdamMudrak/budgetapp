@@ -4,7 +4,6 @@ import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFA
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_ACCOUNT_NAME;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_BUDGET_NAME;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_EXPENSE_CATEGORIES_LIST;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_EXPENSE_CATEGORY_ID;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_INCOME_CATEGORIES_LIST;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_YEARS_STEP;
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACTION;
@@ -128,12 +127,11 @@ public class UserServiceImpl implements UserService {
     }
 
     private void assignTopLevelBudget(User user) {
-        ExpenseCategory defaultExpenseCategory = new ExpenseCategory(DEFAULT_EXPENSE_CATEGORY_ID);
         Budget topLevelBudget = new Budget();
         topLevelBudget.setName(DEFAULT_BUDGET_NAME);
         topLevelBudget.setFromDate(LocalDate.now());
         topLevelBudget.setToDate(LocalDate.now().plusYears(DEFAULT_YEARS_STEP));
-        topLevelBudget.setExpenseCategories(Set.of(defaultExpenseCategory));
+        topLevelBudget.setExpenseCategories(Set.of());
         topLevelBudget.setLimitSum(BigDecimal.ONE);
         topLevelBudget.setCurrentSum(BigDecimal.ZERO);
         topLevelBudget.setUser(user);

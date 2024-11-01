@@ -31,12 +31,17 @@ public class BudgetController {
         return budgetService.saveBudget(user.getId(), budgetRequestDto);
     }
 
-    @GetMapping("get-all-budgets")
-    public List<BudgetResponseDto> getAllBudgets(@AuthenticationPrincipal User user) {
-        return budgetService.getAllBudgets(user.getId());
+    @GetMapping("get-top-level-budget")
+    public BudgetResponseDto getTopLevelBudget(@AuthenticationPrincipal User user) {
+        return budgetService.updateAndGetMainBudgetByUserId(user.getId());
     }
 
-    @DeleteMapping("delete-budget")
+    @GetMapping("get-all-budgets")
+    public List<BudgetResponseDto> getAllBudgets(@AuthenticationPrincipal User user) {
+        return budgetService.updateAndGetAllBudgetsWithoutTopLevel(user.getId());
+    }
+
+    @DeleteMapping("delete-budget/{budgetId}")
     public void deleteBudget(@AuthenticationPrincipal User user,
                                           @PathVariable Long budgetId) {
         budgetService.deleteBudgetById(user.getId(), budgetId);

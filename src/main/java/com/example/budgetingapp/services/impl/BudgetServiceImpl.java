@@ -2,19 +2,21 @@ package com.example.budgetingapp.services.impl;
 
 import static com.example.budgetingapp.constants.Constants.NO_ACCOUNT;
 
-import com.example.budgetingapp.dtos.budget.request.BudgetRequestDto;
-import com.example.budgetingapp.dtos.budget.response.BudgetResponseDto;
+import com.example.budgetingapp.dtos.budgets.request.BudgetRequestDto;
+import com.example.budgetingapp.dtos.budgets.response.BudgetResponseDto;
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.entities.Budget;
+import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.categories.ExpenseCategory;
 import com.example.budgetingapp.entities.transactions.Expense;
-import com.example.budgetingapp.exceptions.AlreadyExistsException;
-import com.example.budgetingapp.exceptions.EntityNotFoundException;
+import com.example.budgetingapp.exceptions.conflictexpections.AlreadyExistsException;
+import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
 import com.example.budgetingapp.mappers.BudgetMapper;
 import com.example.budgetingapp.repositories.budget.BudgetRepository;
 import com.example.budgetingapp.repositories.categories.ExpenseCategoryRepository;
 import com.example.budgetingapp.repositories.transactions.ExpenseRepository;
 import com.example.budgetingapp.repositories.transactions.transactionsspecs.expense.ExpenseSpecificationBuilder;
+import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.BudgetService;
 import java.math.BigDecimal;
 import java.util.List;
@@ -30,54 +32,65 @@ public class BudgetServiceImpl implements BudgetService {
     private final ExpenseCategoryRepository expenseCategoryRepository;
     private final BudgetMapper budgetMapper;
     private final ExpenseSpecificationBuilder expenseSpecificationBuilder;
+    private final UserRepository userRepository;
 
     @Override
-    public BudgetResponseDto getMainBudgetByUserId(Long userId) {
-        //TODO
-        return budgetMapper
-                .toBudgetDto(budgetRepository
-                        .findByIsTopLevelBudget(true)
-                        .orElseThrow(() -> new EntityNotFoundException(
-                                "No default budget found for user with id " + userId)));
+    public BudgetResponseDto updateAndGetMainBudgetByUserId(Long userId) {
+        Budget topLevelBudget = budgetRepository.findByUserIdAndIsTopLevelBudget(userId, true)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "No default budget found for user with id " + userId));
+        topLevelBudget.setLimitSum(BigDecimal.ZERO);
+        topLevelBudget.setCurrentSum(BigDecimal.ZERO);
+        budgetRepository.findAllByUserId(userId)
+                .forEach(budget -> {
+                    if (!budget.getId().equals(topLevelBudget.getId())) {
+                        if (!topLevelBudget.getExpenseCategories()
+                                .containsAll(budget.getExpenseCategories())) {
+                            topLevelBudget.getExpenseCategories()
+                                    .addAll(budget.getExpenseCategories());
+                        }
+                        if (topLevelBudget.getFromDate().isAfter(budget.getFromDate())) {
+                            topLevelBudget.setFromDate(budget.getFromDate());
+                        }
+                        if (topLevelBudget.getToDate().isBefore(budget.getToDate())) {
+                            topLevelBudget.setToDate(budget.getToDate());
+                        }
+                        topLevelBudget.setLimitSum(topLevelBudget.getLimitSum()
+                                .add(budget.getLimitSum()));
+                        topLevelBudget.setCurrentSum(topLevelBudget.getCurrentSum()
+                                .add(budget.getCurrentSum()));
+                        topLevelBudget.setExceeded(isExceeded(topLevelBudget) < 0);
+                        budgetRepository.save(topLevelBudget);
+                    }
+                });
+        return budgetMapper.toBudgetDto(budgetRepository.findByUserIdAndIsTopLevelBudget(
+                userId, true).orElseThrow(() -> new EntityNotFoundException(
+                        "No default budget found for user with id " + userId)));
     }
 
     @Override
     public BudgetResponseDto saveBudget(Long userId, BudgetRequestDto budgetRequestDto) {
-        if (budgetRepository.existByNameAndUserId(budgetRequestDto.name(), userId)) {
+        if (budgetRepository.existsByNameAndUserId(budgetRequestDto.name(), userId)) {
             throw new AlreadyExistsException("Budget with name " + budgetRequestDto.name()
                     + " for user " + userId + " already exists");
         }
         isCategoryPresentInDb(userId, budgetRequestDto);
         Budget newBudget = budgetMapper.toBudget(budgetRequestDto);
+        User currentUser = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "No user with id " + userId + " found"));
+        newBudget.setUser(currentUser);
         return budgetMapper.toBudgetDto(budgetRepository.save(newBudget));
     }
 
     @Override
-    public BudgetResponseDto updateBudget(Long userId, BudgetRequestDto budgetRequestDto) {
-        //TODO
-        return null;
-    }
-
-    @Override
-    public List<BudgetResponseDto> getAllBudgets(Long userId) {
-        budgetRepository.findAllByUserId(userId).forEach(budget -> {
-            String[] categoryIds = parseCategoryIdsFromBudget(budget);
-            FilterTransactionsDto filterTransactionsDto =
-                    initializeFilterWithNoAccount(budget, categoryIds);
-            Specification<Expense> expenseSpecification =
-                    expenseSpecificationBuilder.build(filterTransactionsDto);
-            List<Expense> expenses = expenseRepository.findAll(expenseSpecification);
-            List<BigDecimal> expensesAmounts = expenses.stream()
-                    .map(Expense::getAmount)
-                    .toList();
-            budget.setCurrentSum(getSumOfExpenses(expensesAmounts));
-            if (isExceeded(budget) < 0) {
-                budget.setExceeded(true);
-            }
-            budgetRepository.save(budget);
-        });
+    public List<BudgetResponseDto> updateAndGetAllBudgetsWithoutTopLevel(Long userId) {
+        Budget topLevelBudget = budgetRepository.findByUserIdAndIsTopLevelBudget(userId,true)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "No default budget found for user with id " + userId));
+        updateBudgetsBeforeRetrieval(userId, topLevelBudget.getId());
         return budgetRepository
-                .findAllByUserId(userId)
+                .findAllByUserIdAndIsTopLevelBudget(userId, false)
                 .stream()
                 .map(budgetMapper::toBudgetDto)
                 .toList();
@@ -86,14 +99,14 @@ public class BudgetServiceImpl implements BudgetService {
     @Override
     public void deleteBudgetById(Long userId, Long budgetId) {
         Budget topLevelBudget = budgetRepository
-                .findByIsTopLevelBudget(true)
+                .findByUserIdAndIsTopLevelBudget(userId,true)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No default budget found for user with id " + userId));
         if (topLevelBudget.getId().equals(budgetId)) {
             throw new IllegalArgumentException("You can't delete top level budget!"
-                    + " Consider updating it instead");
+                    + " Consider deleting subsidiary it instead");
         }
-        if (budgetRepository.existByIdAndUserId(budgetId, userId)) {
+        if (budgetRepository.existsByIdAndUserId(budgetId, userId)) {
             budgetRepository.deleteByIdAndUserId(budgetId, budgetId);
         } else {
             throw new EntityNotFoundException("No budget found with id " + budgetId
@@ -103,7 +116,7 @@ public class BudgetServiceImpl implements BudgetService {
 
     private void isCategoryPresentInDb(Long userId, BudgetRequestDto budgetRequestDto) {
         for (Long categoryId : budgetRequestDto.categoryIds()) {
-            if (!expenseCategoryRepository.existsByIdAndUserId(userId, categoryId)) {
+            if (!expenseCategoryRepository.existsByIdAndUserId(categoryId, userId)) {
                 throw new EntityNotFoundException("No category with id " + categoryId
                         + " was found for user with id " + userId);
             }
@@ -135,6 +148,27 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     private int isExceeded(Budget budget) {
-        return (budget.getLimit().compareTo(budget.getCurrentSum()));
+        return (budget.getLimitSum().compareTo(budget.getCurrentSum()));
+    }
+
+    private void updateBudgetsBeforeRetrieval(Long userId, Long topLevelBudgetId) {
+        budgetRepository.findAllByUserId(userId).forEach(budget -> {
+            if (!budget.getId().equals(topLevelBudgetId)) {
+                String[] categoryIds = parseCategoryIdsFromBudget(budget);
+                FilterTransactionsDto filterTransactionsDto =
+                        initializeFilterWithNoAccount(budget, categoryIds);
+                Specification<Expense> expenseSpecification =
+                        expenseSpecificationBuilder.build(filterTransactionsDto);
+                List<Expense> expenses = expenseRepository.findAll(expenseSpecification);
+                List<BigDecimal> expensesAmounts = expenses.stream()
+                        .map(Expense::getAmount)
+                        .toList();
+                budget.setCurrentSum(getSumOfExpenses(expensesAmounts));
+                if (isExceeded(budget) < 0) {
+                    budget.setExceeded(true);
+                }
+                budgetRepository.save(budget);
+            }
+        });
     }
 }
