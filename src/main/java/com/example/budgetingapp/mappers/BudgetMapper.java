@@ -1,8 +1,8 @@
 package com.example.budgetingapp.mappers;
 
 import com.example.budgetingapp.config.MapperConfig;
-import com.example.budgetingapp.dtos.budget.request.BudgetRequestDto;
-import com.example.budgetingapp.dtos.budget.response.BudgetResponseDto;
+import com.example.budgetingapp.dtos.budgets.request.BudgetRequestDto;
+import com.example.budgetingapp.dtos.budgets.response.BudgetResponseDto;
 import com.example.budgetingapp.entities.Budget;
 import com.example.budgetingapp.entities.categories.ExpenseCategory;
 import java.util.Set;
@@ -14,6 +14,7 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(config = MapperConfig.class)
 public interface BudgetMapper {
+
     @Mapping(target = "expenseCategories", ignore = true)
     Budget toBudget(BudgetRequestDto budgetRequestDto);
 
