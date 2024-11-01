@@ -14,11 +14,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table (name = EXPENSE_CATEGORIES)
 public class ExpenseCategory {
     @Id
@@ -29,4 +31,8 @@ public class ExpenseCategory {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = USER_ID, nullable = false)
     private User user;
+
+    public ExpenseCategory(Long id) {
+        this.id = id;
+    }
 }
