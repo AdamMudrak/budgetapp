@@ -44,7 +44,7 @@ public class Budget {
             inverseJoinColumns = @JoinColumn(name = "expense_category_id"))
     private Set<ExpenseCategory> expenseCategories = new HashSet<>();
     @Column(nullable = false)
-    private BigDecimal limit;
+    private BigDecimal limitSum;
     @Column(nullable = false)
     private BigDecimal currentSum = BigDecimal.ZERO;
     @ManyToOne(fetch = FetchType.LAZY)

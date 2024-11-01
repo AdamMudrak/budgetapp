@@ -24,4 +24,4 @@ public record BudgetRequestDto(
         @NotNull
         @Positive
         @Digits(integer = 9, fraction = 2)
-        BigDecimal limit) {}
+        BigDecimal limitSum) {}
