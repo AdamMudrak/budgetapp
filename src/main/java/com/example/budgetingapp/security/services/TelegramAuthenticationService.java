@@ -3,12 +3,16 @@ package com.example.budgetingapp.security.services;
 import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.SUCCESSFULLY_AUTHENTICATED_VIA_TELEGRAM;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_ACCOUNT_CURRENCY;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_ACCOUNT_NAME;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_BUDGET_NAME;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_EXPENSE_CATEGORIES_LIST;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_EXPENSE_CATEGORY_ID;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_INCOME_CATEGORIES_LIST;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_YEARS_STEP;
 
 import com.example.budgetingapp.dtos.users.request.TelegramAuthenticationRequestDto;
 import com.example.budgetingapp.dtos.users.response.TelegramAuthenticationResponseDto;
 import com.example.budgetingapp.entities.Account;
+import com.example.budgetingapp.entities.Budget;
 import com.example.budgetingapp.entities.Role;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.categories.ExpenseCategory;
@@ -18,11 +22,13 @@ import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundExce
 import com.example.budgetingapp.mappers.UserMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.actiontoken.ActionTokenRepository;
+import com.example.budgetingapp.repositories.budget.BudgetRepository;
 import com.example.budgetingapp.repositories.categories.ExpenseCategoryRepository;
 import com.example.budgetingapp.repositories.categories.IncomeCategoryRepository;
 import com.example.budgetingapp.repositories.role.RoleRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,6 +44,7 @@ public class TelegramAuthenticationService {
     private final UserRepository userRepository;
     private final ActionTokenRepository actionTokenRepository;
     private final RoleRepository roleRepository;
+    private final BudgetRepository budgetRepository;
     private final UserMapper userMapper;
 
     public TelegramAuthenticationResponseDto registerOrLogin(
@@ -63,6 +70,7 @@ public class TelegramAuthenticationService {
         assignDefaultAccount(user);
         assignDefaultIncomeCategories(user);
         assignDefaultExpenseCategories(user);
+        assignTopLevelBudget(user);
         return new TelegramAuthenticationResponseDto(SUCCESSFULLY_AUTHENTICATED_VIA_TELEGRAM);
     }
 
@@ -106,5 +114,20 @@ public class TelegramAuthenticationService {
             incomeCategory.setUser(user);
             incomeCategoryRepository.save(incomeCategory);
         }
+    }
+
+    private void assignTopLevelBudget(User user) {
+        ExpenseCategory defaultExpenseCategory = new ExpenseCategory(DEFAULT_EXPENSE_CATEGORY_ID);
+        Budget topLevelBudget = new Budget();
+        topLevelBudget.setName(DEFAULT_BUDGET_NAME);
+        topLevelBudget.setFromDate(LocalDate.now());
+        topLevelBudget.setToDate(LocalDate.now().plusYears(DEFAULT_YEARS_STEP));
+        topLevelBudget.setExpenseCategories(Set.of(defaultExpenseCategory));
+        topLevelBudget.setLimitSum(BigDecimal.ONE);
+        topLevelBudget.setCurrentSum(BigDecimal.ZERO);
+        topLevelBudget.setUser(user);
+        topLevelBudget.setExceeded(false);
+        topLevelBudget.setTopLevelBudget(true);
+        budgetRepository.save(topLevelBudget);
     }
 }

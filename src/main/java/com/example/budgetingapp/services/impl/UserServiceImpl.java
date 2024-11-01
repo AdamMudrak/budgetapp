@@ -25,6 +25,7 @@ import com.example.budgetingapp.exceptions.badrequest.RegistrationException;
 import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
 import com.example.budgetingapp.mappers.UserMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
+import com.example.budgetingapp.repositories.budget.BudgetRepository;
 import com.example.budgetingapp.repositories.categories.ExpenseCategoryRepository;
 import com.example.budgetingapp.repositories.categories.IncomeCategoryRepository;
 import com.example.budgetingapp.repositories.paramtoken.ParamTokenRepository;
@@ -49,6 +50,7 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final ExpenseCategoryRepository expenseCategoryRepository;
     private final IncomeCategoryRepository incomeCategoryRepository;
+    private final BudgetRepository budgetRepository;
     private final ParamTokenRepository paramTokenRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
@@ -130,12 +132,13 @@ public class UserServiceImpl implements UserService {
         Budget topLevelBudget = new Budget();
         topLevelBudget.setName(DEFAULT_BUDGET_NAME);
         topLevelBudget.setFromDate(LocalDate.now());
-        topLevelBudget.setFromDate(LocalDate.now().plusYears(DEFAULT_YEARS_STEP));
+        topLevelBudget.setToDate(LocalDate.now().plusYears(DEFAULT_YEARS_STEP));
         topLevelBudget.setExpenseCategories(Set.of(defaultExpenseCategory));
         topLevelBudget.setLimitSum(BigDecimal.ONE);
         topLevelBudget.setCurrentSum(BigDecimal.ZERO);
         topLevelBudget.setUser(user);
         topLevelBudget.setExceeded(false);
         topLevelBudget.setTopLevelBudget(true);
+        budgetRepository.save(topLevelBudget);
     }
 }
