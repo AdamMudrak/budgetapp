@@ -22,13 +22,13 @@ public class TargetControllerConstants {
             "Successfully replenished a target";
 
     public static final String GET_ALL_TARGETS = "/get-all-targets";
-    public static final String GET_ALL_TARGETS_SUMMARY = "Retrieved all targets";
+    public static final String GET_ALL_TARGETS_SUMMARY = "Retrieve all targets";
     public static final String SUCCESSFULLY_RETRIEVED_TARGETS =
             "Successfully retrieved all targets";
 
     public static final String DESTROY_TARGET = "/destroy-target";
     public static final String DESTROY_TARGET_SUMMARY =
-            "Destroy a target, retrieve money to one of you accounts";
+            "Destroy a target, retrieve money to one of your accounts";
     public static final String SUCCESSFULLY_DESTROYED_TARGET =
             "Successfully destroy a target and automatically replenish the account chosen";
 }
