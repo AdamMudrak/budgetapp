@@ -52,4 +52,6 @@ public class Budget {
     private User user;
     @Column(nullable = false, columnDefinition = BOOLEAN_TO_INT)
     private boolean isExceeded = false;
+    @Column(nullable = false, columnDefinition = BOOLEAN_TO_INT)
+    private boolean isTopLevelBudget = false;
 }

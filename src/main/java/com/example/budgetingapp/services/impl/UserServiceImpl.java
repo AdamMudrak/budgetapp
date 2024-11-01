@@ -2,8 +2,11 @@ package com.example.budgetingapp.services.impl;
 
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_ACCOUNT_CURRENCY;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_ACCOUNT_NAME;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_BUDGET_NAME;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_EXPENSE_CATEGORIES_LIST;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_EXPENSE_CATEGORY_ID;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_INCOME_CATEGORIES_LIST;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_YEARS_STEP;
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACTION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.REGISTERED;
@@ -12,6 +15,7 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.REGI
 import com.example.budgetingapp.dtos.users.request.UserRegistrationRequestDto;
 import com.example.budgetingapp.dtos.users.response.UserRegistrationResponseDto;
 import com.example.budgetingapp.entities.Account;
+import com.example.budgetingapp.entities.Budget;
 import com.example.budgetingapp.entities.Role;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.categories.ExpenseCategory;
@@ -31,6 +35,7 @@ import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
 import com.example.budgetingapp.services.UserService;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -66,7 +71,7 @@ public class UserServiceImpl implements UserService {
         assignDefaultAccount(user);
         assignDefaultExpenseCategories(user);
         assignDefaultIncomeCategories(user);
-
+        assignTopLevelBudget(user);
         passwordEmailService.sendActionMessage(user.getUsername(), CONFIRMATION);
         return new UserRegistrationResponseDto(REGISTERED);
     }
@@ -118,5 +123,19 @@ public class UserServiceImpl implements UserService {
             incomeCategory.setUser(user);
             incomeCategoryRepository.save(incomeCategory);
         }
+    }
+
+    private void assignTopLevelBudget(User user) {
+        ExpenseCategory defaultExpenseCategory = new ExpenseCategory(DEFAULT_EXPENSE_CATEGORY_ID);
+        Budget topLevelBudget = new Budget();
+        topLevelBudget.setName(DEFAULT_BUDGET_NAME);
+        topLevelBudget.setFromDate(LocalDate.now());
+        topLevelBudget.setFromDate(LocalDate.now().plusYears(DEFAULT_YEARS_STEP));
+        topLevelBudget.setExpenseCategories(Set.of(defaultExpenseCategory));
+        topLevelBudget.setLimitSum(BigDecimal.ONE);
+        topLevelBudget.setCurrentSum(BigDecimal.ZERO);
+        topLevelBudget.setUser(user);
+        topLevelBudget.setExceeded(false);
+        topLevelBudget.setTopLevelBudget(true);
     }
 }
