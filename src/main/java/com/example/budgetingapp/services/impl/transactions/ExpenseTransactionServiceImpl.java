@@ -2,14 +2,19 @@ package com.example.budgetingapp.services.impl.transactions;
 
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.EXPENSE;
 
+import com.example.budgetingapp.dtos.transactions.request.ChartTransactionRequestDto;
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
+import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
+import com.example.budgetingapp.dtos.transactions.response.TransactionSumByCategoryDto;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.User;
+import com.example.budgetingapp.entities.categories.ExpenseCategory;
 import com.example.budgetingapp.entities.transactions.Expense;
 import com.example.budgetingapp.exceptions.conflictexpections.TransactionFailedException;
 import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
+import com.example.budgetingapp.mappers.CategoryMapper;
 import com.example.budgetingapp.mappers.TransactionMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.transactions.ExpenseRepository;
@@ -18,7 +23,10 @@ import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.TransactionService;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
@@ -29,8 +37,10 @@ import org.springframework.stereotype.Service;
 @Qualifier(EXPENSE)
 @RequiredArgsConstructor
 public class ExpenseTransactionServiceImpl implements TransactionService {
+    private static final int FIRST_DAY = 1;
     private final AccountRepository accountRepository;
     private final TransactionMapper transactionMapper;
+    private final CategoryMapper categoryMapper;
     private final UserRepository userRepository;
     private final ExpenseRepository expenseRepository;
     private final ExpenseSpecificationBuilder expenseSpecificationBuilder;
@@ -69,6 +79,38 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
                 .stream()
                 .map(transactionMapper::toExpenseDto)
                 .toList();
+    }
+
+    //TODO REFACTOR, IMPROVE
+    @Override
+    public List<AccumulatedResultDto> getSumOfTransactionsForPeriodOfTime(Long userId,
+                                          ChartTransactionRequestDto chartTransactionRequestDto) {
+        Map<LocalDate, Map<ExpenseCategory, BigDecimal>> categorizedExpenseSums =
+                expenseRepository.findAll()
+                .stream()
+                .filter(expense -> isDateWithinPeriod(expense.getTransactionDate(),
+                        chartTransactionRequestDto))
+                .collect(Collectors.groupingBy(
+                        expense -> getPeriodDate(expense.getTransactionDate(),
+                                chartTransactionRequestDto),
+                        Collectors.groupingBy(Expense::getExpenseCategory,
+                                Collectors.reducing(BigDecimal.ZERO,
+                                        Expense::getAmount, BigDecimal::add)
+                        )
+                ));
+        return categorizedExpenseSums.entrySet().stream()
+                .map(entry -> {
+                    List<TransactionSumByCategoryDto> sumsByDate = entry
+                            .getValue()
+                            .entrySet()
+                            .stream()
+                            .map(dateEntry -> new TransactionSumByCategoryDto(
+                                    categoryMapper.toExpenseCategoryDto(dateEntry.getKey()),
+                                    dateEntry.getValue()))
+                            .collect(Collectors.toList());
+                    return new AccumulatedResultDto(entry.getKey(), sumsByDate);
+                })
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -133,5 +175,26 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
         return (account.getBalance()
                 .subtract(requestTransactionDto.amount()))
                 .compareTo(BigDecimal.ZERO);
+    }
+
+    private boolean isDateWithinPeriod(LocalDate checkDate,
+                               ChartTransactionRequestDto accumulatedTransactionRequestDto) {
+        if (accumulatedTransactionRequestDto.getFromDate() == null
+                && accumulatedTransactionRequestDto.getToDate() == null) {
+            return true;
+        }
+        return (checkDate.isAfter(accumulatedTransactionRequestDto.getFromDate())
+                || checkDate.isEqual(accumulatedTransactionRequestDto.getFromDate())
+                && checkDate.isBefore(accumulatedTransactionRequestDto.getToDate())
+                || checkDate.isEqual(accumulatedTransactionRequestDto.getToDate()));
+    }
+
+    private LocalDate getPeriodDate(LocalDate transactionDate,
+                                    ChartTransactionRequestDto chartTransactionRequestDto) {
+        return switch (chartTransactionRequestDto.getFilterType()) {
+            case DAY -> transactionDate;
+            case MONTH -> transactionDate.withDayOfMonth(FIRST_DAY);
+            case YEAR -> transactionDate.withDayOfYear(FIRST_DAY);
+        };
     }
 }

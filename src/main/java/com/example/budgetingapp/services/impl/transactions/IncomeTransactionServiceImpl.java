@@ -2,14 +2,19 @@ package com.example.budgetingapp.services.impl.transactions;
 
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME;
 
+import com.example.budgetingapp.dtos.transactions.request.ChartTransactionRequestDto;
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
+import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
+import com.example.budgetingapp.dtos.transactions.response.TransactionSumByCategoryDto;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.User;
+import com.example.budgetingapp.entities.categories.IncomeCategory;
 import com.example.budgetingapp.entities.transactions.Income;
 import com.example.budgetingapp.exceptions.conflictexpections.TransactionFailedException;
 import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
+import com.example.budgetingapp.mappers.CategoryMapper;
 import com.example.budgetingapp.mappers.TransactionMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.transactions.IncomeRepository;
@@ -18,7 +23,10 @@ import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.TransactionService;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
@@ -29,8 +37,10 @@ import org.springframework.stereotype.Service;
 @Qualifier(INCOME)
 @RequiredArgsConstructor
 public class IncomeTransactionServiceImpl implements TransactionService {
+    private static final int FIRST_DAY = 1;
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
+    private final CategoryMapper categoryMapper;
     private final TransactionMapper transactionMapper;
     private final IncomeRepository incomeRepository;
     private final IncomeSpecificationBuilder incomeSpecificationBuilder;
@@ -64,6 +74,37 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                 .stream()
                 .map(transactionMapper::toIncomeDto)
                 .toList();
+    }
+
+    @Override
+    public List<AccumulatedResultDto> getSumOfTransactionsForPeriodOfTime(Long userId,
+                                          ChartTransactionRequestDto chartTransactionRequestDto) {
+        Map<LocalDate, Map<IncomeCategory, BigDecimal>> categorizedExpenseSums =
+                incomeRepository.findAll()
+                        .stream()
+                        .filter(income -> isDateWithinPeriod(income.getTransactionDate(),
+                                chartTransactionRequestDto))
+                        .collect(Collectors.groupingBy(
+                                income -> getPeriodDate(income.getTransactionDate(),
+                                        chartTransactionRequestDto),
+                                Collectors.groupingBy(Income::getIncomeCategory,
+                                        Collectors.reducing(BigDecimal.ZERO,
+                                                Income::getAmount, BigDecimal::add)
+                                )
+                        ));
+        return categorizedExpenseSums.entrySet().stream()
+                .map(entry -> {
+                    List<TransactionSumByCategoryDto> sumsByDate = entry
+                            .getValue()
+                            .entrySet()
+                            .stream()
+                            .map(dateEntry -> new TransactionSumByCategoryDto(
+                                    categoryMapper.toIncomeCategoryDto(dateEntry.getKey()),
+                                    dateEntry.getValue()))
+                            .collect(Collectors.toList());
+                    return new AccumulatedResultDto(entry.getKey(), sumsByDate);
+                })
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -133,5 +174,26 @@ public class IncomeTransactionServiceImpl implements TransactionService {
         return (account.getBalance()
                 .subtract(income.getAmount()))
                 .compareTo(BigDecimal.ZERO);
+    }
+
+    private boolean isDateWithinPeriod(LocalDate checkDate,
+                                ChartTransactionRequestDto accumulatedTransactionRequestDto) {
+        if (accumulatedTransactionRequestDto.getFromDate() == null
+                && accumulatedTransactionRequestDto.getToDate() == null) {
+            return true;
+        }
+        return (checkDate.isAfter(accumulatedTransactionRequestDto.getFromDate())
+                || checkDate.isEqual(accumulatedTransactionRequestDto.getFromDate())
+                && checkDate.isBefore(accumulatedTransactionRequestDto.getToDate())
+                || checkDate.isEqual(accumulatedTransactionRequestDto.getToDate()));
+    }
+
+    private LocalDate getPeriodDate(LocalDate transactionDate,
+                                    ChartTransactionRequestDto chartTransactionRequestDto) {
+        return switch (chartTransactionRequestDto.getFilterType()) {
+            case DAY -> transactionDate;
+            case MONTH -> transactionDate.withDayOfMonth(FIRST_DAY);
+            case YEAR -> transactionDate.withDayOfYear(FIRST_DAY);
+        };
     }
 }
