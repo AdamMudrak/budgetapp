@@ -12,19 +12,19 @@ import org.springframework.stereotype.Component;
 public class TransactionsCommonFunctionsUtil {
     private static final int FIRST_DAY = 1;
 
-    public int isSufficientAmount(Account account, RequestTransactionDto requestTransactionDto) {
+    int isSufficientAmount(Account account, RequestTransactionDto requestTransactionDto) {
         return (account.getBalance()
                 .subtract(requestTransactionDto.amount()))
                 .compareTo(BigDecimal.ZERO);
     }
 
-    public int isSufficientAmount(Account account, Income income) {
+    int isSufficientAmount(Account account, Income income) {
         return (account.getBalance()
                 .subtract(income.getAmount()))
                 .compareTo(BigDecimal.ZERO);
     }
 
-    public boolean isDateWithinPeriod(LocalDate checkDate,
+    boolean isDateWithinPeriod(LocalDate checkDate,
                                    ChartTransactionRequestDto accumulatedTransactionRequestDto) {
         if (accumulatedTransactionRequestDto.getFromDate() == null
                 && accumulatedTransactionRequestDto.getToDate() == null) {
@@ -36,7 +36,7 @@ public class TransactionsCommonFunctionsUtil {
                 || checkDate.isEqual(accumulatedTransactionRequestDto.getToDate())));
     }
 
-    public LocalDate getPeriodDate(LocalDate transactionDate,
+    LocalDate getPeriodDate(LocalDate transactionDate,
                                     ChartTransactionRequestDto chartTransactionRequestDto) {
         return switch (chartTransactionRequestDto.getFilterType()) {
             case DAY -> transactionDate;
