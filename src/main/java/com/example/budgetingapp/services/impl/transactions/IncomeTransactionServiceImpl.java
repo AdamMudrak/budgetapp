@@ -2,7 +2,8 @@ package com.example.budgetingapp.services.impl.transactions;
 
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME;
 
-import com.example.budgetingapp.dtos.transactions.request.ChartTransactionRequestDto;
+import com.example.budgetingapp.dtos.transactions.request.ChartTransactionRequestDtoByDay;
+import com.example.budgetingapp.dtos.transactions.request.ChartTransactionRequestDtoByMonthOrYear;
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
@@ -78,35 +79,38 @@ public class IncomeTransactionServiceImpl implements TransactionService {
 
     @Override
     public List<AccumulatedResultDto> getSumOfTransactionsForPeriodOfTime(Long userId,
-                                          ChartTransactionRequestDto chartTransactionRequestDto) {
+                              ChartTransactionRequestDtoByDay chartTransactionRequestDtoByDay) {
         Map<LocalDate, Map<IncomeCategory, BigDecimal>> categorizedExpenseSums =
                 incomeRepository.findAll()
                         .stream()
                         .filter(income -> transactionsCommonFunctionsUtil
                                 .isDateWithinPeriod(income.getTransactionDate(),
-                                chartTransactionRequestDto))
-                        .collect(Collectors.groupingBy(
-                                income -> transactionsCommonFunctionsUtil
-                                        .getPeriodDate(income.getTransactionDate(),
-                                        chartTransactionRequestDto),
+                                        chartTransactionRequestDtoByDay))
+                        .collect(Collectors.groupingBy(Income::getTransactionDate,
                                 Collectors.groupingBy(Income::getIncomeCategory,
                                         Collectors.reducing(BigDecimal.ZERO,
                                                 Income::getAmount, BigDecimal::add)
                                 )
                         ));
-        return categorizedExpenseSums.entrySet().stream()
-                .map(entry -> {
-                    List<TransactionSumByCategoryDto> sumsByDate = entry
-                            .getValue()
-                            .entrySet()
-                            .stream()
-                            .map(dateEntry -> new TransactionSumByCategoryDto(
-                                    categoryMapper.toIncomeCategoryDto(dateEntry.getKey()),
-                                    dateEntry.getValue()))
-                            .collect(Collectors.toList());
-                    return new AccumulatedResultDto(entry.getKey(), sumsByDate);
-                })
-                .collect(Collectors.toList());
+        return prepareListOfAccumulatedDtos(categorizedExpenseSums);
+    }
+
+    @Override
+    public List<AccumulatedResultDto> getSumOfTransactionsForMonthOrYear(Long userId,
+                ChartTransactionRequestDtoByMonthOrYear chartTransactionRequestDtoByMonthOrYear) {
+        Map<LocalDate, Map<IncomeCategory, BigDecimal>> categorizedExpenseSums =
+                incomeRepository.findAll()
+                        .stream()
+                        .collect(Collectors.groupingBy(
+                                income -> transactionsCommonFunctionsUtil
+                                        .getPeriodDate(income.getTransactionDate(),
+                                                chartTransactionRequestDtoByMonthOrYear),
+                                Collectors.groupingBy(Income::getIncomeCategory,
+                                        Collectors.reducing(BigDecimal.ZERO,
+                                                Income::getAmount, BigDecimal::add)
+                                )
+                        ));
+        return prepareListOfAccumulatedDtos(categorizedExpenseSums);
     }
 
     @Transactional
@@ -171,5 +175,22 @@ public class IncomeTransactionServiceImpl implements TransactionService {
         account.setBalance(account.getBalance().subtract(income.getAmount()));
         accountRepository.save(account);
         incomeRepository.deleteById(transactionId);
+    }
+
+    private List<AccumulatedResultDto> prepareListOfAccumulatedDtos(
+            Map<LocalDate, Map<IncomeCategory, BigDecimal>> categorizedExpenseSums) {
+        return categorizedExpenseSums.entrySet().stream()
+                .map(entry -> {
+                    List<TransactionSumByCategoryDto> sumsByDate = entry
+                            .getValue()
+                            .entrySet()
+                            .stream()
+                            .map(dateEntry -> new TransactionSumByCategoryDto(
+                                    categoryMapper.toIncomeCategoryDto(dateEntry.getKey()),
+                                    dateEntry.getValue()))
+                            .collect(Collectors.toList());
+                    return new AccumulatedResultDto(entry.getKey(), sumsByDate);
+                })
+                .collect(Collectors.toList());
     }
 }

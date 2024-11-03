@@ -1,6 +1,7 @@
 package com.example.budgetingapp.services;
 
-import com.example.budgetingapp.dtos.transactions.request.ChartTransactionRequestDto;
+import com.example.budgetingapp.dtos.transactions.request.ChartTransactionRequestDtoByDay;
+import com.example.budgetingapp.dtos.transactions.request.ChartTransactionRequestDtoByMonthOrYear;
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
@@ -22,7 +23,10 @@ public interface TransactionService {
                                                     Pageable pageable);
 
     List<AccumulatedResultDto> getSumOfTransactionsForPeriodOfTime(Long userId,
-                                           ChartTransactionRequestDto chartTransactionRequestDto);
+                                ChartTransactionRequestDtoByDay chartTransactionRequestDtoByDay);
+
+    List<AccumulatedResultDto> getSumOfTransactionsForMonthOrYear(Long userId,
+                   ChartTransactionRequestDtoByMonthOrYear chartTransactionRequestDtoByMonthOrYear);
 
     void deleteByTransactionId(Long userId, Long transactionId);
 }
