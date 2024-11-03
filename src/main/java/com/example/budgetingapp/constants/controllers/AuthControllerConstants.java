@@ -20,13 +20,13 @@ public class AuthControllerConstants {
     public static final String REFRESH_ACCESS_TOKEN = "/refreshAccessToken";
 
     public static final String REGISTER_SUMMARY = "Register a new user in the app";
-    public static final String SUCCESSFULLY_REGISTERED = "Successfully registered";
+    public static final String SUCCESSFULLY_REGISTERED = "Successfully registered a new user";
 
     public static final String CONFIRM_SUMMARY = "Confirm registration of a new user in the app";
-    public static final String SUCCESSFULLY_CONFIRMED = "Successfully confirmed";
+    public static final String SUCCESSFULLY_CONFIRMED = "Successfully confirmed registration";
 
     public static final String LOGIN_SUMMARY = "Log in using existing account";
-    public static final String SUCCESSFULLY_LOGGED_IN = "Successfully logged in";
+    public static final String SUCCESSFULLY_LOGGED_IN = "Successfully logged in in the app";
 
     public static final String INITIATE_PASSWORD_RESET_SUMMARY =
             "Initiate password reset via a link sent to your email";
@@ -46,7 +46,7 @@ public class AuthControllerConstants {
             "Successfully authenticated using telegram";
 
     public static final String REFRESH_ACCESS_TOKEN_SUMMARY =
-            "Using an RT, get a new AT";
+            "Using a Refresh Token, get a new Access Token";
     public static final String SUCCESSFULLY_REFRESHED_TOKEN =
             "Successfully refreshed access token using refresh token";
 
