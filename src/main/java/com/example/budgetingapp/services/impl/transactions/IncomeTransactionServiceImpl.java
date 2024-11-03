@@ -11,11 +11,9 @@ import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDt
 import com.example.budgetingapp.dtos.transactions.response.TransactionSumByCategoryDto;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.User;
-import com.example.budgetingapp.entities.categories.IncomeCategory;
 import com.example.budgetingapp.entities.transactions.Income;
 import com.example.budgetingapp.exceptions.conflictexpections.TransactionFailedException;
 import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
-import com.example.budgetingapp.mappers.CategoryMapper;
 import com.example.budgetingapp.mappers.TransactionMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.transactions.IncomeRepository;
@@ -25,8 +23,10 @@ import com.example.budgetingapp.services.TransactionService;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,7 +40,6 @@ import org.springframework.stereotype.Service;
 public class IncomeTransactionServiceImpl implements TransactionService {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
-    private final CategoryMapper categoryMapper;
     private final TransactionMapper transactionMapper;
     private final IncomeRepository incomeRepository;
     private final IncomeSpecificationBuilder incomeSpecificationBuilder;
@@ -80,17 +79,14 @@ public class IncomeTransactionServiceImpl implements TransactionService {
     @Override
     public List<AccumulatedResultDto> getSumOfTransactionsForPeriodOfTime(Long userId,
                               ChartTransactionRequestDtoByDay chartTransactionRequestDtoByDay) {
-        Map<LocalDate, Map<IncomeCategory, BigDecimal>> categorizedExpenseSums =
+        Map<LocalDate, Map<String, BigDecimal>> categorizedExpenseSums =
                 incomeRepository.findAll()
                         .stream()
                         .filter(income -> transactionsCommonFunctionsUtil
                                 .isDateWithinPeriod(income.getTransactionDate(),
                                         chartTransactionRequestDtoByDay))
                         .collect(Collectors.groupingBy(Income::getTransactionDate,
-                                Collectors.groupingBy(Income::getIncomeCategory,
-                                        Collectors.reducing(BigDecimal.ZERO,
-                                                Income::getAmount, BigDecimal::add)
-                                )
+                                getCollectorGroupByDateAndThenCategorySum()
                         ));
         return prepareListOfAccumulatedDtos(categorizedExpenseSums);
     }
@@ -98,17 +94,14 @@ public class IncomeTransactionServiceImpl implements TransactionService {
     @Override
     public List<AccumulatedResultDto> getSumOfTransactionsForMonthOrYear(Long userId,
                 ChartTransactionRequestDtoByMonthOrYear chartTransactionRequestDtoByMonthOrYear) {
-        Map<LocalDate, Map<IncomeCategory, BigDecimal>> categorizedExpenseSums =
+        Map<LocalDate, Map<String, BigDecimal>> categorizedExpenseSums =
                 incomeRepository.findAll()
                         .stream()
                         .collect(Collectors.groupingBy(
                                 income -> transactionsCommonFunctionsUtil
                                         .getPeriodDate(income.getTransactionDate(),
                                                 chartTransactionRequestDtoByMonthOrYear),
-                                Collectors.groupingBy(Income::getIncomeCategory,
-                                        Collectors.reducing(BigDecimal.ZERO,
-                                                Income::getAmount, BigDecimal::add)
-                                )
+                                getCollectorGroupByDateAndThenCategorySum()
                         ));
         return prepareListOfAccumulatedDtos(categorizedExpenseSums);
     }
@@ -178,7 +171,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
     }
 
     private List<AccumulatedResultDto> prepareListOfAccumulatedDtos(
-            Map<LocalDate, Map<IncomeCategory, BigDecimal>> categorizedExpenseSums) {
+            Map<LocalDate, Map<String, BigDecimal>> categorizedExpenseSums) {
         return categorizedExpenseSums.entrySet().stream()
                 .map(entry -> {
                     List<TransactionSumByCategoryDto> sumsByDate = entry
@@ -186,11 +179,32 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                             .entrySet()
                             .stream()
                             .map(dateEntry -> new TransactionSumByCategoryDto(
-                                    categoryMapper.toIncomeCategoryDto(dateEntry.getKey()),
+                                    dateEntry.getKey(),
                                     dateEntry.getValue()))
                             .collect(Collectors.toList());
                     return new AccumulatedResultDto(entry.getKey(), sumsByDate);
                 })
                 .collect(Collectors.toList());
+    }
+
+    private Collector<Income, Object, Map<String, BigDecimal>>
+            getCollectorGroupByDateAndThenCategorySum() {
+        return Collectors.collectingAndThen(
+                Collectors.groupingBy(Income::getIncomeCategory,
+                        Collectors.reducing(BigDecimal.ZERO,
+                                Income::getAmount, BigDecimal::add)),
+                categoryMap -> {
+                    BigDecimal dailyTotal = categoryMap.values()
+                            .stream()
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+                    Map<String, BigDecimal> resultMap =
+                            new LinkedHashMap<>();
+                    resultMap.put("Sum for date:", dailyTotal);
+                    categoryMap.forEach((category, amount) ->
+                            resultMap.put("Sum for category "
+                                    + category.getName() + ":", amount));
+                    return resultMap;
+                }
+        );
     }
 }
