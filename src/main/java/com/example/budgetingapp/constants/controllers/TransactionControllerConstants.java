@@ -23,6 +23,7 @@ public class TransactionControllerConstants {
     public static final String EXPENSE = "EXPENSE";
     public static final String ADD_EXPENSE = "/add-expense";
     public static final String GET_ALL_EXPENSES = "/get-all-expenses";
+    public static final String GET_ALL_EXPENSES_FOR_CHARTS = "/get-all-expenses-for-charts";
     public static final String UPDATE_EXPENSE_BY_ID = "/update-expense/{transactionId}";
     public static final String DELETE_EXPENSE_BY_ID = "/delete-expense/{transactionId}";
 
@@ -43,9 +44,16 @@ public class TransactionControllerConstants {
     public static final String SUCCESSFULLY_RETRIEVED_EXPENSES =
             "Successfully retrieved expenses";
 
+    public static final String GET_ALL_EXPENSES_FOR_CHARTS_SUMMARY =
+            "Retrieve all expenses grouped by date, "
+            + "then grouped by categories";
+    public static final String SUCCESSFULLY_RETRIEVED_EXPENSES_FOR_CHARTS =
+            "Successfully retrieved expenses for charts";
+
     public static final String INCOME = "INCOME";
     public static final String ADD_INCOME = "/add-income";
     public static final String GET_ALL_INCOMES = "/get-all-incomes";
+    public static final String GET_ALL_INCOMES_FOR_CHARTS = "/get-all-incomes-for-charts";
     public static final String UPDATE_INCOME_BY_ID = "/update-income/{transactionId}";
     public static final String DELETE_INCOME_BY_ID = "/delete-income/{transactionId}";
 
@@ -65,5 +73,11 @@ public class TransactionControllerConstants {
             + " filter them by: accountId, fromDate, toDate, categoryIds";
     public static final String SUCCESSFULLY_RETRIEVED_INCOMES =
             "Successfully retrieved incomes";
+
+    public static final String GET_ALL_INCOMES_FOR_CHARTS_SUMMARY =
+            "Retrieve all incomes grouped by date, "
+                    + "then grouped by categories";
+    public static final String SUCCESSFULLY_RETRIEVED_INCOMES_FOR_CHARTS =
+            "Successfully retrieved incomes for charts";
 
 }

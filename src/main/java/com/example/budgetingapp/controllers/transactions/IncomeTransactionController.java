@@ -12,19 +12,24 @@ import static com.example.budgetingapp.constants.controllers.TransactionControll
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.DELETE_INCOME_BY_ID;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.DELETE_INCOME_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_INCOMES;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_INCOMES_FOR_CHARTS;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_INCOMES_FOR_CHARTS_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_INCOMES_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME_TRANSACTIONS;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_ADDED_INCOME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_DELETED_INCOME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_RETRIEVED_INCOMES;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_RETRIEVED_INCOMES_FOR_CHARTS;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_UPDATED_INCOME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSACTION_API_NAME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.UPDATE_INCOME_BY_ID;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.UPDATE_INCOME_SUMMARY;
 
+import com.example.budgetingapp.dtos.transactions.request.ChartTransactionRequestDto;
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
+import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.services.TransactionService;
@@ -86,6 +91,18 @@ public class IncomeTransactionController {
             @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE) Pageable pageable) {
         return incomeTransactionService.getAllTransactions(user.getId(),
                 filterTransactionsDto, pageable);
+    }
+
+    @Operation(summary = GET_ALL_INCOMES_FOR_CHARTS_SUMMARY)
+    @ApiResponse(responseCode = CODE_200, description =
+            SUCCESSFULLY_RETRIEVED_INCOMES_FOR_CHARTS)
+    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
+    @GetMapping(GET_ALL_INCOMES_FOR_CHARTS)
+    public List<AccumulatedResultDto> getIncomesForCharts(@AuthenticationPrincipal User user,
+                                           ChartTransactionRequestDto chartTransactionRequestDto) {
+        return incomeTransactionService
+                .getSumOfTransactionsForPeriodOfTime(
+                        user.getId(), chartTransactionRequestDto);
     }
 
     @Operation(summary = UPDATE_INCOME_SUMMARY)

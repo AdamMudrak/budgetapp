@@ -14,17 +14,22 @@ import static com.example.budgetingapp.constants.controllers.TransactionControll
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.EXPENSE;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.EXPENSE_TRANSACTIONS;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_EXPENSES;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_EXPENSES_FOR_CHARTS;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_EXPENSES_FOR_CHARTS_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_EXPENSES_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_ADDED_EXPENSE;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_DELETED_EXPENSE;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_RETRIEVED_EXPENSES;
+import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_RETRIEVED_EXPENSES_FOR_CHARTS;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_UPDATED_EXPENSE;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSACTION_API_NAME;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.UPDATE_EXPENSE_BY_ID;
 import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.UPDATE_EXPENSE_SUMMARY;
 
+import com.example.budgetingapp.dtos.transactions.request.ChartTransactionRequestDto;
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
+import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.services.TransactionService;
@@ -87,6 +92,18 @@ public class ExpenseTransactionController {
             @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE) Pageable pageable) {
         return expenseTransactionService.getAllTransactions(user.getId(),
                 filterTransactionsDto, pageable);
+    }
+
+    @Operation(summary = GET_ALL_EXPENSES_FOR_CHARTS_SUMMARY)
+    @ApiResponse(responseCode = CODE_200, description =
+            SUCCESSFULLY_RETRIEVED_EXPENSES_FOR_CHARTS)
+    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
+    @GetMapping(GET_ALL_EXPENSES_FOR_CHARTS)
+    public List<AccumulatedResultDto> getExpensesForCharts(@AuthenticationPrincipal User user,
+                                           ChartTransactionRequestDto chartTransactionRequestDto) {
+        return expenseTransactionService
+                .getSumOfTransactionsForPeriodOfTime(
+                        user.getId(), chartTransactionRequestDto);
     }
 
     @Operation(summary = UPDATE_EXPENSE_SUMMARY)
