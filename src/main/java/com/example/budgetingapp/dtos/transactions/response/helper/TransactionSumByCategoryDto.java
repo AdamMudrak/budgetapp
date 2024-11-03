@@ -1,4 +1,4 @@
-package com.example.budgetingapp.dtos.transactions.response;
+package com.example.budgetingapp.dtos.transactions.response.helper;
 
 import java.math.BigDecimal;
 

@@ -3,6 +3,8 @@ package com.example.budgetingapp.constants.validation;
 public class ValidationConstants {
     public static final String INVALID_DATE_FORMAT = "Invalid date format. Should be YYYY-MM-dd";
     public static final String DATE_BEFORE_TODAY = "Invalid date. Can't be earlier than today";
+    public static final String TO_DATE_EARLIER_THAN_FROM_DATE = "Invalid date. "
+            + "to-date can't be earlier than from-date";
     public static final String DATE_PATTERN = "^\\d{4}-\\d{2}-\\d{2}$";
 
     public static final String INVALID_EMAIL = "Invalid email";

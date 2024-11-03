@@ -44,4 +44,7 @@ public class TransactionDtoConstants {
 
     public static final String CURRENCY = "currency";
     public static final String CURRENCY_EXAMPLE = "USD";
+
+    public static final String FILTER = "filterType";
+    public static final String FILTER_EXAMPLE = "MONTH/YEAR";
 }
