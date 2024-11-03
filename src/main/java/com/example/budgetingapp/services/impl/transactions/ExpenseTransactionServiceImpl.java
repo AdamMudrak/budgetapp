@@ -37,13 +37,13 @@ import org.springframework.stereotype.Service;
 @Qualifier(EXPENSE)
 @RequiredArgsConstructor
 public class ExpenseTransactionServiceImpl implements TransactionService {
-    private static final int FIRST_DAY = 1;
     private final AccountRepository accountRepository;
     private final TransactionMapper transactionMapper;
     private final CategoryMapper categoryMapper;
     private final UserRepository userRepository;
     private final ExpenseRepository expenseRepository;
     private final ExpenseSpecificationBuilder expenseSpecificationBuilder;
+    private final TransactionsCommonFunctionsUtil transactionsCommonFunctionsUtil;
 
     @Transactional
     @Override
@@ -56,7 +56,8 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
                         "No account with id "
                                 + requestTransactionDto.accountId() + " was found"
                                 + " for user with id " + userId));
-        if (isSufficientAmount(account, requestTransactionDto) < 0) {
+        if (transactionsCommonFunctionsUtil
+                .isSufficientAmount(account, requestTransactionDto) < 0) {
             throw new TransactionFailedException("Not enough money for transaction");
         }
         account.setBalance(account.getBalance().subtract(requestTransactionDto.amount()));
@@ -88,10 +89,12 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
         Map<LocalDate, Map<ExpenseCategory, BigDecimal>> categorizedExpenseSums =
                 expenseRepository.findAll()
                 .stream()
-                .filter(expense -> isDateWithinPeriod(expense.getTransactionDate(),
+                .filter(expense -> transactionsCommonFunctionsUtil
+                        .isDateWithinPeriod(expense.getTransactionDate(),
                         chartTransactionRequestDto))
                 .collect(Collectors.groupingBy(
-                        expense -> getPeriodDate(expense.getTransactionDate(),
+                        expense -> transactionsCommonFunctionsUtil
+                                .getPeriodDate(expense.getTransactionDate(),
                                 chartTransactionRequestDto),
                         Collectors.groupingBy(Expense::getExpenseCategory,
                                 Collectors.reducing(BigDecimal.ZERO,
@@ -137,7 +140,8 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No account with id " + requestTransactionDto.accountId()
                                 + " was found for user with id " + userId));
-        if (isSufficientAmount(newAccount, requestTransactionDto) < 0) {
+        if (transactionsCommonFunctionsUtil
+                .isSufficientAmount(newAccount, requestTransactionDto) < 0) {
             throw new TransactionFailedException("Not enough money for transaction");
         }
         newAccount.setBalance(newAccount.getBalance().subtract(requestTransactionDto.amount()));
@@ -169,32 +173,5 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
         account.setBalance(account.getBalance().add(expense.getAmount()));
         accountRepository.save(account);
         expenseRepository.deleteById(transactionId);
-    }
-
-    private int isSufficientAmount(Account account, RequestTransactionDto requestTransactionDto) {
-        return (account.getBalance()
-                .subtract(requestTransactionDto.amount()))
-                .compareTo(BigDecimal.ZERO);
-    }
-
-    private boolean isDateWithinPeriod(LocalDate checkDate,
-                               ChartTransactionRequestDto accumulatedTransactionRequestDto) {
-        if (accumulatedTransactionRequestDto.getFromDate() == null
-                && accumulatedTransactionRequestDto.getToDate() == null) {
-            return true;
-        }
-        return (checkDate.isAfter(accumulatedTransactionRequestDto.getFromDate())
-                || checkDate.isEqual(accumulatedTransactionRequestDto.getFromDate())
-                && checkDate.isBefore(accumulatedTransactionRequestDto.getToDate())
-                || checkDate.isEqual(accumulatedTransactionRequestDto.getToDate()));
-    }
-
-    private LocalDate getPeriodDate(LocalDate transactionDate,
-                                    ChartTransactionRequestDto chartTransactionRequestDto) {
-        return switch (chartTransactionRequestDto.getFilterType()) {
-            case DAY -> transactionDate;
-            case MONTH -> transactionDate.withDayOfMonth(FIRST_DAY);
-            case YEAR -> transactionDate.withDayOfYear(FIRST_DAY);
-        };
     }
 }

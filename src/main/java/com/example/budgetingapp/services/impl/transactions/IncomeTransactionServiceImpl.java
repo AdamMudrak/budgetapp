@@ -37,13 +37,13 @@ import org.springframework.stereotype.Service;
 @Qualifier(INCOME)
 @RequiredArgsConstructor
 public class IncomeTransactionServiceImpl implements TransactionService {
-    private static final int FIRST_DAY = 1;
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
     private final CategoryMapper categoryMapper;
     private final TransactionMapper transactionMapper;
     private final IncomeRepository incomeRepository;
     private final IncomeSpecificationBuilder incomeSpecificationBuilder;
+    private final TransactionsCommonFunctionsUtil transactionsCommonFunctionsUtil;
 
     @Transactional
     @Override
@@ -82,10 +82,12 @@ public class IncomeTransactionServiceImpl implements TransactionService {
         Map<LocalDate, Map<IncomeCategory, BigDecimal>> categorizedExpenseSums =
                 incomeRepository.findAll()
                         .stream()
-                        .filter(income -> isDateWithinPeriod(income.getTransactionDate(),
+                        .filter(income -> transactionsCommonFunctionsUtil
+                                .isDateWithinPeriod(income.getTransactionDate(),
                                 chartTransactionRequestDto))
                         .collect(Collectors.groupingBy(
-                                income -> getPeriodDate(income.getTransactionDate(),
+                                income -> transactionsCommonFunctionsUtil
+                                        .getPeriodDate(income.getTransactionDate(),
                                         chartTransactionRequestDto),
                                 Collectors.groupingBy(Income::getIncomeCategory,
                                         Collectors.reducing(BigDecimal.ZERO,
@@ -124,7 +126,8 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                         "No account with id " + previousIncome.getAccount().getId()
                                 + " was found for user with id " + userId));
 
-        if (isSufficientAmount(previousAccount, previousIncome) < 0) {
+        if (transactionsCommonFunctionsUtil
+                .isSufficientAmount(previousAccount, previousIncome) < 0) {
             throw new TransactionFailedException("Not enough money for transaction");
         }
         previousAccount.setBalance(previousAccount.getBalance()
@@ -162,38 +165,11 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No account with id " + income.getAccount().getId()
                                 + " was found for user with id " + userId));
-        if (isSufficientAmount(account, income) < 0) {
+        if (transactionsCommonFunctionsUtil.isSufficientAmount(account, income) < 0) {
             throw new TransactionFailedException("Not enough money for transaction");
         }
         account.setBalance(account.getBalance().subtract(income.getAmount()));
         accountRepository.save(account);
         incomeRepository.deleteById(transactionId);
-    }
-
-    private int isSufficientAmount(Account account, Income income) {
-        return (account.getBalance()
-                .subtract(income.getAmount()))
-                .compareTo(BigDecimal.ZERO);
-    }
-
-    private boolean isDateWithinPeriod(LocalDate checkDate,
-                                ChartTransactionRequestDto accumulatedTransactionRequestDto) {
-        if (accumulatedTransactionRequestDto.getFromDate() == null
-                && accumulatedTransactionRequestDto.getToDate() == null) {
-            return true;
-        }
-        return (checkDate.isAfter(accumulatedTransactionRequestDto.getFromDate())
-                || checkDate.isEqual(accumulatedTransactionRequestDto.getFromDate())
-                && checkDate.isBefore(accumulatedTransactionRequestDto.getToDate())
-                || checkDate.isEqual(accumulatedTransactionRequestDto.getToDate()));
-    }
-
-    private LocalDate getPeriodDate(LocalDate transactionDate,
-                                    ChartTransactionRequestDto chartTransactionRequestDto) {
-        return switch (chartTransactionRequestDto.getFilterType()) {
-            case DAY -> transactionDate;
-            case MONTH -> transactionDate.withDayOfMonth(FIRST_DAY);
-            case YEAR -> transactionDate.withDayOfYear(FIRST_DAY);
-        };
     }
 }
