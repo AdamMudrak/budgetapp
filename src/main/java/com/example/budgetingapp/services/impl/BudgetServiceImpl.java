@@ -1,6 +1,7 @@
 package com.example.budgetingapp.services.impl;
 
 import static com.example.budgetingapp.constants.Constants.NO_ACCOUNT;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.BUDGET_QUANTITY_THRESHOLD;
 
 import com.example.budgetingapp.dtos.budgets.request.BudgetRequestDto;
 import com.example.budgetingapp.dtos.budgets.response.BudgetResponseDto;
@@ -10,6 +11,7 @@ import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.categories.ExpenseCategory;
 import com.example.budgetingapp.entities.transactions.Expense;
 import com.example.budgetingapp.exceptions.conflictexpections.AlreadyExistsException;
+import com.example.budgetingapp.exceptions.conflictexpections.ConflictException;
 import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
 import com.example.budgetingapp.mappers.BudgetMapper;
 import com.example.budgetingapp.repositories.budget.BudgetRepository;
@@ -70,6 +72,11 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Override
     public BudgetResponseDto saveBudget(Long userId, BudgetRequestDto budgetRequestDto) {
+        if (budgetRepository.countBudgetsByUserId(userId) >= BUDGET_QUANTITY_THRESHOLD) {
+            throw new ConflictException("You can't have more than " + BUDGET_QUANTITY_THRESHOLD
+                    + " budgets!");
+        }
+
         if (budgetRepository.existsByNameAndUserId(budgetRequestDto.name(), userId)) {
             throw new AlreadyExistsException("Budget with name " + budgetRequestDto.name()
                     + " for user " + userId + " already exists");
