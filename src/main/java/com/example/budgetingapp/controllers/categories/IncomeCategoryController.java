@@ -21,7 +21,7 @@ import static com.example.budgetingapp.constants.controllers.CategoryControllerC
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.SUCCESSFULLY_UPDATE_CATEGORY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.UPDATE_CATEGORY_BY_ID;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.UPDATE_CATEGORY_SUMMARY;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME;
+import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.INCOME;
 
 import com.example.budgetingapp.dtos.categories.request.CreateCategoryDto;
 import com.example.budgetingapp.dtos.categories.request.UpdateCategoryDto;

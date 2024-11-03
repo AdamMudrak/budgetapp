@@ -1,6 +1,6 @@
 package com.example.budgetingapp.services.impl.categories;
 
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.EXPENSE;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.EXPENSE;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.CATEGORY_QUANTITY_THRESHOLD;
 
 import com.example.budgetingapp.dtos.categories.request.CreateCategoryDto;

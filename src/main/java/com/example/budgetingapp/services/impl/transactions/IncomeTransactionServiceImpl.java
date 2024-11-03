@@ -1,6 +1,6 @@
 package com.example.budgetingapp.services.impl.transactions;
 
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME;
+import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.INCOME;
 
 import com.example.budgetingapp.dtos.transactions.request.ChartTransactionRequestDtoByDay;
 import com.example.budgetingapp.dtos.transactions.request.ChartTransactionRequestDtoByMonthOrYear;
