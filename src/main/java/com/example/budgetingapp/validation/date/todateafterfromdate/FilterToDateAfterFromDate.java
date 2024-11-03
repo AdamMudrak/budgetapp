@@ -1,4 +1,4 @@
-package com.example.budgetingapp.validation.date;
+package com.example.budgetingapp.validation.date.todateafterfromdate;
 
 import static com.example.budgetingapp.constants.validation.ValidationConstants.TO_DATE_EARLIER_THAN_FROM_DATE;
 
@@ -9,11 +9,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
-@Constraint(validatedBy = ToDateAfterFromDateValidator.class)
+@Constraint(validatedBy = FilterToDateAfterFromDateValidator.class)
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ToDateAfterFromDate {
+public @interface FilterToDateAfterFromDate {
     String message() default TO_DATE_EARLIER_THAN_FROM_DATE;
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

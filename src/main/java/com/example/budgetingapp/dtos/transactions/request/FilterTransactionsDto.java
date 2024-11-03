@@ -1,10 +1,12 @@
 package com.example.budgetingapp.dtos.transactions.request;
 
 import com.example.budgetingapp.constants.dtos.TransactionDtoConstants;
+import com.example.budgetingapp.validation.date.todateafterfromdate.FilterToDateAfterFromDate;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@FilterToDateAfterFromDate
 public record FilterTransactionsDto(
         @Schema(name = TransactionDtoConstants.ACCOUNT_ID,
                 example = TransactionDtoConstants.ACCOUNT_ID_EXAMPLE)
