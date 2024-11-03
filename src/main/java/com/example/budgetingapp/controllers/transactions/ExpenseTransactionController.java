@@ -7,26 +7,30 @@ import static com.example.budgetingapp.constants.Constants.CODE_400;
 import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
 import static com.example.budgetingapp.constants.Constants.TRANSACTION_PAGEABLE_EXAMPLE;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.ADD_EXPENSE;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.ADD_EXPENSE_SUMMARY;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.DELETE_EXPENSE_BY_ID;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.DELETE_EXPENSE_SUMMARY;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.EXPENSE;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.EXPENSE_TRANSACTIONS;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_EXPENSES;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_EXPENSES_FOR_CHARTS;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_EXPENSES_FOR_CHARTS_SUMMARY;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.GET_ALL_EXPENSES_SUMMARY;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_ADDED_EXPENSE;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_DELETED_EXPENSE;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_RETRIEVED_EXPENSES;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_RETRIEVED_EXPENSES_FOR_CHARTS;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.SUCCESSFULLY_UPDATED_EXPENSE;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSACTION_API_NAME;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.UPDATE_EXPENSE_BY_ID;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.UPDATE_EXPENSE_SUMMARY;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.ADD_EXPENSE;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.ADD_EXPENSE_SUMMARY;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.DELETE_EXPENSE_BY_ID;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.DELETE_EXPENSE_SUMMARY;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.EXPENSE;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.EXPENSE_TRANSACTIONS;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.GET_ALL_EXPENSES;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.GET_ALL_EXPENSES_FOR_CHARTS_DAYS;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.GET_ALL_EXPENSES_FOR_CHARTS_MONTHS_YEARS;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.GET_ALL_EXPENSES_FOR_CHARTS_SUMMARY;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.GET_ALL_EXPENSES_FOR_CHARTS_SUMMARY_DAY;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.GET_ALL_EXPENSES_SUMMARY;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.SUCCESSFULLY_ADDED_EXPENSE;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.SUCCESSFULLY_DELETED_EXPENSE;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.SUCCESSFULLY_RETRIEVED_EXPENSES;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.SUCCESSFULLY_RETRIEVED_EXPENSES_FOR_CHARTS;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.SUCCESSFULLY_RETRIEVED_EXPENSES_FOR_CHARTS_DAY;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.SUCCESSFULLY_UPDATED_EXPENSE;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.UPDATE_EXPENSE_BY_ID;
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.UPDATE_EXPENSE_SUMMARY;
+import static com.example.budgetingapp.constants.controllers.transactions.TransactionsCommonConstants.TRANSACTION_API_NAME;
 
-import com.example.budgetingapp.dtos.transactions.request.ChartTransactionRequestDto;
+import com.example.budgetingapp.dtos.transactions.request.ChartTransactionRequestDtoByDay;
+import com.example.budgetingapp.dtos.transactions.request.ChartTransactionRequestDtoByMonthOrYear;
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
@@ -94,16 +98,30 @@ public class ExpenseTransactionController {
                 filterTransactionsDto, pageable);
     }
 
+    @Operation(summary = GET_ALL_EXPENSES_FOR_CHARTS_SUMMARY_DAY)
+    @ApiResponse(responseCode = CODE_200, description =
+            SUCCESSFULLY_RETRIEVED_EXPENSES_FOR_CHARTS_DAY)
+    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
+    @GetMapping(GET_ALL_EXPENSES_FOR_CHARTS_DAYS)
+    public List<AccumulatedResultDto> getExpensesForDaysCharts(
+            @AuthenticationPrincipal User user,
+            ChartTransactionRequestDtoByDay chartTransactionRequestDtoByDay) {
+        return expenseTransactionService
+                .getSumOfTransactionsForPeriodOfTime(
+                        user.getId(), chartTransactionRequestDtoByDay);
+    }
+
     @Operation(summary = GET_ALL_EXPENSES_FOR_CHARTS_SUMMARY)
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_RETRIEVED_EXPENSES_FOR_CHARTS)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @GetMapping(GET_ALL_EXPENSES_FOR_CHARTS)
-    public List<AccumulatedResultDto> getExpensesForCharts(@AuthenticationPrincipal User user,
-                                           ChartTransactionRequestDto chartTransactionRequestDto) {
+    @GetMapping(GET_ALL_EXPENSES_FOR_CHARTS_MONTHS_YEARS)
+    public List<AccumulatedResultDto> getExpensesForMonthOrYearCharts(
+            @AuthenticationPrincipal User user,
+            ChartTransactionRequestDtoByMonthOrYear chartTransactionRequestDtoByMonthOrYear) {
         return expenseTransactionService
-                .getSumOfTransactionsForPeriodOfTime(
-                        user.getId(), chartTransactionRequestDto);
+                .getSumOfTransactionsForMonthOrYear(
+                        user.getId(), chartTransactionRequestDtoByMonthOrYear);
     }
 
     @Operation(summary = UPDATE_EXPENSE_SUMMARY)
