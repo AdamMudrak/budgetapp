@@ -29,10 +29,10 @@ import static com.example.budgetingapp.constants.controllers.transactions.Income
 import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.UPDATE_INCOME_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.transactions.TransactionsCommonConstants.TRANSACTION_API_NAME;
 
-import com.example.budgetingapp.dtos.transactions.request.ChartTransactionRequestDtoByDay;
-import com.example.budgetingapp.dtos.transactions.request.ChartTransactionRequestDtoByMonthOrYear;
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
+import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByDay;
+import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByMonthOrYear;
 import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
 import com.example.budgetingapp.entities.User;
