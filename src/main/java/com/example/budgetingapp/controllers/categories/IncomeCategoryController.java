@@ -98,6 +98,7 @@ public class IncomeCategoryController {
     @Operation(summary = DELETE_CATEGORY_SUMMARY)
     @ApiResponse(responseCode = CODE_204, description =
             SUCCESSFULLY_DELETE_CATEGORY)
+    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @DeleteMapping(DELETE_CATEGORY_BY_ID)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategory(@AuthenticationPrincipal User user,
