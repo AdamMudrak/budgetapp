@@ -16,31 +16,31 @@ public class ExpenseSpecificationBuilder implements SpecificationBuilder<Expense
     @Override
     public Specification<Expense> build(FilterTransactionsDto transactionsDto) {
         Specification<Expense> specification = Specification.where(null);
-        if (transactionsDto.getAccountId().isBlank()
-                && transactionsDto.getFromDate().isBlank()
-                && transactionsDto.getToDate().isBlank()
-                && transactionsDto.getCategoryIds().length == 0) {
+        if (transactionsDto.accountId().isBlank()
+                && transactionsDto.fromDate().isBlank()
+                && transactionsDto.toDate().isBlank()
+                && transactionsDto.categoryIds().length == 0) {
             return null;
         }
-        if (!transactionsDto.getAccountId().isBlank()) {
+        if (!transactionsDto.accountId().isBlank()) {
             specification = specification.and(expenseSpecificationProviderManager
                     .getSpecificationProvider("accountId")
-                    .getSpecification(new String[]{transactionsDto.getAccountId()}));
+                    .getSpecification(new String[]{transactionsDto.accountId()}));
         }
-        if (!transactionsDto.getFromDate().isBlank()) {
+        if (!transactionsDto.fromDate().isBlank()) {
             specification = specification.and(expenseSpecificationProviderManager
                     .getSpecificationProvider("fromDate")
-                    .getSpecification(new String[]{transactionsDto.getFromDate()}));
+                    .getSpecification(new String[]{transactionsDto.fromDate()}));
         }
-        if (!transactionsDto.getToDate().isBlank()) {
+        if (!transactionsDto.toDate().isBlank()) {
             specification = specification.and(expenseSpecificationProviderManager
                     .getSpecificationProvider("toDate")
-                    .getSpecification(new String[]{transactionsDto.getToDate()}));
+                    .getSpecification(new String[]{transactionsDto.toDate()}));
         }
-        if (transactionsDto.getCategoryIds().length != 0) {
+        if (transactionsDto.categoryIds().length != 0) {
             specification = specification.and(expenseSpecificationProviderManager
                     .getSpecificationProvider("categoryIds")
-                    .getSpecification(transactionsDto.getCategoryIds()));
+                    .getSpecification(transactionsDto.categoryIds()));
         }
         return specification;
     }

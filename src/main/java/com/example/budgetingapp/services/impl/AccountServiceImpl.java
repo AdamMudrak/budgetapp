@@ -2,14 +2,14 @@ package com.example.budgetingapp.services.impl;
 
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.ACCOUNT_QUANTITY_THRESHOLD;
 
-import com.example.budgetingapp.dtos.account.request.CreateAccountDto;
-import com.example.budgetingapp.dtos.account.request.UpdateAccountDto;
-import com.example.budgetingapp.dtos.account.response.AccountDto;
+import com.example.budgetingapp.dtos.accounts.request.CreateAccountDto;
+import com.example.budgetingapp.dtos.accounts.request.UpdateAccountDto;
+import com.example.budgetingapp.dtos.accounts.response.AccountDto;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.User;
-import com.example.budgetingapp.exceptions.AlreadyExistsException;
-import com.example.budgetingapp.exceptions.ConflictException;
-import com.example.budgetingapp.exceptions.EntityNotFoundException;
+import com.example.budgetingapp.exceptions.conflictexpections.AlreadyExistsException;
+import com.example.budgetingapp.exceptions.conflictexpections.ConflictException;
+import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
 import com.example.budgetingapp.mappers.AccountMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;

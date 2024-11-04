@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-budgets-expense-categories-table
+      author: AdamMudrak
+      changes:
+        - createTable:
+            tableName: budgets_expense_categories
+            columns:
+              - column:
+                  name: budget_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_budgets_id
+                    references: budgets(id)
+                    primaryKey: true
+              - column:
+                  name: expense_category_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_expense_categories_id
+                    references: expense_categories(id)
+                    primaryKey: true

@@ -13,17 +13,17 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.SUCC
 
 import com.example.budgetingapp.constants.controllers.AuthControllerConstants;
 import com.example.budgetingapp.constants.security.SecurityConstants;
-import com.example.budgetingapp.dtos.user.request.UserLoginRequestDto;
-import com.example.budgetingapp.dtos.user.request.UserSetNewPasswordRequestDto;
-import com.example.budgetingapp.dtos.user.response.AccessTokenResponseDto;
-import com.example.budgetingapp.dtos.user.response.UserLoginResponseDto;
-import com.example.budgetingapp.dtos.user.response.UserPasswordResetResponseDto;
+import com.example.budgetingapp.dtos.users.request.UserLoginRequestDto;
+import com.example.budgetingapp.dtos.users.request.UserSetNewPasswordRequestDto;
+import com.example.budgetingapp.dtos.users.response.AccessTokenResponseDto;
+import com.example.budgetingapp.dtos.users.response.UserLoginResponseDto;
+import com.example.budgetingapp.dtos.users.response.UserPasswordResetResponseDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.tokens.ParamToken;
-import com.example.budgetingapp.exceptions.EntityNotFoundException;
-import com.example.budgetingapp.exceptions.LinkExpiredException;
-import com.example.budgetingapp.exceptions.LoginException;
-import com.example.budgetingapp.exceptions.PasswordMismatch;
+import com.example.budgetingapp.exceptions.forbidden.LoginException;
+import com.example.budgetingapp.exceptions.gone.LinkExpiredException;
+import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
+import com.example.budgetingapp.exceptions.unauthorized.PasswordMismatch;
 import com.example.budgetingapp.repositories.paramtoken.ParamTokenRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.security.RandomStringUtil;

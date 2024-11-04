@@ -13,8 +13,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     List<Account> getAllByUserId(Long userId);
 
-    boolean existsByIdAndUserId(Long id, Long userId);
-
     boolean existsByUserIdAndName(Long userId, String name);
 
     boolean existsByUserIdAndByDefault(Long userId, boolean byDefault);

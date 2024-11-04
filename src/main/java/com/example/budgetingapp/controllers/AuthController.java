@@ -3,6 +3,7 @@ package com.example.budgetingapp.controllers;
 import static com.example.budgetingapp.constants.Constants.ACCESS_DENIED;
 import static com.example.budgetingapp.constants.Constants.AUTHORIZATION_REQUIRED;
 import static com.example.budgetingapp.constants.Constants.CODE_200;
+import static com.example.budgetingapp.constants.Constants.CODE_201;
 import static com.example.budgetingapp.constants.Constants.CODE_400;
 import static com.example.budgetingapp.constants.Constants.CODE_403;
 import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
@@ -36,17 +37,17 @@ import static com.example.budgetingapp.constants.controllers.AuthControllerConst
 import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.TELEGRAM_AUTH_SUMMARY;
 
 import com.example.budgetingapp.constants.Constants;
-import com.example.budgetingapp.dtos.user.request.TelegramAuthenticationRequestDto;
-import com.example.budgetingapp.dtos.user.request.UserGetLinkToSetRandomPasswordRequestDto;
-import com.example.budgetingapp.dtos.user.request.UserLoginRequestDto;
-import com.example.budgetingapp.dtos.user.request.UserRegistrationRequestDto;
-import com.example.budgetingapp.dtos.user.request.UserSetNewPasswordRequestDto;
-import com.example.budgetingapp.dtos.user.response.AccessTokenResponseDto;
-import com.example.budgetingapp.dtos.user.response.TelegramAuthenticationResponseDto;
-import com.example.budgetingapp.dtos.user.response.UserLoginResponseDto;
-import com.example.budgetingapp.dtos.user.response.UserPasswordResetResponseDto;
-import com.example.budgetingapp.dtos.user.response.UserRegistrationResponseDto;
-import com.example.budgetingapp.exceptions.RegistrationException;
+import com.example.budgetingapp.dtos.users.request.TelegramAuthenticationRequestDto;
+import com.example.budgetingapp.dtos.users.request.UserGetLinkToSetRandomPasswordRequestDto;
+import com.example.budgetingapp.dtos.users.request.UserLoginRequestDto;
+import com.example.budgetingapp.dtos.users.request.UserRegistrationRequestDto;
+import com.example.budgetingapp.dtos.users.request.UserSetNewPasswordRequestDto;
+import com.example.budgetingapp.dtos.users.response.AccessTokenResponseDto;
+import com.example.budgetingapp.dtos.users.response.TelegramAuthenticationResponseDto;
+import com.example.budgetingapp.dtos.users.response.UserLoginResponseDto;
+import com.example.budgetingapp.dtos.users.response.UserPasswordResetResponseDto;
+import com.example.budgetingapp.dtos.users.response.UserRegistrationResponseDto;
+import com.example.budgetingapp.exceptions.badrequest.RegistrationException;
 import com.example.budgetingapp.security.RandomParamFromHttpRequestUtil;
 import com.example.budgetingapp.security.services.AuthenticationService;
 import com.example.budgetingapp.security.services.TelegramAuthenticationService;
@@ -57,11 +58,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -76,10 +79,11 @@ public class AuthController {
     private final RandomParamFromHttpRequestUtil randomParamFromHttpRequestUtil;
 
     @Operation(summary = REGISTER_SUMMARY)
-    @ApiResponse(responseCode = CODE_200, description =
+    @ApiResponse(responseCode = CODE_201, description =
             SUCCESSFULLY_REGISTERED)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PostMapping(REGISTER)
+    @ResponseStatus(HttpStatus.CREATED)
     public UserRegistrationResponseDto register(
             @RequestBody @Valid UserRegistrationRequestDto requestDto)
             throws RegistrationException {

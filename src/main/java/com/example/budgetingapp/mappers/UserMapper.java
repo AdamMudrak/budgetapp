@@ -1,8 +1,8 @@
 package com.example.budgetingapp.mappers;
 
 import com.example.budgetingapp.config.MapperConfig;
-import com.example.budgetingapp.dtos.user.request.TelegramAuthenticationRequestDto;
-import com.example.budgetingapp.dtos.user.request.UserRegistrationRequestDto;
+import com.example.budgetingapp.dtos.users.request.TelegramAuthenticationRequestDto;
+import com.example.budgetingapp.dtos.users.request.UserRegistrationRequestDto;
 import com.example.budgetingapp.entities.User;
 import org.mapstruct.Mapper;
 

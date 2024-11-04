@@ -21,7 +21,7 @@ public interface TransferMapper {
     @AfterMapping
     default void setTransactionDate(@MappingTarget Transfer transfer,
                                     TransferRequestDto requestTransactionDto) {
-        transfer.setTransactionDate(LocalDate.parse(requestTransactionDto.getTransactionDate()));
+        transfer.setTransactionDate(LocalDate.parse(requestTransactionDto.transactionDate()));
     }
 
     @Mapping(source = "fromAccount.id", target = "fromAccountId")

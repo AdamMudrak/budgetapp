@@ -4,7 +4,13 @@ import java.util.List;
 
 public class EntitiesConstants {
     public static final int ACCOUNT_QUANTITY_THRESHOLD = 5;
+    public static final int TARGET_QUANTITY_THRESHOLD = 10;
+    public static final int BUDGET_QUANTITY_THRESHOLD = 15;
     public static final int CATEGORY_QUANTITY_THRESHOLD = 20;
+
+    public static final String BUDGETS = "budgets";
+
+    public static final String TARGETS = "targets";
 
     public static final String TRANSFERS = "transfers";
     public static final String FROM_ACCOUNT_ID = "from_account_id";
@@ -35,6 +41,9 @@ public class EntitiesConstants {
 
     public static final String DEFAULT_ACCOUNT_NAME = "Default account";
     public static final String DEFAULT_ACCOUNT_CURRENCY = "USD";
+
+    public static final String DEFAULT_BUDGET_NAME = "Top level budget";
+    public static final int DEFAULT_YEARS_STEP = 3;
 
     public static final List<String> DEFAULT_INCOME_CATEGORIES_LIST = List.of(
             "Salary",

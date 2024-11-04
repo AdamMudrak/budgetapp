@@ -1,6 +1,6 @@
 package com.example.budgetingapp.services.impl.categories;
 
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME;
+import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.INCOME;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.CATEGORY_QUANTITY_THRESHOLD;
 
 import com.example.budgetingapp.dtos.categories.request.CreateCategoryDto;
@@ -8,9 +8,9 @@ import com.example.budgetingapp.dtos.categories.request.UpdateCategoryDto;
 import com.example.budgetingapp.dtos.categories.response.ResponseCategoryDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.categories.IncomeCategory;
-import com.example.budgetingapp.exceptions.AlreadyExistsException;
-import com.example.budgetingapp.exceptions.ConflictException;
-import com.example.budgetingapp.exceptions.EntityNotFoundException;
+import com.example.budgetingapp.exceptions.conflictexpections.AlreadyExistsException;
+import com.example.budgetingapp.exceptions.conflictexpections.ConflictException;
+import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
 import com.example.budgetingapp.mappers.CategoryMapper;
 import com.example.budgetingapp.repositories.categories.IncomeCategoryRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
@@ -76,6 +76,11 @@ public class IncomeCategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteByCategoryIdAndUserId(Long userId, Long categoryId) {
-        incomeCategoryRepository.deleteByIdAndUserId(categoryId, userId);
+        if (incomeCategoryRepository.existsByIdAndUserId(categoryId, userId)) {
+            incomeCategoryRepository.deleteByIdAndUserId(categoryId, userId);
+        } else {
+            throw new EntityNotFoundException("No category found with id " + categoryId
+                    + " for user with id " + userId);
+        }
     }
 }

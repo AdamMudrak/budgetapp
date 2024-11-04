@@ -4,8 +4,8 @@ import static com.example.budgetingapp.constants.controllers.AccountControllerCo
 import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.ACCOUNT_API_NAME;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.CATEGORY_API_DESCRIPTION;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.CATEGORY_API_NAME;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSACTION_API_DESCRIPTION;
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.TRANSACTION_API_NAME;
+import static com.example.budgetingapp.constants.controllers.transactions.TransactionsCommonConstants.TRANSACTION_API_DESCRIPTION;
+import static com.example.budgetingapp.constants.controllers.transactions.TransactionsCommonConstants.TRANSACTION_API_NAME;
 import static com.example.budgetingapp.constants.security.SecurityConstants.SERVER_PATH;
 
 import com.example.budgetingapp.constants.config.ConfigConstants;

@@ -1,15 +1,19 @@
 package com.example.budgetingapp.services.impl.transactions;
 
-import static com.example.budgetingapp.constants.controllers.TransactionControllerConstants.INCOME;
+import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.INCOME;
 
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
+import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByDay;
+import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByMonthOrYear;
+import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
+import com.example.budgetingapp.dtos.transactions.response.helper.TransactionSumByCategoryDto;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.transactions.Income;
-import com.example.budgetingapp.exceptions.EntityNotFoundException;
-import com.example.budgetingapp.exceptions.TransactionFailedException;
+import com.example.budgetingapp.exceptions.conflictexpections.TransactionFailedException;
+import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
 import com.example.budgetingapp.mappers.TransactionMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.transactions.IncomeRepository;
@@ -18,7 +22,13 @@ import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.TransactionService;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +44,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
     private final TransactionMapper transactionMapper;
     private final IncomeRepository incomeRepository;
     private final IncomeSpecificationBuilder incomeSpecificationBuilder;
+    private final TransactionsCommonFunctionsUtil transactionsCommonFunctionsUtil;
 
     @Transactional
     @Override
@@ -41,11 +52,11 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                                                   RequestTransactionDto requestTransactionDto) {
         Income income = transactionMapper.toIncome(requestTransactionDto);
         Account account = accountRepository
-                .findByIdAndUserId(requestTransactionDto.getAccountId(), userId)
+                .findByIdAndUserId(requestTransactionDto.accountId(), userId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No account with id "
-                                + requestTransactionDto.getAccountId() + " was found"));
-        account.setBalance(account.getBalance().add(requestTransactionDto.getAmount()));
+                                + requestTransactionDto.accountId() + " was found"));
+        account.setBalance(account.getBalance().add(requestTransactionDto.amount()));
         accountRepository.save(account);
         User currentUser = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -62,8 +73,39 @@ public class IncomeTransactionServiceImpl implements TransactionService {
         Specification<Income> incomeSpecification = incomeSpecificationBuilder.build(filterDto);
         return incomeRepository.findAll(incomeSpecification, pageable)
                 .stream()
+                .sorted(Comparator.comparing(Income::getTransactionDate))
                 .map(transactionMapper::toIncomeDto)
                 .toList();
+    }
+
+    @Override
+    public List<AccumulatedResultDto> getSumOfTransactionsForPeriodOfTime(Long userId,
+                              ChartTransactionRequestDtoByDay chartTransactionRequestDtoByDay) {
+        Map<LocalDate, Map<String, BigDecimal>> categorizedExpenseSums =
+                incomeRepository.findAll()
+                        .stream()
+                        .filter(income -> transactionsCommonFunctionsUtil
+                                .isDateWithinPeriod(income.getTransactionDate(),
+                                        chartTransactionRequestDtoByDay))
+                        .collect(Collectors.groupingBy(Income::getTransactionDate,
+                                getCollectorGroupByDateAndThenCategorySum()
+                        ));
+        return prepareListOfAccumulatedDtos(categorizedExpenseSums);
+    }
+
+    @Override
+    public List<AccumulatedResultDto> getSumOfTransactionsForMonthOrYear(Long userId,
+                ChartTransactionRequestDtoByMonthOrYear chartTransactionRequestDtoByMonthOrYear) {
+        Map<LocalDate, Map<String, BigDecimal>> categorizedExpenseSums =
+                incomeRepository.findAll()
+                        .stream()
+                        .collect(Collectors.groupingBy(
+                                income -> transactionsCommonFunctionsUtil
+                                        .getPeriodDate(income.getTransactionDate(),
+                                                chartTransactionRequestDtoByMonthOrYear),
+                                getCollectorGroupByDateAndThenCategorySum()
+                        ));
+        return prepareListOfAccumulatedDtos(categorizedExpenseSums);
     }
 
     @Transactional
@@ -83,7 +125,8 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                         "No account with id " + previousIncome.getAccount().getId()
                                 + " was found for user with id " + userId));
 
-        if (isSufficientAmount(previousAccount, previousIncome) < 0) {
+        if (transactionsCommonFunctionsUtil
+                .isSufficientAmount(previousAccount, previousIncome) < 0) {
             throw new TransactionFailedException("Not enough money for transaction");
         }
         previousAccount.setBalance(previousAccount.getBalance()
@@ -91,11 +134,11 @@ public class IncomeTransactionServiceImpl implements TransactionService {
         accountRepository.save(previousAccount);
 
         Account newAccount = accountRepository
-                .findByIdAndUserId(requestTransactionDto.getAccountId(), userId)
+                .findByIdAndUserId(requestTransactionDto.accountId(), userId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "No account with id " + requestTransactionDto.getAccountId()
+                        "No account with id " + requestTransactionDto.accountId()
                                 + " was found for user with id " + userId));
-        newAccount.setBalance(newAccount.getBalance().add(requestTransactionDto.getAmount()));
+        newAccount.setBalance(newAccount.getBalance().add(requestTransactionDto.amount()));
         accountRepository.save(newAccount);
 
         Income newIncome = transactionMapper.toIncome(requestTransactionDto);
@@ -121,7 +164,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No account with id " + income.getAccount().getId()
                                 + " was found for user with id " + userId));
-        if (isSufficientAmount(account, income) < 0) {
+        if (transactionsCommonFunctionsUtil.isSufficientAmount(account, income) < 0) {
             throw new TransactionFailedException("Not enough money for transaction");
         }
         account.setBalance(account.getBalance().subtract(income.getAmount()));
@@ -129,9 +172,42 @@ public class IncomeTransactionServiceImpl implements TransactionService {
         incomeRepository.deleteById(transactionId);
     }
 
-    private int isSufficientAmount(Account account, Income income) {
-        return (account.getBalance()
-                .subtract(income.getAmount()))
-                .compareTo(BigDecimal.ZERO);
+    private List<AccumulatedResultDto> prepareListOfAccumulatedDtos(
+            Map<LocalDate, Map<String, BigDecimal>> categorizedExpenseSums) {
+        return categorizedExpenseSums.entrySet().stream()
+                .map(entry -> {
+                    List<TransactionSumByCategoryDto> sumsByDate = entry
+                            .getValue()
+                            .entrySet()
+                            .stream()
+                            .map(dateEntry -> new TransactionSumByCategoryDto(
+                                    dateEntry.getKey(),
+                                    dateEntry.getValue()))
+                            .collect(Collectors.toList());
+                    return new AccumulatedResultDto(entry.getKey(), sumsByDate);
+                })
+                .sorted(Comparator.comparing(AccumulatedResultDto::localDate))
+                .collect(Collectors.toList());
+    }
+
+    private Collector<Income, Object, Map<String, BigDecimal>>
+            getCollectorGroupByDateAndThenCategorySum() {
+        return Collectors.collectingAndThen(
+                Collectors.groupingBy(Income::getIncomeCategory,
+                        Collectors.reducing(BigDecimal.ZERO,
+                                Income::getAmount, BigDecimal::add)),
+                categoryMap -> {
+                    BigDecimal dailyTotal = categoryMap.values()
+                            .stream()
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+                    Map<String, BigDecimal> resultMap =
+                            new LinkedHashMap<>();
+                    resultMap.put("Sum for date:", dailyTotal);
+                    categoryMap.forEach((category, amount) ->
+                            resultMap.put("Sum for category "
+                                    + category.getName() + ":", amount));
+                    return resultMap;
+                }
+        );
     }
 }

@@ -1,6 +1,6 @@
 package com.example.budgetingapp.validation.fieldmatch;
 
-import com.example.budgetingapp.dtos.user.request.UserSetNewPasswordRequestDto;
+import com.example.budgetingapp.dtos.users.request.UserSetNewPasswordRequestDto;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

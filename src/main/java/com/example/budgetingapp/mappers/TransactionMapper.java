@@ -13,7 +13,6 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(config = MapperConfig.class)
 public interface TransactionMapper {
-
     @Mapping(source = "accountId", target = "account.id")
     @Mapping(source = "categoryId", target = "expenseCategory.id")
     @Mapping(target = "transactionDate", ignore = true)
@@ -27,16 +26,20 @@ public interface TransactionMapper {
     @AfterMapping
     default void setTransactionDate(@MappingTarget Expense expense,
                                    RequestTransactionDto requestTransactionDto) {
-        expense.setTransactionDate(LocalDate.parse(requestTransactionDto.getTransactionDate()));
+        expense.setTransactionDate(LocalDate.parse(requestTransactionDto.transactionDate()));
     }
 
     @AfterMapping
     default void setTransactionDate(@MappingTarget Income income,
                                     RequestTransactionDto requestTransactionDto) {
-        income.setTransactionDate(LocalDate.parse(requestTransactionDto.getTransactionDate()));
+        income.setTransactionDate(LocalDate.parse(requestTransactionDto.transactionDate()));
     }
 
+    @Mapping(source = "account.id", target = "accountId")
+    @Mapping(source = "incomeCategory.id", target = "categoryId")
     ResponseTransactionDto toIncomeDto(Income income);
 
+    @Mapping(source = "account.id", target = "accountId")
+    @Mapping(source = "expenseCategory.id", target = "categoryId")
     ResponseTransactionDto toExpenseDto(Expense expense);
 }

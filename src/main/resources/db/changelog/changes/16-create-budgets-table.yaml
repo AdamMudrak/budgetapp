@@ -1,0 +1,58 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-budgets-table
+      author: AdamMudrak
+      changes:
+        - createTable:
+            tableName: budgets
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: from_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: to_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: limit_sum
+                  type: decimal(11,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: current_sum
+                  type: decimal(11,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_b_user_id
+                    references: users(id)
+              - column:
+                  name: is_exceeded
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_top_level_budget
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false

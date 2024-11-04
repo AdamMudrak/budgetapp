@@ -14,6 +14,8 @@ public interface ExpenseCategoryRepository extends JpaRepository<ExpenseCategory
             + " WHERE expenseCategory.user.id=:userId")
     int countCategoriesByUserId(Long userId);
 
+    boolean existsByIdAndUserId(Long id, Long userId);
+
     boolean existsByNameAndUserId(String name, Long userId);
 
     List<ExpenseCategory> getAllByUserId(Long userId, Pageable pageable);
