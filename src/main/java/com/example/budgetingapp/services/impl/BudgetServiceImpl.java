@@ -22,6 +22,7 @@ import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.BudgetService;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -113,12 +114,14 @@ public class BudgetServiceImpl implements BudgetService {
             throw new IllegalArgumentException("You can't delete top level budget!"
                     + " Consider deleting subsidiary it instead");
         }
-        if (budgetRepository.existsByIdAndUserId(budgetId, userId)) {
-            budgetRepository.deleteByIdAndUserId(budgetId, budgetId);
-        } else {
-            throw new EntityNotFoundException("No budget found with id " + budgetId
-                    + " for user with id " + userId);
-        }
+        Budget budgetToBeDeleted = budgetRepository.findByIdAndUserId(budgetId, userId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "No budget with id " + budgetId + " was found for user with id " + userId));
+        Set<ExpenseCategory> topLevelBudgetExpenseCategories =
+                topLevelBudget.getExpenseCategories();
+        topLevelBudgetExpenseCategories.removeAll(budgetToBeDeleted.getExpenseCategories());
+        budgetRepository.deleteByIdAndUserId(budgetId, userId);
+        budgetRepository.save(topLevelBudget);
     }
 
     private void isCategoryPresentInDb(Long userId, BudgetRequestDto budgetRequestDto) {

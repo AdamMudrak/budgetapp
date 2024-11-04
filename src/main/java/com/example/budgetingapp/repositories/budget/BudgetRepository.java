@@ -17,6 +17,8 @@ public interface BudgetRepository extends JpaRepository<Budget, Long> {
 
     boolean existsByNameAndUserId(String name, Long userId);
 
+    Optional<Budget> findByIdAndUserId(Long id, Long userId);
+
     Optional<Budget> findByUserIdAndIsTopLevelBudget(Long userId, boolean isTopLevelBudget);
 
     List<Budget> findAllByUserId(Long userId);
