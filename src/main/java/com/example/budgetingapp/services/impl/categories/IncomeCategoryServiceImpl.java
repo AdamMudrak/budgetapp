@@ -2,6 +2,7 @@ package com.example.budgetingapp.services.impl.categories;
 
 import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.INCOME;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.CATEGORY_QUANTITY_THRESHOLD;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_CATEGORY_NAME;
 
 import com.example.budgetingapp.dtos.categories.request.CreateCategoryDto;
 import com.example.budgetingapp.dtos.categories.request.UpdateCategoryDto;
@@ -82,12 +83,12 @@ public class IncomeCategoryServiceImpl implements CategoryService {
                 .findByIdAndUserId(categoryId, userId).orElseThrow(
                         () -> new EntityNotFoundException(
                             "No category with id " + categoryId + " for user with id " + userId));
-        if (incomeCategory.getName().equals("Other")) {
+        if (incomeCategory.getName().equals(DEFAULT_CATEGORY_NAME)) {
             throw new IllegalArgumentException("Can't delete category by default");
         }
         IncomeCategory defaultCategory =
-                incomeCategoryRepository.findByNameAndUserId("Other", userId).orElseThrow(
-                        () -> new EntityNotFoundException(
+                incomeCategoryRepository.findByNameAndUserId(DEFAULT_CATEGORY_NAME, userId)
+                        .orElseThrow(() -> new EntityNotFoundException(
                                 "No default category was found for user with id " + userId));
 
         incomeRepository.saveAll(incomeRepository.findAll()

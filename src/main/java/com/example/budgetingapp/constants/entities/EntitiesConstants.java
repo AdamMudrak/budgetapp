@@ -58,4 +58,6 @@ public class EntitiesConstants {
             "Transportation",
             "Entertainment",
             "Other");
+
+    public static final String DEFAULT_CATEGORY_NAME = "Other";
 }
