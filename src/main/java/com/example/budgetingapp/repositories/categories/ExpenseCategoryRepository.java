@@ -22,6 +22,8 @@ public interface ExpenseCategoryRepository extends JpaRepository<ExpenseCategory
 
     Optional<ExpenseCategory> findByIdAndUserId(Long id, Long userId);
 
+    Optional<ExpenseCategory> findByNameAndUserId(String name, Long userId);
+
     @Transactional
     @Modifying
     void deleteByIdAndUserId(Long id, Long userId);

@@ -13,6 +13,7 @@ import com.example.budgetingapp.exceptions.conflictexpections.ConflictException;
 import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
 import com.example.budgetingapp.mappers.CategoryMapper;
 import com.example.budgetingapp.repositories.categories.IncomeCategoryRepository;
+import com.example.budgetingapp.repositories.transactions.IncomeRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.CategoryService;
 import java.util.List;
@@ -28,6 +29,7 @@ public class IncomeCategoryServiceImpl implements CategoryService {
     private final CategoryMapper categoryMapper;
     private final IncomeCategoryRepository incomeCategoryRepository;
     private final UserRepository userRepository;
+    private final IncomeRepository incomeRepository;
 
     @Override
     public ResponseCategoryDto saveCategory(Long userId, CreateCategoryDto createCategoryDto) {
@@ -76,11 +78,24 @@ public class IncomeCategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteByCategoryIdAndUserId(Long userId, Long categoryId) {
-        if (incomeCategoryRepository.existsByIdAndUserId(categoryId, userId)) {
-            incomeCategoryRepository.deleteByIdAndUserId(categoryId, userId);
-        } else {
-            throw new EntityNotFoundException("No category found with id " + categoryId
-                    + " for user with id " + userId);
+        IncomeCategory incomeCategory = incomeCategoryRepository
+                .findByIdAndUserId(categoryId, userId).orElseThrow(
+                        () -> new EntityNotFoundException(
+                            "No category with id " + categoryId + " for user with id " + userId));
+        if (incomeCategory.getName().equals("Other")) {
+            throw new IllegalArgumentException("Can't delete category by default");
         }
+        IncomeCategory defaultCategory =
+                incomeCategoryRepository.findByNameAndUserId("Other", userId).orElseThrow(
+                        () -> new EntityNotFoundException(
+                                "No default category was found for user with id " + userId));
+
+        incomeRepository.saveAll(incomeRepository.findAll()
+                .stream()
+                .filter(income -> income.getIncomeCategory().getId()
+                        .equals(incomeCategory.getId()))
+                .peek(income -> income.setIncomeCategory(defaultCategory)).toList());
+
+        incomeCategoryRepository.deleteByIdAndUserId(categoryId, userId);
     }
 }

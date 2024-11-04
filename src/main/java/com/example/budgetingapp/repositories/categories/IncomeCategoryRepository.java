@@ -22,6 +22,8 @@ public interface IncomeCategoryRepository extends JpaRepository<IncomeCategory, 
 
     Optional<IncomeCategory> findByIdAndUserId(Long id, Long userId);
 
+    Optional<IncomeCategory> findByNameAndUserId(String name, Long userId);
+
     @Transactional
     @Modifying
     void deleteByIdAndUserId(Long id, Long userId);
