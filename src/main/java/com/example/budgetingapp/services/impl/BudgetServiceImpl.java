@@ -44,6 +44,7 @@ public class BudgetServiceImpl implements BudgetService {
                         "No default budget found for user with id " + userId));
         topLevelBudget.setLimitSum(BigDecimal.ZERO);
         topLevelBudget.setCurrentSum(BigDecimal.ZERO);
+        updateAndGetAllBudgetsWithoutTopLevel(userId);
         budgetRepository.findAllByUserId(userId)
                 .forEach(budget -> {
                     if (!budget.getId().equals(topLevelBudget.getId())) {
