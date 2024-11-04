@@ -38,8 +38,6 @@ public record BudgetRequestDto(
                 example = BudgetDtoConstants.CATEGORY_IDS_EXAMPLE,
                 requiredMode = REQUIRED)
         @NotNull
-        @Positive
-        @Digits(integer = 9, fraction = 0)
         Set<Long> categoryIds,
         @Schema(name = BudgetDtoConstants.LIMIT_SUM,
                 example = BudgetDtoConstants.LIMIT_SUM_EXAMPLE,
