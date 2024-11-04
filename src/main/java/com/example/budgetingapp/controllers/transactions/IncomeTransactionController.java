@@ -103,7 +103,7 @@ public class IncomeTransactionController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @GetMapping(GET_ALL_INCOMES_FOR_CHARTS_DAYS)
     public List<AccumulatedResultDto> getIncomesForDaysCharts(@AuthenticationPrincipal User user,
-                           ChartTransactionRequestDtoByDay chartTransactionRequestDtoByDay) {
+                          @Valid ChartTransactionRequestDtoByDay chartTransactionRequestDtoByDay) {
         return incomeTransactionService
                 .getSumOfTransactionsForPeriodOfTime(
                         user.getId(), chartTransactionRequestDtoByDay);
@@ -116,7 +116,8 @@ public class IncomeTransactionController {
     @GetMapping(GET_ALL_INCOMES_FOR_CHARTS_MONTHS_YEARS)
     public List<AccumulatedResultDto> getIncomesForMonthOrYearCharts(
             @AuthenticationPrincipal User user,
-            ChartTransactionRequestDtoByMonthOrYear chartTransactionRequestDtoByMonthOrYear) {
+            @Valid ChartTransactionRequestDtoByMonthOrYear
+                    chartTransactionRequestDtoByMonthOrYear) {
         return incomeTransactionService
                 .getSumOfTransactionsForMonthOrYear(
                         user.getId(), chartTransactionRequestDtoByMonthOrYear);

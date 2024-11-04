@@ -10,7 +10,11 @@ public class ChartToDateAfterFromDateValidator
     @Override
     public boolean isValid(ChartTransactionRequestDtoByDay requestDtoByDay,
                            ConstraintValidatorContext constraintValidatorContext) {
-        return LocalDate.parse(requestDtoByDay.toDate())
-                .isAfter(LocalDate.parse(requestDtoByDay.fromDate()));
+        if ((requestDtoByDay.fromDate() != null && requestDtoByDay.toDate() != null)
+                && (!requestDtoByDay.fromDate().isBlank() && !requestDtoByDay.toDate().isBlank())) {
+            return LocalDate.parse(requestDtoByDay.toDate())
+                    .isAfter(LocalDate.parse(requestDtoByDay.fromDate()));
+        }
+        return false;
     }
 }

@@ -28,6 +28,7 @@ import com.example.budgetingapp.services.BudgetService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -56,7 +57,7 @@ public class BudgetController {
     @PostMapping(ADD_BUDGET)
     @ResponseStatus(HttpStatus.CREATED)
     public BudgetResponseDto addBudget(@AuthenticationPrincipal User user,
-                                       @RequestBody BudgetRequestDto budgetRequestDto) {
+                                       @Valid @RequestBody BudgetRequestDto budgetRequestDto) {
         return budgetService.saveBudget(user.getId(), budgetRequestDto);
     }
 

@@ -105,7 +105,7 @@ public class ExpenseTransactionController {
     @GetMapping(GET_ALL_EXPENSES_FOR_CHARTS_DAYS)
     public List<AccumulatedResultDto> getExpensesForDaysCharts(
             @AuthenticationPrincipal User user,
-            ChartTransactionRequestDtoByDay chartTransactionRequestDtoByDay) {
+            @Valid ChartTransactionRequestDtoByDay chartTransactionRequestDtoByDay) {
         return expenseTransactionService
                 .getSumOfTransactionsForPeriodOfTime(
                         user.getId(), chartTransactionRequestDtoByDay);
@@ -118,7 +118,8 @@ public class ExpenseTransactionController {
     @GetMapping(GET_ALL_EXPENSES_FOR_CHARTS_MONTHS_YEARS)
     public List<AccumulatedResultDto> getExpensesForMonthOrYearCharts(
             @AuthenticationPrincipal User user,
-            ChartTransactionRequestDtoByMonthOrYear chartTransactionRequestDtoByMonthOrYear) {
+            @Valid ChartTransactionRequestDtoByMonthOrYear
+                    chartTransactionRequestDtoByMonthOrYear) {
         return expenseTransactionService
                 .getSumOfTransactionsForMonthOrYear(
                         user.getId(), chartTransactionRequestDtoByMonthOrYear);
