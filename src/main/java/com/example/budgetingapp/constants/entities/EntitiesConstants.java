@@ -50,12 +50,12 @@ public class EntitiesConstants {
             "Freelance",
             "Investments",
             "Rental Income",
-            "Gifts");
+            "Other");
 
     public static final List<String> DEFAULT_EXPENSE_CATEGORIES_LIST = List.of(
             "Groceries",
             "Utilities",
             "Transportation",
             "Entertainment",
-            "Healthcare");
+            "Other");
 }
