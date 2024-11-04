@@ -23,6 +23,7 @@ import com.example.budgetingapp.services.TransactionService;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +79,7 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
         Specification<Expense> expenseSpecification = expenseSpecificationBuilder.build(filterDto);
         return expenseRepository.findAll(expenseSpecification, pageable)
                 .stream()
+                .sorted(Comparator.comparing(Expense::getTransactionDate))
                 .map(transactionMapper::toExpenseDto)
                 .toList();
     }
@@ -186,6 +188,7 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
                             .collect(Collectors.toList());
                     return new AccumulatedResultDto(entry.getKey(), sumsByDate);
                 })
+                .sorted(Comparator.comparing(AccumulatedResultDto::localDate))
                 .collect(Collectors.toList());
     }
 
