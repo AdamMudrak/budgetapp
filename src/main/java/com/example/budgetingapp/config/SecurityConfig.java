@@ -1,14 +1,13 @@
 package com.example.budgetingapp.config;
 
-import static com.example.budgetingapp.constants.config.ConfigConstants.FRONT_END_LOCAL_ALLOWED;
-import static com.example.budgetingapp.constants.config.ConfigConstants.FRONT_END_REMOTE_ALLOWED;
-import static com.example.budgetingapp.constants.config.ConfigConstants.POSTMAN_REMOTE_ALLOWED;
-import static com.example.budgetingapp.constants.config.ConfigConstants.SWAGGER_REMOTE_ALLOWED;
+import static com.example.budgetingapp.constants.config.ConfigConstants.ALLOWED_ORIGINS;
+import static com.example.budgetingapp.constants.security.SecurityConstants.SPLITERATOR;
 import static com.example.budgetingapp.constants.security.SecurityConstants.STRENGTH;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 import com.example.budgetingapp.constants.config.ConfigConstants;
 import com.example.budgetingapp.security.JwtAuthenticationFilter;
+import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,15 +32,8 @@ import org.springframework.web.cors.CorsConfiguration;
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    @Value(FRONT_END_LOCAL_ALLOWED)
-    private String frontendLocalAllowed;
-    @Value(FRONT_END_REMOTE_ALLOWED)
-    private String frontendRemoteAllowed;
-    @Value(POSTMAN_REMOTE_ALLOWED)
-    private String postmanRemoteAllowed;
-    //TODO to be deleted before production
-    @Value(SWAGGER_REMOTE_ALLOWED)
-    private String swaggerRemoteAllowed;
+    @Value(ALLOWED_ORIGINS)
+    private String allowedOrigins;
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
@@ -50,15 +42,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        String[] allowedOriginsArray = allowedOrigins.split(SPLITERATOR);
         return http
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of(frontendLocalAllowed,
-                            frontendRemoteAllowed,
-                            postmanRemoteAllowed,
-                            swaggerRemoteAllowed,
-                            "http://localhost:8080" //TODO needs to be commented before deploy build
-                    ));
+                    config.setAllowedOrigins(Arrays.asList(allowedOriginsArray));
                     config.setAllowCredentials(true);
                     config.setAllowedMethods(List.of(ConfigConstants.ALLOWED_METHODS));
                     config.setAllowedHeaders(List.of(ConfigConstants.ALLOWED_HEADERS));

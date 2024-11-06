@@ -2,7 +2,7 @@ package com.example.budgetingapp.constants.security;
 
 public class SecurityConstants {
     public static final String PLUS = "+";
-
+    public static final String SPLITERATOR = "&";
     public static final int STRENGTH = 10;
     public static final int RANDOM_ACTION_JWT_STRENGTH = 24;
     public static final int RANDOM_PASSWORD_STRENGTH = 32;
