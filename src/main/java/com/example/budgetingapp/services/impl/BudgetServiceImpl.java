@@ -84,6 +84,7 @@ public class BudgetServiceImpl implements BudgetService {
                     + " for user " + userId + " already exists");
         }
         isCategoryPresentInDb(userId, budgetRequestDto);
+        checkIfThereAreBudgetsWithSameCategories(userId, budgetRequestDto);
         Budget newBudget = budgetMapper.toBudget(budgetRequestDto);
         User currentUser = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -181,5 +182,15 @@ public class BudgetServiceImpl implements BudgetService {
                 budgetRepository.save(budget);
             }
         });
+    }
+
+    private void checkIfThereAreBudgetsWithSameCategories(Long userId,
+                                                          BudgetRequestDto budgetRequestDto) {
+        for (Long categoryId : budgetRequestDto.categoryIds()) {
+            if (budgetRepository.existsByExpenseCategoryIdAndUserId(categoryId, userId)) {
+                throw new AlreadyExistsException("You can't create a budget containing category "
+                        + categoryId + " as it is already used in another budget");
+            }
+        }
     }
 }

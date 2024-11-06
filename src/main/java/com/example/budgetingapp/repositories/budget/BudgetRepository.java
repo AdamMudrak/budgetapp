@@ -13,7 +13,11 @@ public interface BudgetRepository extends JpaRepository<Budget, Long> {
             + " WHERE budget.user.id=:userId")
     int countBudgetsByUserId(Long userId);
 
-    boolean existsByIdAndUserId(Long id, Long userId);
+    @Query("SELECT COUNT(budget) > 0 FROM Budget budget "
+            + " JOIN budget.expenseCategories expenseCategories"
+            + " WHERE expenseCategories.id=:expenseCategoryId"
+            + " AND expenseCategories.user.id=:userId")
+    boolean existsByExpenseCategoryIdAndUserId(Long expenseCategoryId, Long userId);
 
     boolean existsByNameAndUserId(String name, Long userId);
 
