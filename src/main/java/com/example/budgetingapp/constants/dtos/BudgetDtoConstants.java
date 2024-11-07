@@ -10,8 +10,8 @@ public class BudgetDtoConstants {
     public static final String DATE_DESCRIPTION =
             "date format should be: YYYY-MM-dd";
 
-    public static final String CATEGORY_IDS = "categoryIds";
-    public static final String CATEGORY_IDS_EXAMPLE = "[1, 2]";
+    public static final String CATEGORY_ID = "categoryId";
+    public static final String CATEGORY_ID_EXAMPLE = "1";
 
     public static final String LIMIT_SUM = "limitSum";
     public static final String LIMIT_SUM_EXAMPLE = "999.99";

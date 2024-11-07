@@ -23,6 +23,7 @@ import static com.example.budgetingapp.constants.controllers.BudgetControllerCon
 
 import com.example.budgetingapp.dtos.budgets.request.BudgetRequestDto;
 import com.example.budgetingapp.dtos.budgets.response.BudgetResponseDto;
+import com.example.budgetingapp.dtos.budgets.response.TopLevelBudgetResponseDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.services.BudgetService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -64,7 +65,7 @@ public class BudgetController {
     @Operation(summary = GET_MAIN_BUDGET_SUMMARY)
     @ApiResponse(responseCode = CODE_200, description = SUCCESSFULLY_RETRIEVED_MAIN_BUDGET)
     @GetMapping(GET_TOP_LEVEL_BUDGET)
-    public BudgetResponseDto getTopLevelBudget(@AuthenticationPrincipal User user) {
+    public TopLevelBudgetResponseDto getTopLevelBudget(@AuthenticationPrincipal User user) {
         return budgetService.updateAndGetMainBudgetByUserId(user.getId());
     }
 

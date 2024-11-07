@@ -5,7 +5,7 @@ import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFA
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_BUDGET_NAME;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_EXPENSE_CATEGORIES_LIST;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_INCOME_CATEGORIES_LIST;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_YEARS_STEP;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_MONTH_STEP;
 
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.Budget;
@@ -70,7 +70,7 @@ public class RegistrationDefaultUserObjectsUtil {
         Budget topLevelBudget = new Budget();
         topLevelBudget.setName(DEFAULT_BUDGET_NAME);
         topLevelBudget.setFromDate(LocalDate.now());
-        topLevelBudget.setToDate(LocalDate.now().plusYears(DEFAULT_YEARS_STEP));
+        topLevelBudget.setToDate(LocalDate.now().plusMonths(DEFAULT_MONTH_STEP));
         topLevelBudget.setExpenseCategories(Set.of());
         topLevelBudget.setLimitSum(BigDecimal.ONE);
         topLevelBudget.setCurrentSum(BigDecimal.ZERO);
