@@ -45,10 +45,7 @@ public class BudgetServiceImpl implements BudgetService {
         Budget topLevelBudget = budgetRepository.findByUserIdAndIsTopLevelBudget(userId, true)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No default budget found for user with id " + userId));
-        topLevelBudget.setFromDate(LocalDate.now());
-        topLevelBudget.setToDate(LocalDate.now().plusMonths(DEFAULT_MONTH_STEP));
-        topLevelBudget.setLimitSum(BigDecimal.ZERO);
-        topLevelBudget.setCurrentSum(BigDecimal.ZERO);
+        resetTopLevelBudgetBeforeRenewal(topLevelBudget);
         updateAndGetAllBudgetsWithoutTopLevel(userId);
         budgetRepository.findAllByUserId(userId)
                 .forEach(budget -> {
@@ -194,5 +191,13 @@ public class BudgetServiceImpl implements BudgetService {
             throw new AlreadyExistsException("You can't create a budget containing category "
                     + budgetRequestDto.categoryId() + " as it is already used in another budget");
         }
+    }
+
+    private void resetTopLevelBudgetBeforeRenewal(Budget topLevelBudget) {
+        topLevelBudget.setFromDate(LocalDate.now());
+        topLevelBudget.setToDate(LocalDate.now().plusMonths(DEFAULT_MONTH_STEP));
+        topLevelBudget.setExpenseCategories(Set.of());
+        topLevelBudget.setLimitSum(BigDecimal.ZERO);
+        topLevelBudget.setCurrentSum(BigDecimal.ZERO);
     }
 }
