@@ -66,14 +66,14 @@ public class BudgetController {
     @ApiResponse(responseCode = CODE_200, description = SUCCESSFULLY_RETRIEVED_MAIN_BUDGET)
     @GetMapping(GET_TOP_LEVEL_BUDGET)
     public TopLevelBudgetResponseDto getTopLevelBudget(@AuthenticationPrincipal User user) {
-        return budgetService.updateAndGetMainBudgetByUserId(user.getId());
+        return budgetService.setAndGetTopLevelBudgetByUserId(user.getId());
     }
 
     @Operation(summary = GET_ALL_BUDGETS_SUMMARY)
     @ApiResponse(responseCode = CODE_200, description = SUCCESSFULLY_RETRIEVED)
     @GetMapping(GET_ALL_BUDGETS)
     public List<BudgetResponseDto> getAllBudgets(@AuthenticationPrincipal User user) {
-        return budgetService.updateAndGetAllBudgetsWithoutTopLevel(user.getId());
+        return budgetService.updateAndGetAllBudgets(user.getId());
     }
 
     @Operation(summary = DELETE_BUDGET_BY_ID_SUMMARY)

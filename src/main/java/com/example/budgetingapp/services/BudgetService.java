@@ -6,11 +6,11 @@ import com.example.budgetingapp.dtos.budgets.response.TopLevelBudgetResponseDto;
 import java.util.List;
 
 public interface BudgetService {
-    TopLevelBudgetResponseDto updateAndGetMainBudgetByUserId(Long userId);
+    TopLevelBudgetResponseDto setAndGetTopLevelBudgetByUserId(Long userId);
 
     BudgetResponseDto saveBudget(Long userId, BudgetRequestDto budgetRequestDto);
 
-    List<BudgetResponseDto> updateAndGetAllBudgetsWithoutTopLevel(Long userId);
+    List<BudgetResponseDto> updateAndGetAllBudgets(Long userId);
 
     void deleteBudgetById(Long userId, Long budgetId);
 }
