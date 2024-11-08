@@ -28,7 +28,7 @@ public class TransactionDtoConstants {
     public static final String TO_DATE = "toDate";
     public static final String TO_DATE_EXAMPLE = "2024-10-31";
     public static final String DATE_DESCRIPTION =
-            "date format should be: YYYY / YYYY-MM / YYYY-MM-dd";
+            "date format should be: YYYY-MM-dd";
     public static final String ACHIEVED_BEFORE = "achievedBefore";
     public static final String ACHIEVED_BEFORE_EXAMPLE = "2040-10-29";
 
