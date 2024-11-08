@@ -27,5 +27,3 @@ databaseChangeLog:
       file: db/changelog/changes/13-create-targets-table.yaml
   - include:
       file: db/changelog/changes/14-create-budgets-table.yaml
-  - include:
-      file: db/changelog/changes/15-create-budgets-expense-categories-table.yaml

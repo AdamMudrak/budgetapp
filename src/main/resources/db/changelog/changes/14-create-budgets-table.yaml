@@ -45,6 +45,12 @@ databaseChangeLog:
                     foreignKeyName: fk_b_user_id
                     references: users(id)
               - column:
+                  name: expense_category_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_b_e_category_id
+                    references: expense_categories(id)
+              - column:
                   name: is_exceeded
                   type: boolean
                   defaultValueBoolean: false
