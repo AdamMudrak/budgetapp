@@ -43,6 +43,7 @@ public class EntitiesConstants {
     public static final String DEFAULT_ACCOUNT_CURRENCY = "USD";
 
     public static final String DEFAULT_BUDGET_NAME = "Top level budget";
+    public static final Long DEFAULT_ID = 1L;
     public static final int DEFAULT_MONTH_STEP = 1;
 
     public static final List<String> DEFAULT_INCOME_CATEGORIES_LIST = List.of(

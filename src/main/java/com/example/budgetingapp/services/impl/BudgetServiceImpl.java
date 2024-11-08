@@ -3,6 +3,7 @@ package com.example.budgetingapp.services.impl;
 import static com.example.budgetingapp.constants.Constants.NO_ACCOUNT;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.BUDGET_QUANTITY_THRESHOLD;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_BUDGET_NAME;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_ID;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_MONTH_STEP;
 
 import com.example.budgetingapp.dtos.budgets.request.BudgetRequestDto;
@@ -24,8 +25,8 @@ import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.BudgetService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -105,11 +106,12 @@ public class BudgetServiceImpl implements BudgetService {
 
     private TopLevelBudgetResponseDto getEmptyTopLevelBudget() {
         TopLevelBudgetResponseDto topLevelBudget = new TopLevelBudgetResponseDto();
+        topLevelBudget.setId(DEFAULT_ID);
         topLevelBudget.setName(DEFAULT_BUDGET_NAME);
         topLevelBudget.setFromDate(LocalDate.now());
         topLevelBudget.setToDate(LocalDate.now().plusMonths(DEFAULT_MONTH_STEP));
-        topLevelBudget.setCategoryIds(Set.of());
-        topLevelBudget.setLimitSum(BigDecimal.ONE);
+        topLevelBudget.setCategoryIds(new HashSet<>());
+        topLevelBudget.setLimitSum(BigDecimal.ZERO);
         topLevelBudget.setCurrentSum(BigDecimal.ZERO);
         topLevelBudget.setExceeded(false);
         return topLevelBudget;
