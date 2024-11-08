@@ -3,7 +3,6 @@ package com.example.budgetingapp.services.impl;
 import static com.example.budgetingapp.constants.Constants.NO_ACCOUNT;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.BUDGET_QUANTITY_THRESHOLD;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_BUDGET_NAME;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_ID;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_MONTH_STEP;
 
 import com.example.budgetingapp.dtos.budgets.request.BudgetRequestDto;
@@ -106,7 +105,6 @@ public class BudgetServiceImpl implements BudgetService {
 
     private TopLevelBudgetResponseDto getEmptyTopLevelBudget() {
         TopLevelBudgetResponseDto topLevelBudget = new TopLevelBudgetResponseDto();
-        topLevelBudget.setId(DEFAULT_ID);
         topLevelBudget.setName(DEFAULT_BUDGET_NAME);
         topLevelBudget.setFromDate(LocalDate.now());
         topLevelBudget.setToDate(LocalDate.now().plusMonths(DEFAULT_MONTH_STEP));

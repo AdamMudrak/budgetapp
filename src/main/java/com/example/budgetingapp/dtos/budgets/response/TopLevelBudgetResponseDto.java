@@ -9,7 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TopLevelBudgetResponseDto {
-    private Long id;
     private String name;
     private LocalDate fromDate;
     private LocalDate toDate;
