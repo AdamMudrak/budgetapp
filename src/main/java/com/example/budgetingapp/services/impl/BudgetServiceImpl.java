@@ -46,7 +46,7 @@ public class BudgetServiceImpl implements BudgetService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No default budget found for user with id " + userId));
         resetTopLevelBudgetBeforeRenewal(topLevelBudget);
-        updateAndGetAllBudgetsWithoutTopLevel(userId);
+        updateBudgetsBeforeRetrieval(userId);
         budgetRepository.findAllByUserId(userId)
                 .forEach(budget -> {
                     if (!budget.getId().equals(topLevelBudget.getId())) {
@@ -97,10 +97,7 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Override
     public List<BudgetResponseDto> updateAndGetAllBudgetsWithoutTopLevel(Long userId) {
-        Budget topLevelBudget = budgetRepository.findByUserIdAndIsTopLevelBudget(userId, true)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "No default budget found for user with id " + userId));
-        updateBudgetsBeforeRetrieval(userId, topLevelBudget.getId());
+        updateBudgetsBeforeRetrieval(userId);
         return budgetRepository
                 .findAllByUserIdAndIsTopLevelBudget(userId, false)
                 .stream()
@@ -163,7 +160,11 @@ public class BudgetServiceImpl implements BudgetService {
         return (budget.getLimitSum().compareTo(budget.getCurrentSum()));
     }
 
-    private void updateBudgetsBeforeRetrieval(Long userId, Long topLevelBudgetId) {
+    private void updateBudgetsBeforeRetrieval(Long userId) {
+        Budget topLevelBudget = budgetRepository.findByUserIdAndIsTopLevelBudget(userId, true)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "No default budget found for user with id " + userId));
+        Long topLevelBudgetId = topLevelBudget.getId();
         budgetRepository.findAllByUserId(userId).forEach(budget -> {
             if (!budget.getId().equals(topLevelBudgetId)) {
                 String[] categoryIds = parseCategoryIdsFromBudget(budget);
@@ -196,8 +197,9 @@ public class BudgetServiceImpl implements BudgetService {
     private void resetTopLevelBudgetBeforeRenewal(Budget topLevelBudget) {
         topLevelBudget.setFromDate(LocalDate.now());
         topLevelBudget.setToDate(LocalDate.now().plusMonths(DEFAULT_MONTH_STEP));
-        topLevelBudget.setExpenseCategories(Set.of());
+        topLevelBudget.getExpenseCategories().clear();
         topLevelBudget.setLimitSum(BigDecimal.ZERO);
         topLevelBudget.setCurrentSum(BigDecimal.ZERO);
+        topLevelBudget.setExceeded(false);
     }
 }
