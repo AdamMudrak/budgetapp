@@ -46,7 +46,6 @@ public class TelegramAuthenticationService {
         defaultUserObjectsUtil.assignDefaultAccount(user);
         defaultUserObjectsUtil.assignDefaultIncomeCategories(user);
         defaultUserObjectsUtil.assignDefaultExpenseCategories(user);
-        defaultUserObjectsUtil.assignTopLevelBudget(user);
         return new TelegramAuthenticationResponseDto(SUCCESSFULLY_AUTHENTICATED_VIA_TELEGRAM);
     }
 

@@ -50,7 +50,6 @@ public class UserServiceImpl implements UserService {
         defaultUserObjectsUtil.assignDefaultAccount(user);
         defaultUserObjectsUtil.assignDefaultExpenseCategories(user);
         defaultUserObjectsUtil.assignDefaultIncomeCategories(user);
-        defaultUserObjectsUtil.assignTopLevelBudget(user);
         passwordEmailService.sendActionMessage(user.getUsername(), CONFIRMATION);
         return new UserRegistrationResponseDto(REGISTERED);
     }

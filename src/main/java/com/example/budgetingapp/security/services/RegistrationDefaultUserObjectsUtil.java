@@ -65,18 +65,4 @@ public class RegistrationDefaultUserObjectsUtil {
             incomeCategoryRepository.save(incomeCategory);
         }
     }
-
-    public void assignTopLevelBudget(User user) {
-        Budget topLevelBudget = new Budget();
-        topLevelBudget.setName(DEFAULT_BUDGET_NAME);
-        topLevelBudget.setFromDate(LocalDate.now());
-        topLevelBudget.setToDate(LocalDate.now().plusMonths(DEFAULT_MONTH_STEP));
-        topLevelBudget.setExpenseCategories(Set.of());
-        topLevelBudget.setLimitSum(BigDecimal.ONE);
-        topLevelBudget.setCurrentSum(BigDecimal.ZERO);
-        topLevelBudget.setUser(user);
-        topLevelBudget.setExceeded(false);
-        topLevelBudget.setTopLevelBudget(true);
-        budgetRepository.save(topLevelBudget);
-    }
 }
