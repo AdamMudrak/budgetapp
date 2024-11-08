@@ -202,9 +202,11 @@ public class BudgetAppBot extends TelegramLongPollingBot {
                 + "You can use your phone number and password to login\\." + System.lineSeparator()
                 + "Just click on them to copy\\!"
                 + System.lineSeparator()
-                + "Don't forget to set your name when"
+                + "Don't forget to change your password when"
                 + System.lineSeparator()
-                + "already on the website\\!";
+                + "already on the website to something "
+                + System.lineSeparator()
+                + "you will remember\\!";
     }
 
     private String formRequestBody(String phoneNumber,
