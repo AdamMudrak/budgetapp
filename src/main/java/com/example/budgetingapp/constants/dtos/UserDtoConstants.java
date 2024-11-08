@@ -26,9 +26,6 @@ public class UserDtoConstants {
 
     public static final String REPEAT_NEW_PASSWORD = "repeatNewPassword";
 
-    public static final String FIRST_NAME = "firstName";
-    public static final String FIRST_NAME_EXAMPLE = "John";
-
     public static final int MIN_PASSWORD_SIZE = 8;
     public static final int MAX_PASSWORD_SIZE = 32;
 }

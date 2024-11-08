@@ -35,9 +35,4 @@ public record UserRegistrationRequestDto(
         example = UserDtoConstants.PASSWORD_EXAMPLE,
         description = UserDtoConstants.REPEAT_PASSWORD_DESCRIPTION,
         requiredMode = REQUIRED)
-        @NotBlank String repeatPassword,
-
-        @Schema(name = UserDtoConstants.FIRST_NAME,
-        example = UserDtoConstants.FIRST_NAME_EXAMPLE,
-        requiredMode = REQUIRED)
-        @NotBlank String firstName) {}
+        @NotBlank String repeatPassword) {}
