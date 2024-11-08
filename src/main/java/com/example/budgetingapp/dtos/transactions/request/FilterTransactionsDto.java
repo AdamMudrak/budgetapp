@@ -1,6 +1,7 @@
 package com.example.budgetingapp.dtos.transactions.request;
 
 import com.example.budgetingapp.constants.dtos.TransactionDtoConstants;
+import com.example.budgetingapp.validation.date.Date;
 import com.example.budgetingapp.validation.date.todateafterfromdate.FilterToDateAfterFromDate;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,10 +15,12 @@ public record FilterTransactionsDto(
         @Schema(name = TransactionDtoConstants.FROM_DATE,
                 example = TransactionDtoConstants.FROM_DATE_EXAMPLE,
                 description = TransactionDtoConstants.DATE_DESCRIPTION)
+        @Date
         String fromDate,
         @Schema(name = TransactionDtoConstants.TO_DATE,
                 example = TransactionDtoConstants.TO_DATE_EXAMPLE,
                 description = TransactionDtoConstants.DATE_DESCRIPTION)
+        @Date
         String toDate,
         @Schema(name = TransactionDtoConstants.CATEGORY_IDS,
                 example = TransactionDtoConstants.CATEGORY_IDS_EXAMPLE)
