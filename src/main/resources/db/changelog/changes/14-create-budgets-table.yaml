@@ -50,9 +50,3 @@ databaseChangeLog:
                   defaultValueBoolean: false
                   constraints:
                     nullable: false
-              - column:
-                  name: is_top_level_budget
-                  type: boolean
-                  defaultValueBoolean: false
-                  constraints:
-                    nullable: false
