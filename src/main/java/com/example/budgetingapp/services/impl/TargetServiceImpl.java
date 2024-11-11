@@ -81,7 +81,7 @@ public class TargetServiceImpl implements TargetService {
         accountRepository.save(account);
         if (target.getCurrentSum().compareTo(target.getExpectedSum()) >= 0) {
             target.setAchieved(true);
-            target.setMonthlyDownPayment(BigDecimal.ZERO);
+            target.setDownPayment(BigDecimal.ZERO);
         }
         return targetMapper.toTargetDto(targetRepository.save(target));
     }
@@ -124,7 +124,15 @@ public class TargetServiceImpl implements TargetService {
         BigDecimal difference = target.getExpectedSum().subtract(target.getCurrentSum());
         long monthsToAchieve = ChronoUnit.MONTHS.between(LocalDate.now(),
                 target.getAchievedBefore());
-        target.setMonthlyDownPayment(difference.divide(
-                BigDecimal.valueOf(monthsToAchieve), RoundingMode.CEILING));
+        if (monthsToAchieve > 0) {
+            target.setDownPayment(difference.divide(
+                    BigDecimal.valueOf(monthsToAchieve), RoundingMode.CEILING));
+        } else {
+            long daysToAchieve = ChronoUnit.DAYS.between(LocalDate.now(),
+                    target.getAchievedBefore());
+            target.setDownPayment(difference.divide(BigDecimal.valueOf(daysToAchieve),
+                    RoundingMode.CEILING));
+        }
+
     }
 }

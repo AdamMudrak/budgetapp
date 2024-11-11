@@ -14,7 +14,7 @@ public class TargetTransactionResponseDto {
     private String name;
     private BigDecimal expectedSum;
     private BigDecimal currentSum;
-    private BigDecimal monthlyDownPayment;
+    private BigDecimal downPayment;
     private LocalDate achievedBefore;
     private String periodLeft;
     private String currency;

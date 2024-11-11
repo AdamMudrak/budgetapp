@@ -27,8 +27,12 @@ public interface TargetMapper {
                               Target target) {
         Period period = Period.between(LocalDate.now(), target.getAchievedBefore());
         int months = period.getMonths() + (period.getYears() * MONTHS_IN_A_YEAR);
-        targetTransactionResponseDto.setPeriodLeft(months + " months and "
-                + period.getDays() + " days left");
+        int days = period.getDays();
+        String monthOrMonths = (months == 1) ? " month " : " months ";
+        String dayOrDays = (days == 1) ? " day " : " days ";
+        String paidMonthlyOrDaily = (months == 0) ? " Paid daily. " : "Paid monthly. ";
+        targetTransactionResponseDto.setPeriodLeft(paidMonthlyOrDaily + months + monthOrMonths
+                + "and " + days + dayOrDays + "left");
     }
 
     @AfterMapping
