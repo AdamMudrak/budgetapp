@@ -16,6 +16,7 @@ import com.example.budgetingapp.exceptions.conflictexpections.TransactionFailedE
 import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
 import com.example.budgetingapp.mappers.TransactionMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
+import com.example.budgetingapp.repositories.categories.IncomeCategoryRepository;
 import com.example.budgetingapp.repositories.transactions.IncomeRepository;
 import com.example.budgetingapp.repositories.transactions.transactionsspecs.income.IncomeSpecificationBuilder;
 import com.example.budgetingapp.repositories.user.UserRepository;
@@ -43,6 +44,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
     private final UserRepository userRepository;
     private final TransactionMapper transactionMapper;
     private final IncomeRepository incomeRepository;
+    private final IncomeCategoryRepository incomeCategoryRepository;
     private final IncomeSpecificationBuilder incomeSpecificationBuilder;
     private final TransactionsCommonFunctionsUtil transactionsCommonFunctionsUtil;
 
@@ -50,6 +52,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
     @Override
     public ResponseTransactionDto saveTransaction(Long userId,
                                                   RequestTransactionDto requestTransactionDto) {
+        isCategoryPresentInDb(userId, requestTransactionDto.categoryId());
         Income income = transactionMapper.toIncome(requestTransactionDto);
         Account account = accountRepository
                 .findByIdAndUserId(requestTransactionDto.accountId(), userId)
@@ -81,6 +84,10 @@ public class IncomeTransactionServiceImpl implements TransactionService {
     @Override
     public List<AccumulatedResultDto> getSumOfTransactionsForPeriodOfTime(Long userId,
                                                           FilterTransactionsDto transactionsDto) {
+        if (transactionsDto.accountId() == null) {
+            throw new IllegalArgumentException("Account id can't be null so as to prevent mixing "
+                    + "transactions with different currencies");
+        }
         Specification<Income> specification = incomeSpecificationBuilder.build(transactionsDto);
         Map<LocalDate, Map<String, BigDecimal>> categorizedIncomeSums =
                 incomeRepository.findAll(specification)
@@ -218,5 +225,27 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                     return resultMap;
                 }
         );
+    }
+
+    private void isCategoryPresentInDb(Long userId, Long categoryId) {
+        if (!incomeCategoryRepository.existsByIdAndUserId(categoryId, userId)) {
+            throw new EntityNotFoundException("No category with id " + categoryId
+                    + " was found for user with id " + userId);
+        }
+    }
+
+    private void presenceCheck(Long userId, FilterTransactionsDto filterTransactionsDto) {
+        if (filterTransactionsDto.accountId() != null) {
+            if (!accountRepository.existsByIdAndUserId(filterTransactionsDto.accountId(), userId)) {
+                throw new EntityNotFoundException("No account with id "
+                        + filterTransactionsDto.accountId() + " for user with id "
+                        + userId + " was found");
+            }
+        }
+        if (filterTransactionsDto.categoryIds() != null) {
+            for (Long categoryId : filterTransactionsDto.categoryIds()) {
+                isCategoryPresentInDb(userId, categoryId);
+            }
+        }
     }
 }

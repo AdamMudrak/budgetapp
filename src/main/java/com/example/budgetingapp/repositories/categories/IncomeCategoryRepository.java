@@ -14,6 +14,8 @@ public interface IncomeCategoryRepository extends JpaRepository<IncomeCategory, 
             + " WHERE incomeCategory.user.id=:userId")
     int countCategoriesByUserId(Long userId);
 
+    boolean existsByIdAndUserId(Long id, Long userId);
+
     boolean existsByNameAndUserId(String name, Long userId);
 
     List<IncomeCategory> getAllByUserId(Long userId, Pageable pageable);
