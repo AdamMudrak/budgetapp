@@ -58,7 +58,8 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                 .findByIdAndUserId(requestTransactionDto.accountId(), userId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No account with id "
-                                + requestTransactionDto.accountId() + " was found"));
+                                + requestTransactionDto.accountId()
+                                + " was found for user with id " + userId));
         account.setBalance(account.getBalance().add(requestTransactionDto.amount()));
         accountRepository.save(account);
         User currentUser = userRepository.findById(userId)
@@ -113,11 +114,6 @@ public class IncomeTransactionServiceImpl implements TransactionService {
         Map<LocalDate, Map<String, BigDecimal>> categorizedIncomeSums =
                 incomeRepository.findAll(specification)
                         .stream()
-                        .filter(income -> income.getAccount().getId()
-                                .equals(chartTransactionRequestDtoByMonthOrYear.accountId()))
-                        .filter(income -> chartTransactionRequestDtoByMonthOrYear.categoryIds()
-                                != null && chartTransactionRequestDtoByMonthOrYear.categoryIds()
-                                .contains(income.getIncomeCategory().getId()))
                         .collect(Collectors.groupingBy(
                                 income -> transactionsCommonFunctionsUtil
                                         .getPeriodDate(income.getTransactionDate(),
