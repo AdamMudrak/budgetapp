@@ -1,10 +1,10 @@
 package com.example.budgetingapp.services.impl.transactions;
 
+import static com.example.budgetingapp.constants.Constants.NO_VALUE;
 import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.EXPENSE;
 
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
-import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByDay;
 import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByMonthOrYear;
 import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
@@ -86,13 +86,11 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
 
     @Override
     public List<AccumulatedResultDto> getSumOfTransactionsForPeriodOfTime(Long userId,
-                                  ChartTransactionRequestDtoByDay chartTransactionRequestDtoByDay) {
+                                                          FilterTransactionsDto transactionsDto) {
+        Specification<Expense> specification = expenseSpecificationBuilder.build(transactionsDto);
         Map<LocalDate, Map<String, BigDecimal>> categorizedExpenseSums =
-                expenseRepository.findAll()
+                expenseRepository.findAll(specification)
                         .stream()
-                        .filter(expense -> transactionsCommonFunctionsUtil
-                                .isDateWithinPeriod(expense.getTransactionDate(),
-                                        chartTransactionRequestDtoByDay))
                         .collect(Collectors.groupingBy(Expense::getTransactionDate,
                                 getCollectorGroupByDateAndThenCategorySum()
                         ));
@@ -103,8 +101,14 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
     public List<AccumulatedResultDto> getSumOfTransactionsForMonthOrYear(
             Long userId,
             ChartTransactionRequestDtoByMonthOrYear chartTransactionRequestDtoByMonthOrYear) {
+        FilterTransactionsDto filterTransactionsDto = new FilterTransactionsDto(
+                chartTransactionRequestDtoByMonthOrYear.accountId(),
+                chartTransactionRequestDtoByMonthOrYear.categoryIds(),
+                NO_VALUE,NO_VALUE);
+        Specification<Expense> specification =
+                expenseSpecificationBuilder.build(filterTransactionsDto);
         Map<LocalDate, Map<String, BigDecimal>> categorizedExpenseSums =
-                expenseRepository.findAll()
+                expenseRepository.findAll(specification)
                         .stream()
                         .collect(Collectors.groupingBy(
                                 expense -> transactionsCommonFunctionsUtil

@@ -4,7 +4,6 @@ import static com.example.budgetingapp.constants.Constants.MONTH;
 import static com.example.budgetingapp.constants.Constants.YEAR;
 
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
-import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByDay;
 import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByMonthOrYear;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.transactions.Income;
@@ -26,20 +25,6 @@ public class TransactionsCommonFunctionsUtil {
         return (account.getBalance()
                 .subtract(income.getAmount()))
                 .compareTo(BigDecimal.ZERO);
-    }
-
-    boolean isDateWithinPeriod(LocalDate checkDate,
-                               ChartTransactionRequestDtoByDay accumulatedTransactionRequestDto) {
-        if (accumulatedTransactionRequestDto.fromDate() != null
-                && accumulatedTransactionRequestDto.toDate() != null) {
-            LocalDate fromDate = LocalDate.parse(accumulatedTransactionRequestDto.fromDate());
-            LocalDate toDate = LocalDate.parse(accumulatedTransactionRequestDto.toDate());
-            return ((checkDate.isAfter(fromDate)
-                    || checkDate.isEqual(fromDate)
-                    && (checkDate.isBefore(toDate)
-                    || checkDate.isEqual(toDate))));
-        }
-        return false;
     }
 
     LocalDate getPeriodDate(LocalDate transactionDate,

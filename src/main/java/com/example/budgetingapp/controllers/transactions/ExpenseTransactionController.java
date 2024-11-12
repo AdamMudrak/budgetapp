@@ -31,7 +31,6 @@ import static com.example.budgetingapp.constants.controllers.transactions.Transa
 
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
-import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByDay;
 import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByMonthOrYear;
 import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
@@ -92,7 +91,7 @@ public class ExpenseTransactionController {
     @GetMapping(GET_ALL_EXPENSES)
     public List<ResponseTransactionDto> getAllExpenseTransactions(
             @AuthenticationPrincipal User user,
-            FilterTransactionsDto filterTransactionsDto,
+            @Valid FilterTransactionsDto filterTransactionsDto,
             @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE) Pageable pageable) {
         return expenseTransactionService.getAllTransactions(user.getId(),
                 filterTransactionsDto, pageable);
@@ -105,10 +104,10 @@ public class ExpenseTransactionController {
     @GetMapping(GET_ALL_EXPENSES_FOR_CHARTS_DAYS)
     public List<AccumulatedResultDto> getExpensesForDaysCharts(
             @AuthenticationPrincipal User user,
-            @Valid ChartTransactionRequestDtoByDay chartTransactionRequestDtoByDay) {
+            @Valid FilterTransactionsDto filterTransactionsDto) {
         return expenseTransactionService
                 .getSumOfTransactionsForPeriodOfTime(
-                        user.getId(), chartTransactionRequestDtoByDay);
+                        user.getId(), filterTransactionsDto);
     }
 
     @Operation(summary = GET_ALL_EXPENSES_FOR_CHARTS_SUMMARY)

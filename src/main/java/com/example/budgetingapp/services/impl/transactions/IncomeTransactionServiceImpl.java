@@ -1,10 +1,10 @@
 package com.example.budgetingapp.services.impl.transactions;
 
+import static com.example.budgetingapp.constants.Constants.NO_VALUE;
 import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.INCOME;
 
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
-import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByDay;
 import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByMonthOrYear;
 import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
@@ -80,32 +80,41 @@ public class IncomeTransactionServiceImpl implements TransactionService {
 
     @Override
     public List<AccumulatedResultDto> getSumOfTransactionsForPeriodOfTime(Long userId,
-                              ChartTransactionRequestDtoByDay chartTransactionRequestDtoByDay) {
-        Map<LocalDate, Map<String, BigDecimal>> categorizedExpenseSums =
-                incomeRepository.findAll()
+                                                          FilterTransactionsDto transactionsDto) {
+        Specification<Income> specification = incomeSpecificationBuilder.build(transactionsDto);
+        Map<LocalDate, Map<String, BigDecimal>> categorizedIncomeSums =
+                incomeRepository.findAll(specification)
                         .stream()
-                        .filter(income -> transactionsCommonFunctionsUtil
-                                .isDateWithinPeriod(income.getTransactionDate(),
-                                        chartTransactionRequestDtoByDay))
                         .collect(Collectors.groupingBy(Income::getTransactionDate,
                                 getCollectorGroupByDateAndThenCategorySum()
                         ));
-        return prepareListOfAccumulatedDtos(categorizedExpenseSums);
+        return prepareListOfAccumulatedDtos(categorizedIncomeSums);
     }
 
     @Override
     public List<AccumulatedResultDto> getSumOfTransactionsForMonthOrYear(Long userId,
                 ChartTransactionRequestDtoByMonthOrYear chartTransactionRequestDtoByMonthOrYear) {
-        Map<LocalDate, Map<String, BigDecimal>> categorizedExpenseSums =
-                incomeRepository.findAll()
+        FilterTransactionsDto filterTransactionsDto = new FilterTransactionsDto(
+                chartTransactionRequestDtoByMonthOrYear.accountId(),
+                chartTransactionRequestDtoByMonthOrYear.categoryIds(),
+                NO_VALUE,NO_VALUE);
+        Specification<Income> specification =
+                incomeSpecificationBuilder.build(filterTransactionsDto);
+        Map<LocalDate, Map<String, BigDecimal>> categorizedIncomeSums =
+                incomeRepository.findAll(specification)
                         .stream()
+                        .filter(income -> income.getAccount().getId()
+                                .equals(chartTransactionRequestDtoByMonthOrYear.accountId()))
+                        .filter(income -> chartTransactionRequestDtoByMonthOrYear.categoryIds()
+                                != null && chartTransactionRequestDtoByMonthOrYear.categoryIds()
+                                .contains(income.getIncomeCategory().getId()))
                         .collect(Collectors.groupingBy(
                                 income -> transactionsCommonFunctionsUtil
                                         .getPeriodDate(income.getTransactionDate(),
                                                 chartTransactionRequestDtoByMonthOrYear),
                                 getCollectorGroupByDateAndThenCategorySum()
                         ));
-        return prepareListOfAccumulatedDtos(categorizedExpenseSums);
+        return prepareListOfAccumulatedDtos(categorizedIncomeSums);
     }
 
     @Transactional
@@ -173,8 +182,8 @@ public class IncomeTransactionServiceImpl implements TransactionService {
     }
 
     private List<AccumulatedResultDto> prepareListOfAccumulatedDtos(
-            Map<LocalDate, Map<String, BigDecimal>> categorizedExpenseSums) {
-        return categorizedExpenseSums.entrySet().stream()
+            Map<LocalDate, Map<String, BigDecimal>> categorizedIncomeSums) {
+        return categorizedIncomeSums.entrySet().stream()
                 .map(entry -> {
                     List<TransactionSumByCategoryDto> sumsByDate = entry
                             .getValue()
