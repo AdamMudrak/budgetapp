@@ -73,6 +73,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
     public List<ResponseTransactionDto> getAllTransactions(Long userId,
                                                            FilterTransactionsDto filterDto,
                                                            Pageable pageable) {
+        presenceCheck(userId, filterDto);
         Specification<Income> incomeSpecification = incomeSpecificationBuilder.build(filterDto);
         return incomeRepository.findAll(incomeSpecification, pageable)
                 .stream()
@@ -88,6 +89,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
             throw new IllegalArgumentException("Account id can't be null so as to prevent mixing "
                     + "transactions with different currencies");
         }
+        presenceCheck(userId, transactionsDto);
         Specification<Income> specification = incomeSpecificationBuilder.build(transactionsDto);
         Map<LocalDate, Map<String, BigDecimal>> categorizedIncomeSums =
                 incomeRepository.findAll(specification)
@@ -105,6 +107,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                 chartTransactionRequestDtoByMonthOrYear.accountId(),
                 chartTransactionRequestDtoByMonthOrYear.categoryIds(),
                 NO_VALUE,NO_VALUE);
+        presenceCheck(userId, filterTransactionsDto);
         Specification<Income> specification =
                 incomeSpecificationBuilder.build(filterTransactionsDto);
         Map<LocalDate, Map<String, BigDecimal>> categorizedIncomeSums =
@@ -129,6 +132,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
     public ResponseTransactionDto updateTransaction(Long userId,
                                                     RequestTransactionDto requestTransactionDto,
                                                     Long transactionId) {
+        presenceCheck(userId, requestTransactionDto);
         Income previousIncome = incomeRepository
                 .findById(transactionId)
                 .orElseThrow(() ->
@@ -247,5 +251,14 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                 isCategoryPresentInDb(userId, categoryId);
             }
         }
+    }
+
+    private void presenceCheck(Long userId, RequestTransactionDto requestTransactionDto) {
+        if (!accountRepository.existsByIdAndUserId(requestTransactionDto.accountId(), userId)) {
+            throw new EntityNotFoundException("No account with id "
+                    + requestTransactionDto.accountId() + " for user with id "
+                    + userId + " was found");
+        }
+        isCategoryPresentInDb(userId, requestTransactionDto.categoryId());
     }
 }

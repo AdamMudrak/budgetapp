@@ -78,6 +78,7 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
     public List<ResponseTransactionDto> getAllTransactions(Long userId,
                                                            FilterTransactionsDto filterDto,
                                                            Pageable pageable) {
+        presenceCheck(userId, filterDto);
         Specification<Expense> expenseSpecification = expenseSpecificationBuilder.build(filterDto);
         return expenseRepository.findAll(expenseSpecification, pageable)
                 .stream()
@@ -111,7 +112,8 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
         FilterTransactionsDto filterTransactionsDto = new FilterTransactionsDto(
                 chartTransactionRequestDtoByMonthOrYear.accountId(),
                 chartTransactionRequestDtoByMonthOrYear.categoryIds(),
-                NO_VALUE,NO_VALUE);
+                NO_VALUE, NO_VALUE);
+        presenceCheck(userId, filterTransactionsDto);
         Specification<Expense> specification =
                 expenseSpecificationBuilder.build(filterTransactionsDto);
         Map<LocalDate, Map<String, BigDecimal>> categorizedExpenseSums =
@@ -131,6 +133,7 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
     public ResponseTransactionDto updateTransaction(Long userId,
                                                     RequestTransactionDto requestTransactionDto,
                                                     Long transactionId) {
+        presenceCheck(userId, requestTransactionDto);
         Expense previousExpense = expenseRepository
                 .findById(transactionId)
                 .orElseThrow(() ->
@@ -244,5 +247,14 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
                 isCategoryPresentInDb(userId, categoryId);
             }
         }
+    }
+
+    private void presenceCheck(Long userId, RequestTransactionDto requestTransactionDto) {
+        if (!accountRepository.existsByIdAndUserId(requestTransactionDto.accountId(), userId)) {
+            throw new EntityNotFoundException("No account with id "
+                    + requestTransactionDto.accountId() + " for user with id "
+                    + userId + " was found");
+        }
+        isCategoryPresentInDb(userId, requestTransactionDto.categoryId());
     }
 }
