@@ -1,6 +1,5 @@
 package com.example.budgetingapp.services.impl;
 
-import static com.example.budgetingapp.constants.Constants.NO_ACCOUNT;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.BUDGET_QUANTITY_THRESHOLD;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_BUDGET_NAME;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_MONTH_STEP;
@@ -26,6 +25,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -120,11 +120,10 @@ public class BudgetServiceImpl implements BudgetService {
             List<Expense> expenses = expenseRepository.findAll(
                     expenseSpecificationBuilder.build(
                             new FilterTransactionsDto(
-                                    NO_ACCOUNT,
+                                    null,
+                                    Set.of(budget.getExpenseCategory().getId()),
                                     budget.getFromDate().toString(),
-                                    budget.getToDate().toString(),
-                                    new String[]{
-                                            String.valueOf(budget.getExpenseCategory().getId())})));
+                                    budget.getToDate().toString())));
             BigDecimal expensesAmount = expenses.stream()
                     .map(Expense::getAmount)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
