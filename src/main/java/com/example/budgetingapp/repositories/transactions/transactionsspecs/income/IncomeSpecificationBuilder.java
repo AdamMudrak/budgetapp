@@ -19,21 +19,13 @@ public class IncomeSpecificationBuilder implements SpecificationBuilder<Income> 
         if ((transactionsDto.accountId() == null
                 && transactionsDto.fromDate() == null
                 && transactionsDto.toDate() == null
-                && transactionsDto.categoryIds() == null)
-                || (transactionsDto.accountId() != null
-                && transactionsDto.accountId().isBlank()
-                && transactionsDto.fromDate() != null
-                && transactionsDto.fromDate().isBlank()
-                && transactionsDto.toDate() != null
-                && transactionsDto.toDate().isBlank()
-                && transactionsDto.categoryIds() != null
-                && transactionsDto.categoryIds().length == 0)) {
+                && transactionsDto.categoryIds() == null)) {
             return null;
         }
-        if (transactionsDto.accountId() != null && !transactionsDto.accountId().isBlank()) {
+        if (transactionsDto.accountId() != null) {
             specification = specification.and(incomeSpecificationProviderManager
                     .getSpecificationProvider("accountId")
-                    .getSpecification(new String[]{transactionsDto.accountId()}));
+                    .getSpecification(new String[]{String.valueOf(transactionsDto.accountId())}));
         }
         if (transactionsDto.fromDate() != null && !transactionsDto.fromDate().isBlank()) {
             specification = specification.and(incomeSpecificationProviderManager
@@ -45,10 +37,11 @@ public class IncomeSpecificationBuilder implements SpecificationBuilder<Income> 
                     .getSpecificationProvider("toDate")
                     .getSpecification(new String[]{transactionsDto.toDate()}));
         }
-        if (transactionsDto.categoryIds() != null && transactionsDto.categoryIds().length != 0) {
+        if (transactionsDto.categoryIds() != null) {
             specification = specification.and(incomeSpecificationProviderManager
                     .getSpecificationProvider("categoryIds")
-                    .getSpecification(transactionsDto.categoryIds()));
+                    .getSpecification(transactionsDto.categoryIds()
+                            .stream().map(String::valueOf).toArray(String[]::new)));
         }
         return specification;
     }
