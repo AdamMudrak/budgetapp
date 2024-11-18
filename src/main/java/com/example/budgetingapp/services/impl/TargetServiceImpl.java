@@ -42,6 +42,7 @@ public class TargetServiceImpl implements TargetService {
             throw new ConflictException("You can't have more than " + TARGET_QUANTITY_THRESHOLD
                     + " targets!");
         }
+        isAccountPresentByCurrencyAndUserId(userId, requestTransactionDto);
         if (targetRepository.existsByUserIdAndName(userId, requestTransactionDto.name())) {
             throw new AlreadyExistsException("You already have a target named "
                     + requestTransactionDto.name());
@@ -134,5 +135,15 @@ public class TargetServiceImpl implements TargetService {
                     RoundingMode.CEILING));
         }
 
+    }
+
+    private void isAccountPresentByCurrencyAndUserId(Long userId,
+                                         TargetTransactionRequestDto targetTransactionRequestDto) {
+        if (!accountRepository.existsByUserIdAndCurrency(
+                userId, targetTransactionRequestDto.currency())) {
+            throw new EntityNotFoundException("No account with currency "
+                    + targetTransactionRequestDto.currency()
+                    + " was found for user with id " + userId);
+        }
     }
 }
