@@ -2,6 +2,7 @@ package com.example.budgetingapp.services;
 
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
+import com.example.budgetingapp.dtos.transactions.request.UpdateRequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByMonthOrYear;
 import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
@@ -14,7 +15,7 @@ public interface TransactionService {
                                            RequestTransactionDto requestTransactionDto);
 
     ResponseTransactionDto updateTransaction(Long userId,
-                                             RequestTransactionDto requestTransactionDto,
+                                             UpdateRequestTransactionDto requestTransactionDto,
                                              Long transactionId);
 
     List<ResponseTransactionDto> getAllTransactions(Long userId,
