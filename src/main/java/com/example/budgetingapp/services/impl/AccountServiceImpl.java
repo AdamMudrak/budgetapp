@@ -65,7 +65,7 @@ public class AccountServiceImpl implements AccountService {
     public List<AccountDto> getAllAccountsByUserId(Long userId) {
         return accountMapper
                 .toDtoList(accountRepository
-                        .getAllByUserId(userId));
+                        .findAllByUserId(userId));
     }
 
     @Override
