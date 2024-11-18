@@ -81,7 +81,10 @@ public class BudgetServiceImpl implements BudgetService {
     private void updateBudgetsBeforeRetrieval(Long userId) {
         budgetRepository.findAllByUserId(userId).forEach(budget -> {
             List<Expense> expenses = expenseRepository.findAllByUserIdUnpaged(userId,
-                    expenseSpecificationBuilder.build(getFilterDtoWithNoAccount(budget)));
+                    expenseSpecificationBuilder.build(getFilterDtoWithNoAccount(budget)))
+                    .stream()
+                    .filter(expense -> expense.getCurrency().equals(budget.getCurrency()))
+                    .toList();
             BigDecimal expensesAmount = expenses.stream()
                     .map(Expense::getAmount)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);

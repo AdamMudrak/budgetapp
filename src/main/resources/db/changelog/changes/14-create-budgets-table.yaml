@@ -29,6 +29,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: currency
+                  type: varchar(64)
+                  constraints:
+                    nullable: false
+              - column:
                   name: limit_sum
                   type: decimal(11,2)
                   constraints:
