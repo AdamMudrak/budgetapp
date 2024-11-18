@@ -117,13 +117,8 @@ public class BudgetServiceImpl implements BudgetService {
 
     private void updateBudgetsBeforeRetrieval(Long userId) {
         budgetRepository.findAllByUserId(userId).forEach(budget -> {
-            List<Expense> expenses = expenseRepository.findAll(
-                    expenseSpecificationBuilder.build(
-                            new FilterTransactionsDto(
-                                    null,
-                                    Set.of(budget.getExpenseCategory().getId()),
-                                    budget.getFromDate().toString(),
-                                    budget.getToDate().toString())));
+            List<Expense> expenses = expenseRepository.findAllByUserIdUnpaged(userId,
+                    expenseSpecificationBuilder.build(getFilterDtoWithNoAccount(budget)));
             BigDecimal expensesAmount = expenses.stream()
                     .map(Expense::getAmount)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -157,5 +152,13 @@ public class BudgetServiceImpl implements BudgetService {
             throw new AlreadyExistsException("You can't create a budget containing category "
                     + budgetRequestDto.categoryId() + " as it is already used in another budget");
         }
+    }
+
+    private FilterTransactionsDto getFilterDtoWithNoAccount(Budget budget) {
+        return new FilterTransactionsDto(
+                null,
+                Set.of(budget.getExpenseCategory().getId()),
+                budget.getFromDate().toString(),
+                budget.getToDate().toString());
     }
 }
