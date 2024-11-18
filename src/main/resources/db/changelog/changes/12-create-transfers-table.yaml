@@ -44,3 +44,8 @@ databaseChangeLog:
                   constraints:
                     foreignKeyName: fk_i_to_account_id
                     references: accounts(id)
+              - column:
+                  name: currency
+                  type: varchar(64)
+                  constraints:
+                    nullable: false

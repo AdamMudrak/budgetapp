@@ -62,6 +62,7 @@ public class TransferServiceImpl implements TransferService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No user with id " + userId + " found"));
         transfer.setUser(currentUser);
+        transfer.setCurrency(toAccount.getCurrency());
 
         accountRepository.save(fromAccount);
         accountRepository.save(toAccount);

@@ -6,6 +6,7 @@ import java.time.LocalDate;
 public record TransferResponseDto(
         Long id,
         String comment,
+        String currency,
         BigDecimal amount,
         LocalDate transactionDate,
         Long fromAccountId,
