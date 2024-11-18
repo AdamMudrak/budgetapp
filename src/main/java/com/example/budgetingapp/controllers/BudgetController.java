@@ -14,16 +14,12 @@ import static com.example.budgetingapp.constants.controllers.BudgetControllerCon
 import static com.example.budgetingapp.constants.controllers.BudgetControllerConstants.DELETE_BUDGET_BY_ID_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.BudgetControllerConstants.GET_ALL_BUDGETS;
 import static com.example.budgetingapp.constants.controllers.BudgetControllerConstants.GET_ALL_BUDGETS_SUMMARY;
-import static com.example.budgetingapp.constants.controllers.BudgetControllerConstants.GET_MAIN_BUDGET_SUMMARY;
-import static com.example.budgetingapp.constants.controllers.BudgetControllerConstants.GET_TOP_LEVEL_BUDGET;
 import static com.example.budgetingapp.constants.controllers.BudgetControllerConstants.SUCCESSFULLY_ADDED;
 import static com.example.budgetingapp.constants.controllers.BudgetControllerConstants.SUCCESSFULLY_DELETED;
 import static com.example.budgetingapp.constants.controllers.BudgetControllerConstants.SUCCESSFULLY_RETRIEVED;
-import static com.example.budgetingapp.constants.controllers.BudgetControllerConstants.SUCCESSFULLY_RETRIEVED_MAIN_BUDGET;
 
 import com.example.budgetingapp.dtos.budgets.request.BudgetRequestDto;
 import com.example.budgetingapp.dtos.budgets.response.BudgetResponseDto;
-import com.example.budgetingapp.dtos.budgets.response.TopLevelBudgetResponseDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.services.BudgetService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,13 +56,6 @@ public class BudgetController {
     public BudgetResponseDto addBudget(@AuthenticationPrincipal User user,
                                        @Valid @RequestBody BudgetRequestDto budgetRequestDto) {
         return budgetService.saveBudget(user.getId(), budgetRequestDto);
-    }
-
-    @Operation(summary = GET_MAIN_BUDGET_SUMMARY)
-    @ApiResponse(responseCode = CODE_200, description = SUCCESSFULLY_RETRIEVED_MAIN_BUDGET)
-    @GetMapping(GET_TOP_LEVEL_BUDGET)
-    public TopLevelBudgetResponseDto getTopLevelBudget(@AuthenticationPrincipal User user) {
-        return budgetService.setAndGetTopLevelBudgetByUserId(user.getId());
     }
 
     @Operation(summary = GET_ALL_BUDGETS_SUMMARY)
