@@ -32,6 +32,8 @@ databaseChangeLog:
               - column:
                   name: currency
                   type: varchar(64)
+                  constraints:
+                    nullable: false
               - column:
                   name: by_default
                   type: boolean
