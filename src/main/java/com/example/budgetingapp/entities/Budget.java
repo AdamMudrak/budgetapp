@@ -38,6 +38,8 @@ public class Budget {
     @JoinColumn(name = EXPENSE_CATEGORY_ID, nullable = false)
     private ExpenseCategory expenseCategory;
     @Column(nullable = false)
+    private String currency;
+    @Column(nullable = false)
     private BigDecimal limitSum;
     @Column(nullable = false)
     private BigDecimal currentSum = BigDecimal.ZERO;

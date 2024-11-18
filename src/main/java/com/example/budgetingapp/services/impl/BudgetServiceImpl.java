@@ -1,12 +1,9 @@
 package com.example.budgetingapp.services.impl;
 
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.BUDGET_QUANTITY_THRESHOLD;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_BUDGET_NAME;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_MONTH_STEP;
 
 import com.example.budgetingapp.dtos.budgets.request.BudgetRequestDto;
 import com.example.budgetingapp.dtos.budgets.response.BudgetResponseDto;
-import com.example.budgetingapp.dtos.budgets.response.TopLevelBudgetResponseDto;
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.entities.Budget;
 import com.example.budgetingapp.entities.User;
@@ -15,6 +12,7 @@ import com.example.budgetingapp.exceptions.conflictexpections.AlreadyExistsExcep
 import com.example.budgetingapp.exceptions.conflictexpections.ConflictException;
 import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
 import com.example.budgetingapp.mappers.BudgetMapper;
+import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.budget.BudgetRepository;
 import com.example.budgetingapp.repositories.categories.ExpenseCategoryRepository;
 import com.example.budgetingapp.repositories.transactions.ExpenseRepository;
@@ -22,8 +20,6 @@ import com.example.budgetingapp.repositories.transactions.transactionsspecs.expe
 import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.BudgetService;
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -38,32 +34,11 @@ public class BudgetServiceImpl implements BudgetService {
     private final BudgetMapper budgetMapper;
     private final ExpenseSpecificationBuilder expenseSpecificationBuilder;
     private final UserRepository userRepository;
-
-    @Override
-    public TopLevelBudgetResponseDto setAndGetTopLevelBudgetByUserId(Long userId) {
-        TopLevelBudgetResponseDto topLevelBudget = getEmptyTopLevelBudget();
-        updateBudgetsBeforeRetrieval(userId);
-        budgetRepository.findAllByUserId(userId)
-                .forEach(budget -> {
-                    topLevelBudget.getCategoryIds()
-                            .add(budget.getExpenseCategory().getId());
-                    if (topLevelBudget.getFromDate().isAfter(budget.getFromDate())) {
-                        topLevelBudget.setFromDate(budget.getFromDate());
-                    }
-                    if (topLevelBudget.getToDate().isBefore(budget.getToDate())) {
-                        topLevelBudget.setToDate(budget.getToDate());
-                    }
-                    topLevelBudget.setLimitSum(topLevelBudget.getLimitSum()
-                            .add(budget.getLimitSum()));
-                    topLevelBudget.setCurrentSum(topLevelBudget.getCurrentSum()
-                            .add(budget.getCurrentSum()));
-                    topLevelBudget.setExceeded(isExceeded(topLevelBudget) < 0);
-                });
-        return topLevelBudget;
-    }
+    private final AccountRepository accountRepository;
 
     @Override
     public BudgetResponseDto saveBudget(Long userId, BudgetRequestDto budgetRequestDto) {
+        isAccountPresentByCurrencyAndUserId(userId, budgetRequestDto);
         if (budgetRepository.countBudgetsByUserId(userId) >= BUDGET_QUANTITY_THRESHOLD) {
             throw new ConflictException("You can't have more than " + BUDGET_QUANTITY_THRESHOLD
                     + " budgets!");
@@ -101,18 +76,6 @@ public class BudgetServiceImpl implements BudgetService {
             throw new EntityNotFoundException(
                     "No budget with id " + budgetId + " was found for user with id " + userId);
         }
-    }
-
-    private TopLevelBudgetResponseDto getEmptyTopLevelBudget() {
-        TopLevelBudgetResponseDto topLevelBudget = new TopLevelBudgetResponseDto();
-        topLevelBudget.setName(DEFAULT_BUDGET_NAME);
-        topLevelBudget.setFromDate(LocalDate.now());
-        topLevelBudget.setToDate(LocalDate.now().plusMonths(DEFAULT_MONTH_STEP));
-        topLevelBudget.setCategoryIds(new HashSet<>());
-        topLevelBudget.setLimitSum(BigDecimal.ZERO);
-        topLevelBudget.setCurrentSum(BigDecimal.ZERO);
-        topLevelBudget.setExceeded(false);
-        return topLevelBudget;
     }
 
     private void updateBudgetsBeforeRetrieval(Long userId) {
@@ -160,5 +123,13 @@ public class BudgetServiceImpl implements BudgetService {
                 Set.of(budget.getExpenseCategory().getId()),
                 budget.getFromDate().toString(),
                 budget.getToDate().toString());
+    }
+
+    private void isAccountPresentByCurrencyAndUserId(Long userId,
+                                                     BudgetRequestDto budgetRequestDto) {
+        if (!accountRepository.existsByUserIdAndCurrency(userId, budgetRequestDto.currency())) {
+            throw new EntityNotFoundException("No account with currency "
+                    + budgetRequestDto.currency() + " was found for user with id " + userId);
+        }
     }
 }

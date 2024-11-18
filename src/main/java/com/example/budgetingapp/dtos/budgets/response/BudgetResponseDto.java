@@ -13,6 +13,7 @@ public class BudgetResponseDto {
     private LocalDate fromDate;
     private LocalDate toDate;
     private Long categoryId;
+    private String currency;
     private BigDecimal limitSum;
     private BigDecimal currentSum;
     private boolean isExceeded;

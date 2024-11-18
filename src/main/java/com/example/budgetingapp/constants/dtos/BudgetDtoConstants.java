@@ -3,6 +3,8 @@ package com.example.budgetingapp.constants.dtos;
 public class BudgetDtoConstants {
     public static final String NAME = "name";
     public static final String NAME_EXAMPLE = "New budget";
+    public static final String CURRENCY = "currency";
+    public static final String CURRENCY_EXAMPLE = "USD";
     public static final String FROM_DATE = "fromDate";
     public static final String FROM_DATE_EXAMPLE = "2024-10-29";
     public static final String TO_DATE = "toDate";

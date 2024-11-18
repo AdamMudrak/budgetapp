@@ -19,6 +19,11 @@ public record BudgetRequestDto(
                 requiredMode = REQUIRED)
         @NotBlank
         String name,
+        @Schema(name = BudgetDtoConstants.CURRENCY,
+                example = BudgetDtoConstants.CURRENCY_EXAMPLE,
+                requiredMode = REQUIRED)
+        @NotBlank
+        String currency,
         @Schema(name = BudgetDtoConstants.FROM_DATE,
                 example = BudgetDtoConstants.FROM_DATE_EXAMPLE,
                 description = BudgetDtoConstants.DATE_DESCRIPTION,
