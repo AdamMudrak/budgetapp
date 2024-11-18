@@ -65,7 +65,7 @@ public class ExpenseCategoryServiceImpl implements CategoryService {
                     () -> new EntityNotFoundException("No expense category with id "
                         + categoryId + " was found for user with id " + userId));
         if (expenseCategory.getName().equals(DEFAULT_CATEGORY_NAME)) {
-            throw new IllegalArgumentException("Can't delete category by default");
+            throw new IllegalArgumentException("Can't update category by default");
         }
         expenseCategory.setName(createCategoryDto.newName());
         return categoryMapper

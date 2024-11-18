@@ -64,6 +64,9 @@ public class IncomeCategoryServiceImpl implements CategoryService {
                 userId).orElseThrow(
                     () -> new EntityNotFoundException("No income category with id "
                         + categoryId + " was found for user with id " + userId));
+        if (incomeCategory.getName().equals(DEFAULT_CATEGORY_NAME)) {
+            throw new IllegalArgumentException("Can't update category by default");
+        }
         incomeCategory.setName(createCategoryDto.newName());
         return categoryMapper
                 .toIncomeCategoryDto(incomeCategoryRepository
