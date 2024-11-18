@@ -1,6 +1,8 @@
 package com.example.budgetingapp.repositories.transactions;
 
+import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.transactions.Income;
+import jakarta.persistence.criteria.Join;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +37,9 @@ public interface IncomeRepository extends JpaRepository<Income, Long>,
     }
 
     private Specification<Income> getUserIdSpecification(Long userId) {
-        return (root, query, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get("userId"), userId);
+        return ((root, query, criteriaBuilder) -> {
+            Join<Income, User> incomeUserJoin = root.join("user");
+            return criteriaBuilder.equal(incomeUserJoin.get("id"), userId);
+        });
     }
 }
