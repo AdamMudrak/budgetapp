@@ -31,6 +31,7 @@ import static com.example.budgetingapp.constants.controllers.transactions.Transa
 
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
+import com.example.budgetingapp.dtos.transactions.request.UpdateRequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByMonthOrYear;
 import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
@@ -131,7 +132,7 @@ public class ExpenseTransactionController {
     @PutMapping(UPDATE_EXPENSE_BY_ID)
     public ResponseTransactionDto updateExpenseTransaction(
             @AuthenticationPrincipal User user,
-            @Valid @RequestBody RequestTransactionDto requestTransactionDto,
+            @Valid @RequestBody UpdateRequestTransactionDto requestTransactionDto,
             @PathVariable @Positive Long transactionId) {
         return expenseTransactionService.updateTransaction(
                 user.getId(), requestTransactionDto, transactionId);

@@ -31,6 +31,7 @@ import static com.example.budgetingapp.constants.controllers.transactions.Transa
 
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
+import com.example.budgetingapp.dtos.transactions.request.UpdateRequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByMonthOrYear;
 import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
@@ -128,8 +129,8 @@ public class IncomeTransactionController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PutMapping(UPDATE_INCOME_BY_ID)
     public ResponseTransactionDto updateIncomeTransaction(@AuthenticationPrincipal User user,
-            @Valid @RequestBody RequestTransactionDto requestTransactionDto,
-            @PathVariable Long transactionId) {
+                              @Valid @RequestBody UpdateRequestTransactionDto requestTransactionDto,
+                              @PathVariable Long transactionId) {
         return incomeTransactionService.updateTransaction(user.getId(),
                 requestTransactionDto, transactionId);
     }
