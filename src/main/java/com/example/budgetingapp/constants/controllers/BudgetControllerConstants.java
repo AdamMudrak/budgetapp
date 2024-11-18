@@ -10,7 +10,6 @@ public class BudgetControllerConstants {
             """;
     public static final String BUDGET = "/budgets";
     public static final String ADD_BUDGET = "/add-budget";
-    public static final String GET_TOP_LEVEL_BUDGET = "/get-top-level-budget";
     public static final String GET_ALL_BUDGETS = "/get-all-budgets";
     public static final String DELETE_BUDGET_BY_ID = "/delete-budget/{budgetId}";
 
@@ -19,10 +18,6 @@ public class BudgetControllerConstants {
 
     public static final String GET_ALL_BUDGETS_SUMMARY = "Get all user's budgets";
     public static final String SUCCESSFULLY_RETRIEVED = "Successfully retrieved budgets";
-
-    public static final String GET_MAIN_BUDGET_SUMMARY = "Get user's main budget for all periods";
-    public static final String SUCCESSFULLY_RETRIEVED_MAIN_BUDGET =
-            "Successfully retrieved main budget";
 
     public static final String DELETE_BUDGET_BY_ID_SUMMARY = "Delete a user's budget";
     public static final String SUCCESSFULLY_DELETED = "Successfully deleted a budget";

@@ -97,10 +97,6 @@ public class BudgetServiceImpl implements BudgetService {
         return (budget.getLimitSum().compareTo(budget.getCurrentSum()));
     }
 
-    private int isExceeded(TopLevelBudgetResponseDto budget) {
-        return (budget.getLimitSum().compareTo(budget.getCurrentSum()));
-    }
-
     private void isCategoryPresentInDb(Long userId, BudgetRequestDto budgetRequestDto) {
         if (!expenseCategoryRepository.existsByIdAndUserId(budgetRequestDto.categoryId(), userId)) {
             throw new EntityNotFoundException("No category with id " + budgetRequestDto.categoryId()
