@@ -74,7 +74,7 @@ public class IncomeCategoryServiceImpl implements CategoryService {
     public List<ResponseCategoryDto> getAllCategoriesByUserId(Long userId, Pageable pageable) {
         return categoryMapper
                 .toIncomeCategoryDtoList(incomeCategoryRepository
-                        .getAllByUserId(userId, pageable));
+                        .findAllByUserId(userId, pageable));
     }
 
     @Override
@@ -91,7 +91,7 @@ public class IncomeCategoryServiceImpl implements CategoryService {
                         .orElseThrow(() -> new EntityNotFoundException(
                                 "No default category was found for user with id " + userId));
 
-        incomeRepository.saveAll(incomeRepository.findAll()
+        incomeRepository.saveAll(incomeRepository.findAllByUserId(userId)
                 .stream()
                 .filter(income -> income.getIncomeCategory().getId()
                         .equals(incomeCategory.getId()))

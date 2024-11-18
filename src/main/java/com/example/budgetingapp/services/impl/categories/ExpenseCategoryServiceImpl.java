@@ -64,6 +64,9 @@ public class ExpenseCategoryServiceImpl implements CategoryService {
                 userId).orElseThrow(
                     () -> new EntityNotFoundException("No expense category with id "
                         + categoryId + " was found for user with id " + userId));
+        if (expenseCategory.getName().equals(DEFAULT_CATEGORY_NAME)) {
+            throw new IllegalArgumentException("Can't delete category by default");
+        }
         expenseCategory.setName(createCategoryDto.newName());
         return categoryMapper
                 .toExpenseCategoryDto(expenseCategoryRepository
@@ -74,7 +77,7 @@ public class ExpenseCategoryServiceImpl implements CategoryService {
     public List<ResponseCategoryDto> getAllCategoriesByUserId(Long userId, Pageable pageable) {
         return categoryMapper
                 .toExpenseCategoryDtoList(expenseCategoryRepository
-                        .getAllByUserId(userId, pageable));
+                        .findAllByUserId(userId, pageable));
     }
 
     @Override
@@ -91,7 +94,7 @@ public class ExpenseCategoryServiceImpl implements CategoryService {
                         .orElseThrow(() -> new EntityNotFoundException(
                                 "No default category was found for user with id " + userId));
 
-        expenseRepository.saveAll(expenseRepository.findAll()
+        expenseRepository.saveAll(expenseRepository.findAllByUserId(userId)
                 .stream()
                 .filter(expense -> expense.getExpenseCategory().getId()
                         .equals(expenseCategory.getId()))

@@ -18,7 +18,7 @@ public interface IncomeCategoryRepository extends JpaRepository<IncomeCategory, 
 
     boolean existsByNameAndUserId(String name, Long userId);
 
-    List<IncomeCategory> getAllByUserId(Long userId, Pageable pageable);
+    List<IncomeCategory> findAllByUserId(Long userId, Pageable pageable);
 
     Optional<IncomeCategory> findByIdAndUserId(Long id, Long userId);
 
