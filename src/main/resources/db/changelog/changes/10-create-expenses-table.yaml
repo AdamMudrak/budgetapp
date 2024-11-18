@@ -35,6 +35,11 @@ databaseChangeLog:
                     foreignKeyName: fk_e_category_id
                     references: expense_categories(id)
               - column:
+                  name: currency
+                  type: varchar(64)
+                  constraints:
+                    nullable: false
+              - column:
                   name: amount
                   type: decimal(11,2)
                   constraints:
