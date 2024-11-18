@@ -30,7 +30,7 @@ public interface TransactionMapper {
     Income toIncome(RequestTransactionDto requestTransactionDto);
 
     @Mapping(source = "accountId", target = "account.id")
-    @Mapping(source = "categoryId", target = "expenseCategory.id")
+    @Mapping(source = "categoryId", target = "incomeCategory.id")
     @Mapping(target = "transactionDate", ignore = true)
     Income toIncome(UpdateRequestTransactionDto requestTransactionDto);
 
