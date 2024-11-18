@@ -1,14 +1,13 @@
 package com.example.budgetingapp.services.impl.transactions;
 
-import static com.example.budgetingapp.constants.Constants.NO_VALUE;
 import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.EXPENSE;
 
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
+import com.example.budgetingapp.dtos.transactions.request.UpdateRequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByMonthOrYear;
 import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
-import com.example.budgetingapp.dtos.transactions.response.helper.TransactionSumByCategoryDto;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.transactions.Expense;
@@ -80,7 +79,7 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
                                                            Pageable pageable) {
         presenceCheck(userId, filterDto);
         Specification<Expense> expenseSpecification = expenseSpecificationBuilder.build(filterDto);
-        return expenseRepository.findAll(expenseSpecification, pageable)
+        return expenseRepository.findAllByUserIdPaged(userId, expenseSpecification, pageable)
                 .stream()
                 .sorted(Comparator.comparing(Expense::getTransactionDate))
                 .map(transactionMapper::toExpenseDto)
@@ -97,27 +96,29 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
         presenceCheck(userId, transactionsDto);
         Specification<Expense> specification = expenseSpecificationBuilder.build(transactionsDto);
         Map<LocalDate, Map<String, BigDecimal>> categorizedExpenseSums =
-                expenseRepository.findAll(specification)
+                expenseRepository.findAllByUserIdUnpaged(userId, specification)
                         .stream()
                         .collect(Collectors.groupingBy(Expense::getTransactionDate,
                                 getCollectorGroupByDateAndThenCategorySum()
                         ));
-        return prepareListOfAccumulatedDtos(categorizedExpenseSums);
+        return transactionsCommonFunctionsUtil.prepareListOfAccumulatedDtos(categorizedExpenseSums);
     }
 
     @Override
     public List<AccumulatedResultDto> getSumOfTransactionsForMonthOrYear(
             Long userId,
             ChartTransactionRequestDtoByMonthOrYear chartTransactionRequestDtoByMonthOrYear) {
-        FilterTransactionsDto filterTransactionsDto = new FilterTransactionsDto(
-                chartTransactionRequestDtoByMonthOrYear.accountId(),
-                chartTransactionRequestDtoByMonthOrYear.categoryIds(),
-                NO_VALUE, NO_VALUE);
+        if (chartTransactionRequestDtoByMonthOrYear.accountId() == null) {
+            throw new IllegalArgumentException("Account id can't be null so as to prevent mixing "
+                    + "transactions with different currencies");
+        }
+        FilterTransactionsDto filterTransactionsDto = transactionsCommonFunctionsUtil
+                .getFilterDtoWithNoDates(chartTransactionRequestDtoByMonthOrYear);
         presenceCheck(userId, filterTransactionsDto);
         Specification<Expense> specification =
                 expenseSpecificationBuilder.build(filterTransactionsDto);
         Map<LocalDate, Map<String, BigDecimal>> categorizedExpenseSums =
-                expenseRepository.findAll(specification)
+                expenseRepository.findAllByUserIdUnpaged(userId, specification)
                         .stream()
                         .collect(Collectors.groupingBy(
                                 expense -> transactionsCommonFunctionsUtil
@@ -125,40 +126,51 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
                                                 chartTransactionRequestDtoByMonthOrYear),
                                 getCollectorGroupByDateAndThenCategorySum()
                         ));
-        return prepareListOfAccumulatedDtos(categorizedExpenseSums);
+        return transactionsCommonFunctionsUtil.prepareListOfAccumulatedDtos(categorizedExpenseSums);
     }
 
     @Transactional
     @Override
     public ResponseTransactionDto updateTransaction(Long userId,
-                                                    RequestTransactionDto requestTransactionDto,
-                                                    Long transactionId) {
+                                                UpdateRequestTransactionDto requestTransactionDto,
+                                                Long transactionId) {
         presenceCheck(userId, requestTransactionDto);
         Expense previousExpense = expenseRepository
-                .findById(transactionId)
+                .findByIdAndUserId(transactionId, userId)
                 .orElseThrow(() ->
                         new EntityNotFoundException(
-                                "No expense with id " + transactionId + " was found"));
+                                "No expense with id " + transactionId
+                                        + " was found for user with id " + userId));
+        if (requestTransactionDto.amount() != null) {
+            Account thisExpenseAccount = accountRepository
+                    .findByIdAndUserId(previousExpense.getAccount().getId(), userId)
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            "No account with id " + previousExpense.getAccount().getId()
+                                    + " was found for user with id " + userId));
+            thisExpenseAccount.setBalance(
+                    thisExpenseAccount.getBalance().add(previousExpense.getAmount()));
+            accountRepository.save(thisExpenseAccount);
 
-        Account previousAccount = accountRepository
-                .findByIdAndUserId(previousExpense.getAccount().getId(), userId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "No account with id " + previousExpense.getAccount().getId()
-                                + " was found for user with id " + userId));
-        previousAccount.setBalance(previousAccount.getBalance().add(previousExpense.getAmount()));
-        accountRepository.save(previousAccount);
+            Account currentAccount;
+            if (requestTransactionDto.accountId() != null) {
+                currentAccount = accountRepository
+                        .findByIdAndUserId(requestTransactionDto.accountId(), userId)
+                        .orElseThrow(() -> new EntityNotFoundException(
+                                "No account with id " + requestTransactionDto.accountId()
+                                        + " was found for user with id " + userId));
+            } else {
+                currentAccount = thisExpenseAccount;
+            }
 
-        Account newAccount = accountRepository
-                .findByIdAndUserId(requestTransactionDto.accountId(), userId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "No account with id " + requestTransactionDto.accountId()
-                                + " was found for user with id " + userId));
-        if (transactionsCommonFunctionsUtil
-                .isSufficientAmount(newAccount, requestTransactionDto) < 0) {
-            throw new TransactionFailedException("Not enough money for transaction");
+            if (transactionsCommonFunctionsUtil
+                    .isSufficientAmount(currentAccount, requestTransactionDto) < 0) {
+                throw new TransactionFailedException("Not enough money for transaction");
+            } else {
+                currentAccount.setBalance(currentAccount.getBalance()
+                        .subtract(requestTransactionDto.amount()));
+                accountRepository.save(currentAccount);
+            }
         }
-        newAccount.setBalance(newAccount.getBalance().subtract(requestTransactionDto.amount()));
-        accountRepository.save(newAccount);
 
         Expense newExpense = transactionMapper.toExpense(requestTransactionDto);
         newExpense.setId(transactionId);
@@ -174,10 +186,10 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
     @Override
     public void deleteByTransactionId(Long userId, Long transactionId) {
         Expense expense = expenseRepository
-                .findById(transactionId)
+                .findByIdAndUserId(transactionId, userId)
                 .orElseThrow(() ->
                         new EntityNotFoundException("No expense with id "
-                                + transactionId + " was found"));
+                                + transactionId + " was found for user with id " + userId));
         Account account = accountRepository
                 .findByIdAndUserId(expense.getAccount().getId(), userId)
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -186,24 +198,6 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
         account.setBalance(account.getBalance().add(expense.getAmount()));
         accountRepository.save(account);
         expenseRepository.deleteById(transactionId);
-    }
-
-    private List<AccumulatedResultDto> prepareListOfAccumulatedDtos(
-            Map<LocalDate, Map<String, BigDecimal>> categorizedExpenseSums) {
-        return categorizedExpenseSums.entrySet().stream()
-                .map(entry -> {
-                    List<TransactionSumByCategoryDto> sumsByDate = entry
-                            .getValue()
-                            .entrySet()
-                            .stream()
-                            .map(dateEntry -> new TransactionSumByCategoryDto(
-                                    dateEntry.getKey(),
-                                    dateEntry.getValue()))
-                            .collect(Collectors.toList());
-                    return new AccumulatedResultDto(entry.getKey(), sumsByDate);
-                })
-                .sorted(Comparator.comparing(AccumulatedResultDto::localDate))
-                .collect(Collectors.toList());
     }
 
     private Collector<Expense, Object, Map<String, BigDecimal>>
@@ -249,7 +243,7 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
         }
     }
 
-    private void presenceCheck(Long userId, RequestTransactionDto requestTransactionDto) {
+    private void presenceCheck(Long userId, UpdateRequestTransactionDto requestTransactionDto) {
         if (!accountRepository.existsByIdAndUserId(requestTransactionDto.accountId(), userId)) {
             throw new EntityNotFoundException("No account with id "
                     + requestTransactionDto.accountId() + " for user with id "

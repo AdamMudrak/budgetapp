@@ -1,14 +1,13 @@
 package com.example.budgetingapp.services.impl.transactions;
 
-import static com.example.budgetingapp.constants.Constants.NO_VALUE;
 import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.INCOME;
 
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
+import com.example.budgetingapp.dtos.transactions.request.UpdateRequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByMonthOrYear;
 import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
-import com.example.budgetingapp.dtos.transactions.response.helper.TransactionSumByCategoryDto;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.transactions.Income;
@@ -76,7 +75,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                                                            Pageable pageable) {
         presenceCheck(userId, filterDto);
         Specification<Income> incomeSpecification = incomeSpecificationBuilder.build(filterDto);
-        return incomeRepository.findAll(incomeSpecification, pageable)
+        return incomeRepository.findAllByUserIdPaged(userId, incomeSpecification, pageable)
                 .stream()
                 .sorted(Comparator.comparing(Income::getTransactionDate))
                 .map(transactionMapper::toIncomeDto)
@@ -93,26 +92,28 @@ public class IncomeTransactionServiceImpl implements TransactionService {
         presenceCheck(userId, transactionsDto);
         Specification<Income> specification = incomeSpecificationBuilder.build(transactionsDto);
         Map<LocalDate, Map<String, BigDecimal>> categorizedIncomeSums =
-                incomeRepository.findAll(specification)
+                incomeRepository.findAllByUserIdUnpaged(userId, specification)
                         .stream()
                         .collect(Collectors.groupingBy(Income::getTransactionDate,
                                 getCollectorGroupByDateAndThenCategorySum()
                         ));
-        return prepareListOfAccumulatedDtos(categorizedIncomeSums);
+        return transactionsCommonFunctionsUtil.prepareListOfAccumulatedDtos(categorizedIncomeSums);
     }
 
     @Override
     public List<AccumulatedResultDto> getSumOfTransactionsForMonthOrYear(Long userId,
                 ChartTransactionRequestDtoByMonthOrYear chartTransactionRequestDtoByMonthOrYear) {
-        FilterTransactionsDto filterTransactionsDto = new FilterTransactionsDto(
-                chartTransactionRequestDtoByMonthOrYear.accountId(),
-                chartTransactionRequestDtoByMonthOrYear.categoryIds(),
-                NO_VALUE,NO_VALUE);
+        if (chartTransactionRequestDtoByMonthOrYear.accountId() == null) {
+            throw new IllegalArgumentException("Account id can't be null so as to prevent mixing "
+                    + "transactions with different currencies");
+        }
+        FilterTransactionsDto filterTransactionsDto = transactionsCommonFunctionsUtil
+                .getFilterDtoWithNoDates(chartTransactionRequestDtoByMonthOrYear);
         presenceCheck(userId, filterTransactionsDto);
         Specification<Income> specification =
                 incomeSpecificationBuilder.build(filterTransactionsDto);
         Map<LocalDate, Map<String, BigDecimal>> categorizedIncomeSums =
-                incomeRepository.findAll(specification)
+                incomeRepository.findAllByUserIdUnpaged(userId, specification)
                         .stream()
                         .collect(Collectors.groupingBy(
                                 income -> transactionsCommonFunctionsUtil
@@ -120,42 +121,50 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                                                 chartTransactionRequestDtoByMonthOrYear),
                                 getCollectorGroupByDateAndThenCategorySum()
                         ));
-        return prepareListOfAccumulatedDtos(categorizedIncomeSums);
+        return transactionsCommonFunctionsUtil.prepareListOfAccumulatedDtos(categorizedIncomeSums);
     }
 
     @Transactional
     @Override
     public ResponseTransactionDto updateTransaction(Long userId,
-                                                    RequestTransactionDto requestTransactionDto,
-                                                    Long transactionId) {
+                                                UpdateRequestTransactionDto requestTransactionDto,
+                                                Long transactionId) {
         presenceCheck(userId, requestTransactionDto);
         Income previousIncome = incomeRepository
                 .findById(transactionId)
                 .orElseThrow(() ->
                         new EntityNotFoundException(
                                 "No income with id " + transactionId + " was found"));
+        if (requestTransactionDto.amount() != null) {
+            Account thisIncomeAccount = accountRepository
+                    .findByIdAndUserId(previousIncome.getAccount().getId(), userId)
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            "No account with id " + previousIncome.getAccount().getId()
+                                    + " was found for user with id " + userId));
 
-        Account previousAccount = accountRepository
-                .findByIdAndUserId(previousIncome.getAccount().getId(), userId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "No account with id " + previousIncome.getAccount().getId()
-                                + " was found for user with id " + userId));
+            if (transactionsCommonFunctionsUtil
+                    .isSufficientAmount(thisIncomeAccount, previousIncome) < 0) {
+                throw new TransactionFailedException("Not enough money for transaction");
+            } else {
+                thisIncomeAccount.setBalance(thisIncomeAccount.getBalance()
+                        .subtract(previousIncome.getAmount()));
+                accountRepository.save(thisIncomeAccount);
+            }
 
-        if (transactionsCommonFunctionsUtil
-                .isSufficientAmount(previousAccount, previousIncome) < 0) {
-            throw new TransactionFailedException("Not enough money for transaction");
+            Account currentAccount;
+            if (requestTransactionDto.accountId() != null) {
+                currentAccount = accountRepository
+                        .findByIdAndUserId(requestTransactionDto.accountId(), userId)
+                        .orElseThrow(() -> new EntityNotFoundException(
+                                "No account with id " + requestTransactionDto.accountId()
+                                        + " was found for user with id " + userId));
+            } else {
+                currentAccount = thisIncomeAccount;
+            }
+            currentAccount.setBalance(
+                    currentAccount.getBalance().add(requestTransactionDto.amount()));
+            accountRepository.save(currentAccount);
         }
-        previousAccount.setBalance(previousAccount.getBalance()
-                .subtract(previousIncome.getAmount()));
-        accountRepository.save(previousAccount);
-
-        Account newAccount = accountRepository
-                .findByIdAndUserId(requestTransactionDto.accountId(), userId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "No account with id " + requestTransactionDto.accountId()
-                                + " was found for user with id " + userId));
-        newAccount.setBalance(newAccount.getBalance().add(requestTransactionDto.amount()));
-        accountRepository.save(newAccount);
 
         Income newIncome = transactionMapper.toIncome(requestTransactionDto);
         newIncome.setId(transactionId);
@@ -171,10 +180,10 @@ public class IncomeTransactionServiceImpl implements TransactionService {
     @Override
     public void deleteByTransactionId(Long userId, Long transactionId) {
         Income income = incomeRepository
-                .findById(transactionId)
+                .findByIdAndUserId(transactionId, userId)
                 .orElseThrow(() ->
                         new EntityNotFoundException("No income with id "
-                                + transactionId + " was found"));
+                                + transactionId + " was found for user with id " + userId));
         Account account = accountRepository
                 .findByIdAndUserId(income.getAccount().getId(), userId)
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -186,24 +195,6 @@ public class IncomeTransactionServiceImpl implements TransactionService {
         account.setBalance(account.getBalance().subtract(income.getAmount()));
         accountRepository.save(account);
         incomeRepository.deleteById(transactionId);
-    }
-
-    private List<AccumulatedResultDto> prepareListOfAccumulatedDtos(
-            Map<LocalDate, Map<String, BigDecimal>> categorizedIncomeSums) {
-        return categorizedIncomeSums.entrySet().stream()
-                .map(entry -> {
-                    List<TransactionSumByCategoryDto> sumsByDate = entry
-                            .getValue()
-                            .entrySet()
-                            .stream()
-                            .map(dateEntry -> new TransactionSumByCategoryDto(
-                                    dateEntry.getKey(),
-                                    dateEntry.getValue()))
-                            .collect(Collectors.toList());
-                    return new AccumulatedResultDto(entry.getKey(), sumsByDate);
-                })
-                .sorted(Comparator.comparing(AccumulatedResultDto::localDate))
-                .collect(Collectors.toList());
     }
 
     private Collector<Income, Object, Map<String, BigDecimal>>
@@ -249,7 +240,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
         }
     }
 
-    private void presenceCheck(Long userId, RequestTransactionDto requestTransactionDto) {
+    private void presenceCheck(Long userId, UpdateRequestTransactionDto requestTransactionDto) {
         if (!accountRepository.existsByIdAndUserId(requestTransactionDto.accountId(), userId)) {
             throw new EntityNotFoundException("No account with id "
                     + requestTransactionDto.accountId() + " for user with id "
