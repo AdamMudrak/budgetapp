@@ -18,10 +18,8 @@ databaseChangeLog:
                   type: varchar(512)
                   constraints:
                     nullable: false
-                    unique: true
               - column:
                   name: action_token
                   type: varchar(512)
                   constraints:
                     nullable: false
-                    unique: true
