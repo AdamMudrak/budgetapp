@@ -65,6 +65,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No user with id " + userId + " found"));
         income.setUser(currentUser);
+        income.setCurrency(account.getCurrency());
         incomeRepository.save(income);
         return transactionMapper.toIncomeDto(income);
     }
@@ -129,6 +130,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
     public ResponseTransactionDto updateTransaction(Long userId,
                                                 UpdateRequestTransactionDto requestTransactionDto,
                                                 Long transactionId) {
+        String currency = "";
         presenceCheck(userId, requestTransactionDto);
         Income previousIncome = incomeRepository
                 .findById(transactionId)
@@ -158,6 +160,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                         .orElseThrow(() -> new EntityNotFoundException(
                                 "No account with id " + requestTransactionDto.accountId()
                                         + " was found for user with id " + userId));
+                currency = currentAccount.getCurrency();
             } else {
                 currentAccount = thisIncomeAccount;
             }
@@ -172,6 +175,9 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No user with id " + userId + " found"));
         newIncome.setUser(currentUser);
+        if (requestTransactionDto.accountId() != null) {
+            newIncome.setCurrency(currency);
+        }
         incomeRepository.save(newIncome);
         return transactionMapper.toIncomeDto(newIncome);
     }

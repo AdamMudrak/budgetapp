@@ -69,6 +69,7 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No user with id " + userId + " found"));
         expense.setUser(currentUser);
+        expense.setCurrency(account.getCurrency());
         expenseRepository.save(expense);
         return transactionMapper.toExpenseDto(expense);
     }
@@ -134,6 +135,7 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
     public ResponseTransactionDto updateTransaction(Long userId,
                                                 UpdateRequestTransactionDto requestTransactionDto,
                                                 Long transactionId) {
+        String currency = "";
         presenceCheck(userId, requestTransactionDto);
         Expense previousExpense = expenseRepository
                 .findByIdAndUserId(transactionId, userId)
@@ -158,6 +160,7 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
                         .orElseThrow(() -> new EntityNotFoundException(
                                 "No account with id " + requestTransactionDto.accountId()
                                         + " was found for user with id " + userId));
+                currency = currentAccount.getCurrency();
             } else {
                 currentAccount = thisExpenseAccount;
             }
@@ -178,6 +181,9 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No user with id " + userId + " found"));
         newExpense.setUser(currentUser);
+        if (requestTransactionDto.accountId() != null) {
+            newExpense.setCurrency(currency);
+        }
         expenseRepository.save(newExpense);
         return transactionMapper.toExpenseDto(newExpense);
     }
