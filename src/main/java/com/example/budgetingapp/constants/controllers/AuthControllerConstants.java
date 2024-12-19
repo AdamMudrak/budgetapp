@@ -25,8 +25,10 @@ public class AuthControllerConstants {
     public static final String CONFIRM_SUMMARY = "Confirm registration of a new user in the app";
     public static final String SUCCESSFULLY_CONFIRMED = "Successfully confirmed registration";
 
-    public static final String LOGIN_SUMMARY = "Log in using existing account";
+    public static final String TELEGRAM_LOGIN_SUMMARY = "Log in using existing telegram account";
     public static final String SUCCESSFULLY_LOGGED_IN = "Successfully logged in in the app";
+
+    public static final String EMAIL_LOGIN_SUMMARY = "Log in using existing email account";
 
     public static final String INITIATE_PASSWORD_RESET_SUMMARY =
             "Initiate password reset via a link sent to your email";
