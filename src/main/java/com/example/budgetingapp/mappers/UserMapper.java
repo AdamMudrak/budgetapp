@@ -16,7 +16,7 @@ public interface UserMapper {
 
     User toTelegramUser(TelegramAuthenticationRequestDto authenticationRequestDto);
 
-    @Mapping(source = "phone", target = "userName")
+    @Mapping(source = "phoneNumber", target = "userName")
     InnerUserLoginRequestDto toInnerUserDto(
             UserTelegramLoginRequestDto userTelegramLoginRequestDto);
 
