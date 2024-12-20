@@ -23,7 +23,7 @@ public class TelegramAuthenticationService {
     private final ActionTokenRepository actionTokenRepository;
     private final UserMapper userMapper;
 
-    public TelegramAuthenticationResponseDto registerOrLogin(
+    public TelegramAuthenticationResponseDto registerOrGetLogin(
             TelegramAuthenticationRequestDto requestDto) {
         ActionToken actionToken = actionTokenRepository.findByActionToken(requestDto.token())
                 .orElseThrow(() ->
@@ -32,7 +32,7 @@ public class TelegramAuthenticationService {
         if (!userRepository.existsByUserName(requestDto.userName())) {
             return register(requestDto);
         } else {
-            return login(requestDto);
+            return getLogin(requestDto);
         }
     }
 
@@ -49,7 +49,8 @@ public class TelegramAuthenticationService {
         return new TelegramAuthenticationResponseDto(SUCCESSFULLY_AUTHENTICATED_VIA_TELEGRAM);
     }
 
-    private TelegramAuthenticationResponseDto login(TelegramAuthenticationRequestDto requestDto) {
+    private TelegramAuthenticationResponseDto getLogin(
+            TelegramAuthenticationRequestDto requestDto) {
         User user = userRepository.findByUserName(requestDto.userName()).orElseThrow(() ->
                 new EntityNotFoundException("User with login "
                         + requestDto.userName() + " was not found"));
