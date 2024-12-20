@@ -8,6 +8,7 @@ import com.example.budgetingapp.dtos.users.request.userloginrequestdtos.UserEmai
 import com.example.budgetingapp.dtos.users.request.userloginrequestdtos.UserTelegramLoginRequestDto;
 import com.example.budgetingapp.entities.User;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(config = MapperConfig.class)
 public interface UserMapper {
@@ -15,8 +16,10 @@ public interface UserMapper {
 
     User toTelegramUser(TelegramAuthenticationRequestDto authenticationRequestDto);
 
+    @Mapping(source = "phone", target = "userName")
     InnerUserLoginRequestDto toInnerUserDto(
             UserTelegramLoginRequestDto userTelegramLoginRequestDto);
 
+    @Mapping(source = "email", target = "userName")
     InnerUserLoginRequestDto toInnerUserDto(UserEmailLoginRequestDto userEmailLoginRequestDto);
 }
