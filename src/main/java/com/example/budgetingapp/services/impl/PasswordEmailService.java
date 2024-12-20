@@ -14,59 +14,41 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.RESE
 
 import com.example.budgetingapp.exceptions.notfoundexceptions.ActionNotFoundException;
 import com.example.budgetingapp.security.EmailLinkParameterProvider;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
-@Setter
-public class PasswordEmailService {
-    private final JavaMailSender mailSender;
+public class PasswordEmailService extends EmailService {
     private final EmailLinkParameterProvider emailLinkParameterProvider;
     @Value(RESET_PATH)
     private String resetPath;
     @Value(CONFIRMATION_PATH)
     private String confirmationPath;
-    private String subject;
-    private String body;
 
-    public void sendMessage(String to, String setText) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(setText);
-        mailSender.send(message);
+    public PasswordEmailService(JavaMailSender mailSender,
+                                EmailLinkParameterProvider emailLinkParameterProvider) {
+        super(mailSender);
+        this.emailLinkParameterProvider = emailLinkParameterProvider;
     }
 
-    public void sendActionMessage(String email, String action) {
+    public void sendActionMessage(String toEmail, String action) {
         switch (action) {
-            case RESET -> {
-                this.setSubject(INITIATE_RANDOM_PASSWORD_SUBJECT);
-                this.setBody(INITIATE_RANDOM_PASSWORD_BODY);
-                this.sendMessage(email, formTextForAction(email, resetPath));
-            }
-            case CONFIRMATION -> {
-                this.setSubject(CONFIRM_REGISTRATION_SUBJECT);
-                this.setBody(CONFIRM_REGISTRATION_BODY);
-                this.sendMessage(email, formTextForAction(email, confirmationPath));
-            }
+            case RESET -> this.sendMessage(toEmail, INITIATE_RANDOM_PASSWORD_SUBJECT,
+                    formTextForAction(toEmail, INITIATE_RANDOM_PASSWORD_BODY, resetPath));
+            case CONFIRMATION -> this.sendMessage(toEmail, CONFIRM_REGISTRATION_SUBJECT,
+                    formTextForAction(toEmail, CONFIRM_REGISTRATION_BODY, confirmationPath));
             default -> throw new ActionNotFoundException("Unknown action " + action);
         }
     }
 
-    public void sendResetPassword(String email, String randomPassword) {
-        this.setSubject(RANDOM_PASSWORD_SUBJECT);
-        this.setBody(RANDOM_PASSWORD_BODY);
-        String mail = body + System.lineSeparator() + randomPassword;
-        this.sendMessage(email, mail);
+    public void sendResetPassword(String toEmail, String randomPassword) {
+        this.sendMessage(toEmail, RANDOM_PASSWORD_SUBJECT,
+                    RANDOM_PASSWORD_BODY + System.lineSeparator() + randomPassword);
     }
 
-    private String formTextForAction(String email, String actionPath) {
-        emailLinkParameterProvider.formRandomParamTokenPair(email);
+    private String formTextForAction(String toEmail, String body, String actionPath) {
+        emailLinkParameterProvider.formRandomParamTokenPair(toEmail);
         return body + System.lineSeparator() + actionPath
                 + emailLinkParameterProvider.getEmailLinkParameter()
                 + SPLITERATOR + emailLinkParameterProvider.getToken();
