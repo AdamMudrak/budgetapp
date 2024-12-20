@@ -41,6 +41,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     private static final String STATUS = "status";
     private static final String ERRORS = "errors";
     private static final String SPLITERATOR = " ";
+    private static final String DOT = ".";
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -148,7 +149,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         if (e instanceof FieldError fieldError) {
             String field = fieldError.getField();
             String message = e.getDefaultMessage();
-            return field + SPLITERATOR + message;
+            return field + SPLITERATOR + message + DOT;
         }
         return e.getDefaultMessage();
     }
@@ -157,7 +158,11 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         Map<String, Object> body = new LinkedHashMap<>();
         body.put(TIMESTAMP, LocalDateTime.now());
         body.put(STATUS, httpStatus);
-        body.put(ERRORS, exception.getMessage());
+        String exceptionMessage = exception.getMessage();
+        if (!exceptionMessage.endsWith(DOT)) {
+            exceptionMessage += DOT;
+        }
+        body.put(ERRORS, exceptionMessage);
         return new ResponseEntity<>(body, httpStatus);
     }
 }
