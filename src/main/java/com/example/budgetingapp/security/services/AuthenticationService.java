@@ -1,5 +1,7 @@
 package com.example.budgetingapp.security.services;
 
+import static com.example.budgetingapp.constants.Constants.EMAIL;
+import static com.example.budgetingapp.constants.Constants.TELEGRAM_PHONE_NUMBER;
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACCESS;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_STRENGTH;
@@ -61,13 +63,13 @@ public class AuthenticationService {
 
     public UserLoginResponseDto authenticateTelegram(UserTelegramLoginRequestDto requestDto) {
         InnerUserLoginRequestDto innerUserLoginRequestDto = interprete(requestDto);
-        isCreatedAndEnabled(innerUserLoginRequestDto);
+        isCreatedAndEnabled(innerUserLoginRequestDto, TELEGRAM_PHONE_NUMBER);
         return getTokens(innerUserLoginRequestDto);
     }
 
     public UserLoginResponseDto authenticateEmail(UserEmailLoginRequestDto requestDto) {
         InnerUserLoginRequestDto innerUserLoginRequestDto = interprete(requestDto);
-        isCreatedAndEnabled(innerUserLoginRequestDto);
+        isCreatedAndEnabled(innerUserLoginRequestDto, EMAIL);
         return getTokens(innerUserLoginRequestDto);
     }
 
@@ -134,10 +136,11 @@ public class AuthenticationService {
                 .matches(userSetNewPasswordRequestDto.currentPassword(), user.getPassword());
     }
 
-    private void isCreatedAndEnabled(InnerUserLoginRequestDto requestDto) {
+    private void isCreatedAndEnabled(InnerUserLoginRequestDto requestDto, String userNameType) {
         User user = userRepository.findByUserName(requestDto.userName())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "User with username " + requestDto.userName() + " was not found"));
+                        "User with " + userNameType + " " + requestDto.userName()
+                                + " was not found"));
         if (!user.isEnabled()) {
             passwordEmailService.sendActionMessage(user.getUsername(), CONFIRMATION);
             throw new LoginException(REGISTERED_BUT_NOT_ACTIVATED);

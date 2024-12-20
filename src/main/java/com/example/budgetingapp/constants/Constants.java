@@ -1,6 +1,8 @@
 package com.example.budgetingapp.constants;
 
 public class Constants {
+    public static final String TELEGRAM_PHONE_NUMBER = "telegram phone number";
+    public static final String EMAIL = "email";
     public static final String MONTH = "MONTH";
     public static final String YEAR = "YEAR";
 
