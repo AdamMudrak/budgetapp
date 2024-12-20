@@ -16,7 +16,7 @@ public record UserTelegramLoginRequestDto(
         requiredMode = REQUIRED)
         @NotBlank
         @Phone
-        String phone,
+        String phoneNumber,
 
         @Schema(name = UserDtoConstants.PASSWORD,
         example = UserDtoConstants.PASSWORD_EXAMPLE,
