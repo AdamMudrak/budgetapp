@@ -63,13 +63,13 @@ public class AuthenticationService {
 
     public UserLoginResponseDto authenticateTelegram(UserTelegramLoginRequestDto requestDto) {
         InnerUserLoginRequestDto innerUserLoginRequestDto = interprete(requestDto);
-        isCreatedAndEnabled(innerUserLoginRequestDto, TELEGRAM_PHONE_NUMBER);
+        isCreatedAndEnabled(innerUserLoginRequestDto.userName(), TELEGRAM_PHONE_NUMBER);
         return getTokens(innerUserLoginRequestDto);
     }
 
     public UserLoginResponseDto authenticateEmail(UserEmailLoginRequestDto requestDto) {
         InnerUserLoginRequestDto innerUserLoginRequestDto = interprete(requestDto);
-        isCreatedAndEnabled(innerUserLoginRequestDto, EMAIL);
+        isCreatedAndEnabled(innerUserLoginRequestDto.userName(), EMAIL);
         return getTokens(innerUserLoginRequestDto);
     }
 
@@ -79,6 +79,7 @@ public class AuthenticationService {
             throw new EntityNotFoundException(
                     "User with email " + email + " was not found");
         }
+        isCreatedAndEnabled(email, EMAIL);
         passwordEmailService.sendActionMessage(email, RESET);
         return new UserPasswordResetResponseDto(SUCCESS_EMAIL);
     }
@@ -136,10 +137,10 @@ public class AuthenticationService {
                 .matches(userSetNewPasswordRequestDto.currentPassword(), user.getPassword());
     }
 
-    private void isCreatedAndEnabled(InnerUserLoginRequestDto requestDto, String userNameType) {
-        User user = userRepository.findByUserName(requestDto.userName())
+    private void isCreatedAndEnabled(String userName, String userNameType) {
+        User user = userRepository.findByUserName(userName)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "User with " + userNameType + " " + requestDto.userName()
+                        "User with " + userNameType + " " + userName
                                 + " was not found"));
         if (!user.isEnabled()) {
             passwordEmailService.sendActionMessage(user.getUsername(), CONFIRMATION);
