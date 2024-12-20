@@ -15,10 +15,11 @@ import static com.example.budgetingapp.constants.controllers.AuthControllerConst
 import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.CHANGE_PASSWORD_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.CONFIRM_REGISTRATION;
 import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.CONFIRM_SUMMARY;
+import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.EMAIL_LOGIN_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.FORGOT_PASSWORD;
 import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.INITIATE_PASSWORD_RESET_SUMMARY;
-import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.LOGIN;
-import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.LOGIN_SUMMARY;
+import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.LOGIN_EMAIL;
+import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.LOGIN_TELEGRAM;
 import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.REFRESH_ACCESS_TOKEN;
 import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.REFRESH_ACCESS_TOKEN_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.REGISTER;
@@ -35,13 +36,15 @@ import static com.example.budgetingapp.constants.controllers.AuthControllerConst
 import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.SUCCESSFULLY_RESET_PASSWORD;
 import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.TELEGRAM_AUTH;
 import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.TELEGRAM_AUTH_SUMMARY;
+import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.TELEGRAM_LOGIN_SUMMARY;
 
 import com.example.budgetingapp.constants.Constants;
 import com.example.budgetingapp.dtos.users.request.TelegramAuthenticationRequestDto;
 import com.example.budgetingapp.dtos.users.request.UserGetLinkToSetRandomPasswordRequestDto;
-import com.example.budgetingapp.dtos.users.request.UserLoginRequestDto;
 import com.example.budgetingapp.dtos.users.request.UserRegistrationRequestDto;
 import com.example.budgetingapp.dtos.users.request.UserSetNewPasswordRequestDto;
+import com.example.budgetingapp.dtos.users.request.userloginrequestdtos.UserEmailLoginRequestDto;
+import com.example.budgetingapp.dtos.users.request.userloginrequestdtos.UserTelegramLoginRequestDto;
 import com.example.budgetingapp.dtos.users.response.AccessTokenResponseDto;
 import com.example.budgetingapp.dtos.users.response.TelegramAuthenticationResponseDto;
 import com.example.budgetingapp.dtos.users.response.UserLoginResponseDto;
@@ -103,14 +106,25 @@ public class AuthController {
                         randomParamFromHttpRequestUtil.getToken()));
     }
 
-    @Operation(summary = LOGIN_SUMMARY)
+    @Operation(summary = TELEGRAM_LOGIN_SUMMARY)
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_LOGGED_IN)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @ApiResponse(responseCode = CODE_403, description = ACCESS_DENIED)
-    @PostMapping(LOGIN)
-    public UserLoginResponseDto login(@RequestBody @Valid UserLoginRequestDto request) {
-        return authenticationService.authenticate(request);
+    @PostMapping(LOGIN_TELEGRAM)
+    public UserLoginResponseDto loginTelegram(@RequestBody @Valid
+                                                  UserTelegramLoginRequestDto request) {
+        return authenticationService.authenticateTelegram(request);
+    }
+
+    @Operation(summary = EMAIL_LOGIN_SUMMARY)
+    @ApiResponse(responseCode = CODE_200, description =
+            SUCCESSFULLY_LOGGED_IN)
+    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
+    @ApiResponse(responseCode = CODE_403, description = ACCESS_DENIED)
+    @PostMapping(LOGIN_EMAIL)
+    public UserLoginResponseDto loginEmail(@RequestBody @Valid UserEmailLoginRequestDto request) {
+        return authenticationService.authenticateEmail(request);
     }
 
     @Operation(summary = INITIATE_PASSWORD_RESET_SUMMARY)
@@ -157,7 +171,7 @@ public class AuthController {
     @PostMapping(TELEGRAM_AUTH)
     public TelegramAuthenticationResponseDto telegramAuth(@RequestBody @Valid
                               TelegramAuthenticationRequestDto telegramAuthenticationRequestDto) {
-        return telegramAuthenticationService.registerOrLogin(telegramAuthenticationRequestDto);
+        return telegramAuthenticationService.registerOrGetLogin(telegramAuthenticationRequestDto);
     }
 
     @Operation(summary = REFRESH_ACCESS_TOKEN_SUMMARY, hidden = true)

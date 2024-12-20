@@ -13,8 +13,10 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.SUCC
 
 import com.example.budgetingapp.constants.controllers.AuthControllerConstants;
 import com.example.budgetingapp.constants.security.SecurityConstants;
-import com.example.budgetingapp.dtos.users.request.UserLoginRequestDto;
 import com.example.budgetingapp.dtos.users.request.UserSetNewPasswordRequestDto;
+import com.example.budgetingapp.dtos.users.request.userloginrequestdtos.InnerUserLoginRequestDto;
+import com.example.budgetingapp.dtos.users.request.userloginrequestdtos.UserEmailLoginRequestDto;
+import com.example.budgetingapp.dtos.users.request.userloginrequestdtos.UserTelegramLoginRequestDto;
 import com.example.budgetingapp.dtos.users.response.AccessTokenResponseDto;
 import com.example.budgetingapp.dtos.users.response.UserLoginResponseDto;
 import com.example.budgetingapp.dtos.users.response.UserPasswordResetResponseDto;
@@ -24,6 +26,7 @@ import com.example.budgetingapp.exceptions.forbidden.LoginException;
 import com.example.budgetingapp.exceptions.gone.LinkExpiredException;
 import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
 import com.example.budgetingapp.exceptions.unauthorized.PasswordMismatch;
+import com.example.budgetingapp.mappers.UserMapper;
 import com.example.budgetingapp.repositories.paramtoken.ParamTokenRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.security.RandomStringUtil;
@@ -48,6 +51,7 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class AuthenticationService {
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtStrategy jwtStrategy;
@@ -55,17 +59,16 @@ public class AuthenticationService {
     private final RandomStringUtil randomStringUtil;
     private final ParamTokenRepository paramTokenRepository;
 
-    public UserLoginResponseDto authenticate(UserLoginRequestDto requestDto) {
-        isCreatedAndEnabled(requestDto);
-        final Authentication authentication = authenticationManager
-                .authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                requestDto.userName(), requestDto.password()));
-        JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
-        String accessToken = jwtAbstractUtil.generateToken(authentication.getName());
-        jwtAbstractUtil = jwtStrategy.getStrategy(REFRESH);
-        String refreshToken = jwtAbstractUtil.generateToken(authentication.getName());
-        return new UserLoginResponseDto(accessToken, refreshToken);
+    public UserLoginResponseDto authenticateTelegram(UserTelegramLoginRequestDto requestDto) {
+        InnerUserLoginRequestDto innerUserLoginRequestDto = interprete(requestDto);
+        isCreatedAndEnabled(innerUserLoginRequestDto);
+        return getTokens(innerUserLoginRequestDto);
+    }
+
+    public UserLoginResponseDto authenticateEmail(UserEmailLoginRequestDto requestDto) {
+        InnerUserLoginRequestDto innerUserLoginRequestDto = interprete(requestDto);
+        isCreatedAndEnabled(innerUserLoginRequestDto);
+        return getTokens(innerUserLoginRequestDto);
     }
 
     public UserPasswordResetResponseDto initiatePasswordReset(String email) {
@@ -131,10 +134,10 @@ public class AuthenticationService {
                 .matches(userSetNewPasswordRequestDto.currentPassword(), user.getPassword());
     }
 
-    private void isCreatedAndEnabled(UserLoginRequestDto requestDto) {
+    private void isCreatedAndEnabled(InnerUserLoginRequestDto requestDto) {
         User user = userRepository.findByUserName(requestDto.userName())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "User with email " + requestDto.userName() + " was not found"));
+                        "User with username " + requestDto.userName() + " was not found"));
         if (!user.isEnabled()) {
             passwordEmailService.sendActionMessage(user.getUsername(), CONFIRMATION);
             throw new LoginException(REGISTERED_BUT_NOT_ACTIVATED);
@@ -164,5 +167,27 @@ public class AuthenticationService {
             bearerToken = bearerToken.substring(SecurityConstants.BEGIN_INDEX);
         }
         return bearerToken;
+    }
+
+    private InnerUserLoginRequestDto interprete(
+            UserTelegramLoginRequestDto userTelegramLoginRequestDto) {
+        return userMapper.toInnerUserDto(userTelegramLoginRequestDto);
+    }
+
+    private InnerUserLoginRequestDto interprete(
+            UserEmailLoginRequestDto userEmailLoginRequestDto) {
+        return userMapper.toInnerUserDto(userEmailLoginRequestDto);
+    }
+
+    private UserLoginResponseDto getTokens(InnerUserLoginRequestDto innerUserLoginRequestDto) {
+        final Authentication authentication = authenticationManager
+                .authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                        innerUserLoginRequestDto.userName(), innerUserLoginRequestDto.password()));
+        JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
+        String accessToken = jwtAbstractUtil.generateToken(authentication.getName());
+        jwtAbstractUtil = jwtStrategy.getStrategy(REFRESH);
+        String refreshToken = jwtAbstractUtil.generateToken(authentication.getName());
+        return new UserLoginResponseDto(accessToken, refreshToken);
     }
 }
