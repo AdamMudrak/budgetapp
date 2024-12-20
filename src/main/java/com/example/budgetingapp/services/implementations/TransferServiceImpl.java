@@ -1,4 +1,4 @@
-package com.example.budgetingapp.services.impl;
+package com.example.budgetingapp.services.implementations;
 
 import com.example.budgetingapp.dtos.transfers.request.TransferRequestDto;
 import com.example.budgetingapp.dtos.transfers.response.TransferResponseDto;
@@ -12,7 +12,7 @@ import com.example.budgetingapp.mappers.TransferMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.transfer.TransferRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
-import com.example.budgetingapp.services.TransferService;
+import com.example.budgetingapp.services.interfaces.TransferService;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;

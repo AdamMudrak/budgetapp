@@ -1,4 +1,4 @@
-package com.example.budgetingapp.services;
+package com.example.budgetingapp.services.interfaces;
 
 import com.example.budgetingapp.dtos.accounts.request.CreateAccountDto;
 import com.example.budgetingapp.dtos.accounts.request.UpdateAccountDto;

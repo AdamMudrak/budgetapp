@@ -1,4 +1,4 @@
-package com.example.budgetingapp.services.impl;
+package com.example.budgetingapp.services.implementations;
 
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACTION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION;
@@ -17,7 +17,8 @@ import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
 import com.example.budgetingapp.security.services.RegistrationDefaultUserObjectsUtil;
-import com.example.budgetingapp.services.UserService;
+import com.example.budgetingapp.services.email.PasswordEmailService;
+import com.example.budgetingapp.services.interfaces.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

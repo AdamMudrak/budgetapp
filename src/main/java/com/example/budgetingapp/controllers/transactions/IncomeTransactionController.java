@@ -36,7 +36,7 @@ import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactio
 import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
 import com.example.budgetingapp.entities.User;
-import com.example.budgetingapp.services.TransactionService;
+import com.example.budgetingapp.services.interfaces.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

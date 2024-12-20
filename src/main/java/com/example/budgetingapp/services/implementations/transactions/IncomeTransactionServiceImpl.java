@@ -1,4 +1,4 @@
-package com.example.budgetingapp.services.impl.transactions;
+package com.example.budgetingapp.services.implementations.transactions;
 
 import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.INCOME;
 
@@ -19,7 +19,7 @@ import com.example.budgetingapp.repositories.categories.IncomeCategoryRepository
 import com.example.budgetingapp.repositories.transactions.IncomeRepository;
 import com.example.budgetingapp.repositories.transactions.transactionsspecs.income.IncomeSpecificationBuilder;
 import com.example.budgetingapp.repositories.user.UserRepository;
-import com.example.budgetingapp.services.TransactionService;
+import com.example.budgetingapp.services.interfaces.TransactionService;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;

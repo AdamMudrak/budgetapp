@@ -34,7 +34,7 @@ import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.security.RandomStringUtil;
 import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
-import com.example.budgetingapp.services.impl.PasswordEmailService;
+import com.example.budgetingapp.services.email.PasswordEmailService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

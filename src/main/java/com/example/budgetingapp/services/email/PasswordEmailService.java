@@ -1,4 +1,4 @@
-package com.example.budgetingapp.services.impl;
+package com.example.budgetingapp.services.email;
 
 import static com.example.budgetingapp.constants.Constants.SPLITERATOR;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION;

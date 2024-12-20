@@ -1,4 +1,4 @@
-package com.example.budgetingapp.services.impl;
+package com.example.budgetingapp.services.implementations;
 
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.ACCOUNT_QUANTITY_THRESHOLD;
 
@@ -13,7 +13,7 @@ import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundExce
 import com.example.budgetingapp.mappers.AccountMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
-import com.example.budgetingapp.services.AccountService;
+import com.example.budgetingapp.services.interfaces.AccountService;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;

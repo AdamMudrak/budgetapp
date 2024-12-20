@@ -1,6 +1,6 @@
-package com.example.budgetingapp.services.impl.categories;
+package com.example.budgetingapp.services.implementations.categories;
 
-import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.EXPENSE;
+import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.INCOME;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.CATEGORY_QUANTITY_THRESHOLD;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_CATEGORY_NAME;
 
@@ -8,15 +8,15 @@ import com.example.budgetingapp.dtos.categories.request.CreateCategoryDto;
 import com.example.budgetingapp.dtos.categories.request.UpdateCategoryDto;
 import com.example.budgetingapp.dtos.categories.response.ResponseCategoryDto;
 import com.example.budgetingapp.entities.User;
-import com.example.budgetingapp.entities.categories.ExpenseCategory;
+import com.example.budgetingapp.entities.categories.IncomeCategory;
 import com.example.budgetingapp.exceptions.conflictexpections.AlreadyExistsException;
 import com.example.budgetingapp.exceptions.conflictexpections.ConflictException;
 import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
 import com.example.budgetingapp.mappers.CategoryMapper;
-import com.example.budgetingapp.repositories.categories.ExpenseCategoryRepository;
-import com.example.budgetingapp.repositories.transactions.ExpenseRepository;
+import com.example.budgetingapp.repositories.categories.IncomeCategoryRepository;
+import com.example.budgetingapp.repositories.transactions.IncomeRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
-import com.example.budgetingapp.services.CategoryService;
+import com.example.budgetingapp.services.interfaces.CategoryService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,82 +24,82 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-@Qualifier(EXPENSE)
+@Qualifier(INCOME)
 @RequiredArgsConstructor
-public class ExpenseCategoryServiceImpl implements CategoryService {
+public class IncomeCategoryServiceImpl implements CategoryService {
     private final CategoryMapper categoryMapper;
-    private final ExpenseCategoryRepository expenseCategoryRepository;
+    private final IncomeCategoryRepository incomeCategoryRepository;
     private final UserRepository userRepository;
-    private final ExpenseRepository expenseRepository;
+    private final IncomeRepository incomeRepository;
 
     @Override
     public ResponseCategoryDto saveCategory(Long userId, CreateCategoryDto createCategoryDto) {
-        if (expenseCategoryRepository.countCategoriesByUserId(userId)
+        if (incomeCategoryRepository.countCategoriesByUserId(userId)
                 >= CATEGORY_QUANTITY_THRESHOLD) {
             throw new ConflictException("You can't have more than " + CATEGORY_QUANTITY_THRESHOLD
-                    + " expense categories!");
+                    + " income categories!");
         }
         User currentUser = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No user with id " + userId + " found"));
-        if (expenseCategoryRepository.existsByNameAndUserId(createCategoryDto.name(), userId)) {
-            throw new ConflictException("Expense category with name "
+        if (incomeCategoryRepository.existsByNameAndUserId(createCategoryDto.name(), userId)) {
+            throw new ConflictException("Income category with name "
                     + createCategoryDto.name() + " already exists");
         }
-        ExpenseCategory expenseCategory =
-                categoryMapper.toExpenseCategory(createCategoryDto);
-        expenseCategory.setUser(currentUser);
-        expenseCategoryRepository.save(expenseCategory);
-        return categoryMapper.toExpenseCategoryDto(expenseCategory);
+        IncomeCategory incomeCategory =
+                categoryMapper.toIncomeCategory(createCategoryDto);
+        incomeCategory.setUser(currentUser);
+        incomeCategoryRepository.save(incomeCategory);
+        return categoryMapper.toIncomeCategoryDto(incomeCategory);
     }
 
     @Override
     public ResponseCategoryDto updateCategory(Long userId, Long categoryId,
                                               UpdateCategoryDto createCategoryDto) {
-        if (expenseCategoryRepository.existsByNameAndUserId(createCategoryDto.newName(), userId)) {
-            throw new AlreadyExistsException("You already have expense category named "
+        if (incomeCategoryRepository.existsByNameAndUserId(createCategoryDto.newName(), userId)) {
+            throw new AlreadyExistsException("You already have income category named "
                     + createCategoryDto.newName());
         }
-        ExpenseCategory expenseCategory = expenseCategoryRepository.findByIdAndUserId(categoryId,
+        IncomeCategory incomeCategory = incomeCategoryRepository.findByIdAndUserId(categoryId,
                 userId).orElseThrow(
-                    () -> new EntityNotFoundException("No expense category with id "
+                    () -> new EntityNotFoundException("No income category with id "
                         + categoryId + " was found for user with id " + userId));
-        if (expenseCategory.getName().equals(DEFAULT_CATEGORY_NAME)) {
+        if (incomeCategory.getName().equals(DEFAULT_CATEGORY_NAME)) {
             throw new IllegalArgumentException("Can't update category by default");
         }
-        expenseCategory.setName(createCategoryDto.newName());
+        incomeCategory.setName(createCategoryDto.newName());
         return categoryMapper
-                .toExpenseCategoryDto(expenseCategoryRepository
-                        .save(expenseCategory));
+                .toIncomeCategoryDto(incomeCategoryRepository
+                        .save(incomeCategory));
     }
 
     @Override
     public List<ResponseCategoryDto> getAllCategoriesByUserId(Long userId, Pageable pageable) {
         return categoryMapper
-                .toExpenseCategoryDtoList(expenseCategoryRepository
+                .toIncomeCategoryDtoList(incomeCategoryRepository
                         .findAllByUserId(userId, pageable));
     }
 
     @Override
     public void deleteByCategoryIdAndUserId(Long userId, Long categoryId) {
-        ExpenseCategory expenseCategory = expenseCategoryRepository
+        IncomeCategory incomeCategory = incomeCategoryRepository
                 .findByIdAndUserId(categoryId, userId).orElseThrow(
                         () -> new EntityNotFoundException(
-                        "No category with id " + categoryId + " for user with id " + userId));
-        if (expenseCategory.getName().equals(DEFAULT_CATEGORY_NAME)) {
+                            "No category with id " + categoryId + " for user with id " + userId));
+        if (incomeCategory.getName().equals(DEFAULT_CATEGORY_NAME)) {
             throw new IllegalArgumentException("Can't delete category by default");
         }
-        ExpenseCategory defaultCategory =
-                expenseCategoryRepository.findByNameAndUserId(DEFAULT_CATEGORY_NAME, userId)
+        IncomeCategory defaultCategory =
+                incomeCategoryRepository.findByNameAndUserId(DEFAULT_CATEGORY_NAME, userId)
                         .orElseThrow(() -> new EntityNotFoundException(
                                 "No default category was found for user with id " + userId));
 
-        expenseRepository.saveAll(expenseRepository.findAllByUserId(userId)
+        incomeRepository.saveAll(incomeRepository.findAllByUserId(userId)
                 .stream()
-                .filter(expense -> expense.getExpenseCategory().getId()
-                        .equals(expenseCategory.getId()))
-                .peek(expense -> expense.setExpenseCategory(defaultCategory)).toList());
+                .filter(income -> income.getIncomeCategory().getId()
+                        .equals(incomeCategory.getId()))
+                .peek(income -> income.setIncomeCategory(defaultCategory)).toList());
 
-        expenseCategoryRepository.deleteByIdAndUserId(categoryId, userId);
+        incomeCategoryRepository.deleteByIdAndUserId(categoryId, userId);
     }
 }

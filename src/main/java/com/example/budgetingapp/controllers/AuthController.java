@@ -54,7 +54,7 @@ import com.example.budgetingapp.exceptions.badrequest.RegistrationException;
 import com.example.budgetingapp.security.RandomParamFromHttpRequestUtil;
 import com.example.budgetingapp.security.services.AuthenticationService;
 import com.example.budgetingapp.security.services.TelegramAuthenticationService;
-import com.example.budgetingapp.services.UserService;
+import com.example.budgetingapp.services.interfaces.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -1,4 +1,4 @@
-package com.example.budgetingapp.services;
+package com.example.budgetingapp.services.interfaces;
 
 import com.example.budgetingapp.dtos.categories.request.CreateCategoryDto;
 import com.example.budgetingapp.dtos.categories.request.UpdateCategoryDto;

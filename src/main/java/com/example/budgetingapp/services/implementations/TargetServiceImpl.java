@@ -1,4 +1,4 @@
-package com.example.budgetingapp.services.impl;
+package com.example.budgetingapp.services.implementations;
 
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGET_QUANTITY_THRESHOLD;
 
@@ -16,7 +16,7 @@ import com.example.budgetingapp.mappers.TargetMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.target.TargetRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
-import com.example.budgetingapp.services.TargetService;
+import com.example.budgetingapp.services.interfaces.TargetService;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;

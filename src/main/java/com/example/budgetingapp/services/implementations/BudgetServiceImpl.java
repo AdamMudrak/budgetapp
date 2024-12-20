@@ -1,4 +1,4 @@
-package com.example.budgetingapp.services.impl;
+package com.example.budgetingapp.services.implementations;
 
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.BUDGET_QUANTITY_THRESHOLD;
 
@@ -18,7 +18,7 @@ import com.example.budgetingapp.repositories.categories.ExpenseCategoryRepositor
 import com.example.budgetingapp.repositories.transactions.ExpenseRepository;
 import com.example.budgetingapp.repositories.transactions.transactionsspecs.expense.ExpenseSpecificationBuilder;
 import com.example.budgetingapp.repositories.user.UserRepository;
-import com.example.budgetingapp.services.BudgetService;
+import com.example.budgetingapp.services.interfaces.BudgetService;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;

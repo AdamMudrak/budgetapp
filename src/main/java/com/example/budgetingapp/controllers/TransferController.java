@@ -18,7 +18,7 @@ import static com.example.budgetingapp.constants.controllers.TransferControllerC
 import com.example.budgetingapp.dtos.transfers.request.TransferRequestDto;
 import com.example.budgetingapp.dtos.transfers.response.TransferResponseDto;
 import com.example.budgetingapp.entities.User;
-import com.example.budgetingapp.services.TransferService;
+import com.example.budgetingapp.services.interfaces.TransferService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

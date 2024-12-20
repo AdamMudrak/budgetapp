@@ -1,4 +1,4 @@
-package com.example.budgetingapp.services.impl.transactions;
+package com.example.budgetingapp.services.implementations.transactions;
 
 import static com.example.budgetingapp.constants.Constants.MONTH;
 import static com.example.budgetingapp.constants.Constants.NO_VALUE;
