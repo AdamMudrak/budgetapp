@@ -57,6 +57,7 @@ public class SecurityConfig {
                         auth -> auth
                                 .requestMatchers(
                                         antMatcher(ConfigConstants.AUTH_MATCHER),
+                                        antMatcher(ConfigConstants.SUPPORT_MATCHER),
                                         antMatcher(ConfigConstants.SWAGGER_MATCHER),
                                         antMatcher(ConfigConstants.SWAGGER_DOCS_MATCHER),
                                         antMatcher(ConfigConstants.ERRORS_MATCHER)
