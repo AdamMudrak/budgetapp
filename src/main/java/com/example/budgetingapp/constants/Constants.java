@@ -1,6 +1,9 @@
 package com.example.budgetingapp.constants;
 
 public class Constants {
+    public static final String SUPPORT_EMAIL = "${spring.mail.username}";
+    public static final String SUPPORT_EMAIL_SUBJECT = "A request from ";
+
     public static final String TELEGRAM_PHONE_NUMBER = "telegram phone number";
     public static final String EMAIL = "email";
     public static final String MONTH = "MONTH";
@@ -11,6 +14,8 @@ public class Constants {
     public static final int MONTHS_IN_A_YEAR = 12;
 
     public static final String SPLITERATOR = "=";
+    public static final String LEFT_PARENTHESIS = "(";
+    public static final String RIGHT_PARENTHESIS = ")";
 
     public static final String INVALID_ENTITY_VALUE =
             "One of the parameters is invalid. API will show which one";
