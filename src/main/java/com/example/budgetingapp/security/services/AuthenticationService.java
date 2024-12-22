@@ -1,6 +1,7 @@
 package com.example.budgetingapp.security.services;
 
 import static com.example.budgetingapp.constants.Constants.EMAIL;
+import static com.example.budgetingapp.constants.Constants.PASSWORD_RESET_CONFIRMATION_LINK;
 import static com.example.budgetingapp.constants.Constants.TELEGRAM_PHONE_NUMBER;
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACCESS;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION;
@@ -10,7 +11,6 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.REFR
 import static com.example.budgetingapp.constants.security.SecurityConstants.REGISTERED_BUT_NOT_ACTIVATED;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RESET;
 import static com.example.budgetingapp.constants.security.SecurityConstants.SUCCESSFUL_CHANGE_MESSAGE;
-import static com.example.budgetingapp.constants.security.SecurityConstants.SUCCESSFUL_RESET_MSG;
 import static com.example.budgetingapp.constants.security.SecurityConstants.SUCCESS_EMAIL;
 
 import com.example.budgetingapp.constants.controllers.AuthControllerConstants;
@@ -34,6 +34,7 @@ import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.security.RandomStringUtil;
 import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
+import com.example.budgetingapp.services.RedirectUtil;
 import com.example.budgetingapp.services.email.PasswordEmailService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
@@ -42,6 +43,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -52,6 +54,7 @@ import org.springframework.util.StringUtils;
 @Component
 @RequiredArgsConstructor
 public class AuthenticationService {
+    private final RedirectUtil redirectUtil;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
@@ -84,7 +87,7 @@ public class AuthenticationService {
         return new UserPasswordResetResponseDto(SUCCESS_EMAIL);
     }
 
-    public UserPasswordResetResponseDto confirmResetPassword(String token) {
+    public ResponseEntity<Void> confirmResetPassword(String token) {
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
         try {
             jwtAbstractUtil.isValidToken(token);
@@ -99,7 +102,7 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(randomPassword));
         userRepository.save(user);
         passwordEmailService.sendResetPassword(email, randomPassword);
-        return new UserPasswordResetResponseDto(SUCCESSFUL_RESET_MSG);
+        return redirectUtil.redirect(PASSWORD_RESET_CONFIRMATION_LINK);
     }
 
     public UserPasswordResetResponseDto changePassword(HttpServletRequest httpServletRequest,
