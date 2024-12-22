@@ -62,6 +62,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -98,7 +99,7 @@ public class AuthController {
             SUCCESSFULLY_CONFIRMED)
     @ApiResponse(responseCode = CODE_403, description = ACCESS_DENIED)
     @GetMapping(CONFIRM_REGISTRATION)
-    public UserRegistrationResponseDto confirmRegistration(HttpServletRequest httpServletRequest) {
+    public ResponseEntity<Void> confirmRegistration(HttpServletRequest httpServletRequest) {
         randomParamFromHttpRequestUtil.parseRandomParameterAndToken(httpServletRequest);
         return userService
                 .confirmRegistration(randomParamFromHttpRequestUtil.getTokenFromRepo(
@@ -131,9 +132,9 @@ public class AuthController {
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_INITIATED_PASSWORD_RESET)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @PostMapping(FORGOT_PASSWORD)
-    public UserPasswordResetResponseDto initiatePasswordReset(@RequestBody
-                                          @Valid UserGetLinkToSetRandomPasswordRequestDto request) {
+    @GetMapping(FORGOT_PASSWORD)
+    public UserPasswordResetResponseDto initiatePasswordReset(@Valid
+                                              UserGetLinkToSetRandomPasswordRequestDto request) {
         return authenticationService.initiatePasswordReset(request.email());
     }
 
@@ -142,7 +143,7 @@ public class AuthController {
             SUCCESSFULLY_RESET_PASSWORD)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @GetMapping(RESET_PASSWORD)
-    public UserPasswordResetResponseDto resetPassword(HttpServletRequest httpServletRequest) {
+    public ResponseEntity<Void> resetPassword(HttpServletRequest httpServletRequest) {
         randomParamFromHttpRequestUtil.parseRandomParameterAndToken(httpServletRequest);
         return authenticationService
                 .confirmResetPassword(randomParamFromHttpRequestUtil.getTokenFromRepo(
