@@ -1,8 +1,6 @@
 package com.example.budgetingapp.controllers;
 
 import static com.example.budgetingapp.constants.Constants.SUPPORT_RESET_SENT_LINK;
-import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.ACCOUNT;
-import static com.example.budgetingapp.constants.controllers.AccountControllerConstants.ACCOUNT_API_NAME;
 import static com.example.budgetingapp.constants.controllers.SupportControllerConstants.SEND_REQUEST_TO_EMAIL;
 import static com.example.budgetingapp.constants.controllers.SupportControllerConstants.SUPPORT;
 import static com.example.budgetingapp.constants.controllers.SupportControllerConstants.SUPPORT_API_DESCRIPTION;
