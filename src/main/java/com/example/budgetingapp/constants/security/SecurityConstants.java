@@ -45,11 +45,6 @@ public class SecurityConstants {
     public static final String RANDOM_PASSWORD_BODY = """
             Your new random password:
             """;
-    public static final String SUCCESSFUL_RESET_MSG = """
-            Your password has been reset successfully.
-            Check email to see your new random password.
-            We recommend setting a new meaningful password
-            as soon as possible.""";
     public static final String SUCCESSFUL_CHANGE_MESSAGE =
             "New password has been set successfully.";
     public static final String REGISTERED_BUT_NOT_ACTIVATED =
@@ -60,8 +55,6 @@ public class SecurityConstants {
             "User is registered successfully. "
                     + "Check your email to confirm registration. "
                     + "Your account will not be enabled until then.";
-    public static final String REGISTERED_AND_CONFIRMED =
-            "Your registration is successfully confirmed.";
     public static final String SUCCESS_EMAIL = "An email with reset link has been sent.";
 
     public static final String BOT_NAME = "BudgetApplicationBot";
