@@ -1,9 +1,9 @@
 package com.example.budgetingapp.services.implementations;
 
+import static com.example.budgetingapp.constants.Constants.REGISTRATION_CONFIRMATION_LINK;
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACTION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.REGISTERED;
-import static com.example.budgetingapp.constants.security.SecurityConstants.REGISTERED_AND_CONFIRMED;
 
 import com.example.budgetingapp.dtos.users.request.UserRegistrationRequestDto;
 import com.example.budgetingapp.dtos.users.response.UserRegistrationResponseDto;
@@ -17,16 +17,19 @@ import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
 import com.example.budgetingapp.security.services.RegistrationDefaultUserObjectsUtil;
+import com.example.budgetingapp.services.RedirectUtil;
 import com.example.budgetingapp.services.email.PasswordEmailService;
 import com.example.budgetingapp.services.interfaces.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    private final RedirectUtil redirectUtil;
     private final RegistrationDefaultUserObjectsUtil defaultUserObjectsUtil;
     private final UserRepository userRepository;
     private final ParamTokenRepository paramTokenRepository;
@@ -57,7 +60,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserRegistrationResponseDto confirmRegistration(String token) {
+    public ResponseEntity<Void> confirmRegistration(String token) {
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACTION);
         String email = jwtAbstractUtil.getUsername(token);
         User user = userRepository.findByUserName(email).orElseThrow(
@@ -68,6 +71,6 @@ public class UserServiceImpl implements UserService {
         ParamToken paramToken = paramTokenRepository.findByActionToken(token).orElseThrow(()
                 -> new EntityNotFoundException("No such request"));
         paramTokenRepository.deleteById(paramToken.getId());
-        return new UserRegistrationResponseDto(REGISTERED_AND_CONFIRMED);
+        return redirectUtil.redirect(REGISTRATION_CONFIRMATION_LINK);
     }
 }
