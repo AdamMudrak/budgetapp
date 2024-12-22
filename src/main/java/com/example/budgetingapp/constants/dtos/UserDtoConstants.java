@@ -1,8 +1,8 @@
 package com.example.budgetingapp.constants.dtos;
 
 public class UserDtoConstants {
-    public static final String USER_NAME = "userName";
-    public static final String USER_NAME_EXAMPLE = "example@gmail.com / +380630000000";
+    public static final String TELEGRAM_PHONE_NUMBER = "phoneNumber";
+    public static final String TELEGRAM_PHONE_NUMBER_EXAMPLE = "+380630000000";
     public static final String EMAIL = "email";
     public static final String EMAIL_EXAMPLE = "example@gmail.com";
 
@@ -25,9 +25,6 @@ public class UserDtoConstants {
     public static final String NEW_PASSWORD = "newPassword";
 
     public static final String REPEAT_NEW_PASSWORD = "repeatNewPassword";
-
-    public static final String FIRST_NAME = "firstName";
-    public static final String FIRST_NAME_EXAMPLE = "John";
 
     public static final int MIN_PASSWORD_SIZE = 8;
     public static final int MAX_PASSWORD_SIZE = 32;

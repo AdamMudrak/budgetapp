@@ -1,8 +1,11 @@
 package com.example.budgetingapp.constants.security;
 
 public class SecurityConstants {
-    public static final String PLUS = "+";
+    public static final String SUPPORT_EMAIL = "${spring.mail.username}";
+    public static final String SUPPORT_EMAIL_SUBJECT = "A request from ";
 
+    public static final String PLUS = "+";
+    public static final String SPLITERATOR = "&";
     public static final int STRENGTH = 10;
     public static final int RANDOM_ACTION_JWT_STRENGTH = 24;
     public static final int RANDOM_PASSWORD_STRENGTH = 32;
@@ -45,24 +48,17 @@ public class SecurityConstants {
     public static final String RANDOM_PASSWORD_BODY = """
             Your new random password:
             """;
-    public static final String SUCCESSFUL_RESET_MSG = """
-            Your password has been reset successfully.
-            Check email to see your new random password.
-            We recommend setting a new meaningful password
-            as soon as possible""";
     public static final String SUCCESSFUL_CHANGE_MESSAGE =
-            "New password has been set successfully";
+            "New password has been set successfully.";
     public static final String REGISTERED_BUT_NOT_ACTIVATED =
             "User is registered but not enabled. "
                     + "Check your email to confirm registration. "
-                    + "Your account will not be available until then";
+                    + "Your account will not be available until then.";
     public static final String REGISTERED =
             "User is registered successfully. "
                     + "Check your email to confirm registration. "
-                    + "Your account will not be enabled until then";
-    public static final String REGISTERED_AND_CONFIRMED =
-            "Your registration is successfully confirmed";
-    public static final String SUCCESS_EMAIL = "An email with reset link has been sent";
+                    + "Your account will not be enabled until then.";
+    public static final String SUCCESS_EMAIL = "An email with reset link has been sent.";
 
     public static final String BOT_NAME = "BudgetApplicationBot";
     public static final String START = "/start";
@@ -73,15 +69,18 @@ public class SecurityConstants {
     public static final String TELEGRAM_REGISTRATION =
             "To register or login in our app, you'll need"
                     + System.lineSeparator()
-                    + "to share your phone number with us."
+                    + "to SHARE your phone number with us."
                     + System.lineSeparator()
                     + "This data is going to be used only in"
                     + System.lineSeparator()
                     + "registration purposes. You'll then receive"
                     + System.lineSeparator()
-                    + "a password to login in the app.";
+                    + "a password to login in the app."
+                    + System.lineSeparator()
+                    + System.lineSeparator()
+                    + "Please, push \"SHARE\" button.";
     public static final String CONTENT_TYPE_HEADER = "Content-Type";
     public static final String CONTENT_TYPE = "application/json";
-    public static final String FAILED = "Something went wrong... Please try again later";
+    public static final String FAILED = "Something went wrong... Please try again later.";
     public static final String REFRESH_TOKEN = "refreshToken";
 }

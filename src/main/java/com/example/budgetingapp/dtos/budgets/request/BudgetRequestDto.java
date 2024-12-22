@@ -11,7 +11,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
-import java.util.Set;
 
 @BudgetToDateAfterFromDate
 public record BudgetRequestDto(
@@ -20,6 +19,11 @@ public record BudgetRequestDto(
                 requiredMode = REQUIRED)
         @NotBlank
         String name,
+        @Schema(name = BudgetDtoConstants.CURRENCY,
+                example = BudgetDtoConstants.CURRENCY_EXAMPLE,
+                requiredMode = REQUIRED)
+        @NotBlank
+        String currency,
         @Schema(name = BudgetDtoConstants.FROM_DATE,
                 example = BudgetDtoConstants.FROM_DATE_EXAMPLE,
                 description = BudgetDtoConstants.DATE_DESCRIPTION,
@@ -34,13 +38,13 @@ public record BudgetRequestDto(
         @NotBlank
         @Date
         String toDate,
-        @Schema(name = BudgetDtoConstants.CATEGORY_IDS,
-                example = BudgetDtoConstants.CATEGORY_IDS_EXAMPLE,
+        @Schema(name = BudgetDtoConstants.CATEGORY_ID,
+                example = BudgetDtoConstants.CATEGORY_ID_EXAMPLE,
                 requiredMode = REQUIRED)
         @NotNull
         @Positive
         @Digits(integer = 9, fraction = 0)
-        Set<Long> categoryIds,
+        Long categoryId,
         @Schema(name = BudgetDtoConstants.LIMIT_SUM,
                 example = BudgetDtoConstants.LIMIT_SUM_EXAMPLE,
                 requiredMode = REQUIRED)

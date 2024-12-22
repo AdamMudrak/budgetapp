@@ -1,5 +1,8 @@
 package com.example.budgetingapp.security.services;
 
+import static com.example.budgetingapp.constants.Constants.EMAIL;
+import static com.example.budgetingapp.constants.Constants.PASSWORD_RESET_CONFIRMATION_LINK;
+import static com.example.budgetingapp.constants.Constants.TELEGRAM_PHONE_NUMBER;
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACCESS;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_STRENGTH;
@@ -8,13 +11,14 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.REFR
 import static com.example.budgetingapp.constants.security.SecurityConstants.REGISTERED_BUT_NOT_ACTIVATED;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RESET;
 import static com.example.budgetingapp.constants.security.SecurityConstants.SUCCESSFUL_CHANGE_MESSAGE;
-import static com.example.budgetingapp.constants.security.SecurityConstants.SUCCESSFUL_RESET_MSG;
 import static com.example.budgetingapp.constants.security.SecurityConstants.SUCCESS_EMAIL;
 
 import com.example.budgetingapp.constants.controllers.AuthControllerConstants;
 import com.example.budgetingapp.constants.security.SecurityConstants;
-import com.example.budgetingapp.dtos.users.request.UserLoginRequestDto;
 import com.example.budgetingapp.dtos.users.request.UserSetNewPasswordRequestDto;
+import com.example.budgetingapp.dtos.users.request.userloginrequestdtos.InnerUserLoginRequestDto;
+import com.example.budgetingapp.dtos.users.request.userloginrequestdtos.UserEmailLoginRequestDto;
+import com.example.budgetingapp.dtos.users.request.userloginrequestdtos.UserTelegramLoginRequestDto;
 import com.example.budgetingapp.dtos.users.response.AccessTokenResponseDto;
 import com.example.budgetingapp.dtos.users.response.UserLoginResponseDto;
 import com.example.budgetingapp.dtos.users.response.UserPasswordResetResponseDto;
@@ -24,12 +28,14 @@ import com.example.budgetingapp.exceptions.forbidden.LoginException;
 import com.example.budgetingapp.exceptions.gone.LinkExpiredException;
 import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
 import com.example.budgetingapp.exceptions.unauthorized.PasswordMismatch;
+import com.example.budgetingapp.mappers.UserMapper;
 import com.example.budgetingapp.repositories.paramtoken.ParamTokenRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.security.RandomStringUtil;
 import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
-import com.example.budgetingapp.services.impl.PasswordEmailService;
+import com.example.budgetingapp.services.RedirectUtil;
+import com.example.budgetingapp.services.email.PasswordEmailService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,6 +43,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -47,7 +54,9 @@ import org.springframework.util.StringUtils;
 @Component
 @RequiredArgsConstructor
 public class AuthenticationService {
+    private final RedirectUtil redirectUtil;
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtStrategy jwtStrategy;
@@ -55,17 +64,16 @@ public class AuthenticationService {
     private final RandomStringUtil randomStringUtil;
     private final ParamTokenRepository paramTokenRepository;
 
-    public UserLoginResponseDto authenticate(UserLoginRequestDto requestDto) {
-        isCreatedAndEnabled(requestDto);
-        final Authentication authentication = authenticationManager
-                .authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                requestDto.userName(), requestDto.password()));
-        JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
-        String accessToken = jwtAbstractUtil.generateToken(authentication.getName());
-        jwtAbstractUtil = jwtStrategy.getStrategy(REFRESH);
-        String refreshToken = jwtAbstractUtil.generateToken(authentication.getName());
-        return new UserLoginResponseDto(accessToken, refreshToken);
+    public UserLoginResponseDto authenticateTelegram(UserTelegramLoginRequestDto requestDto) {
+        InnerUserLoginRequestDto innerUserLoginRequestDto = interprete(requestDto);
+        isCreatedAndEnabled(innerUserLoginRequestDto.userName(), TELEGRAM_PHONE_NUMBER);
+        return getTokens(innerUserLoginRequestDto);
+    }
+
+    public UserLoginResponseDto authenticateEmail(UserEmailLoginRequestDto requestDto) {
+        InnerUserLoginRequestDto innerUserLoginRequestDto = interprete(requestDto);
+        isCreatedAndEnabled(innerUserLoginRequestDto.userName(), EMAIL);
+        return getTokens(innerUserLoginRequestDto);
     }
 
     public UserPasswordResetResponseDto initiatePasswordReset(String email) {
@@ -74,11 +82,12 @@ public class AuthenticationService {
             throw new EntityNotFoundException(
                     "User with email " + email + " was not found");
         }
+        isCreatedAndEnabled(email, EMAIL);
         passwordEmailService.sendActionMessage(email, RESET);
         return new UserPasswordResetResponseDto(SUCCESS_EMAIL);
     }
 
-    public UserPasswordResetResponseDto confirmResetPassword(String token) {
+    public ResponseEntity<Void> confirmResetPassword(String token) {
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
         try {
             jwtAbstractUtil.isValidToken(token);
@@ -93,7 +102,7 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(randomPassword));
         userRepository.save(user);
         passwordEmailService.sendResetPassword(email, randomPassword);
-        return new UserPasswordResetResponseDto(SUCCESSFUL_RESET_MSG);
+        return redirectUtil.redirect(PASSWORD_RESET_CONFIRMATION_LINK);
     }
 
     public UserPasswordResetResponseDto changePassword(HttpServletRequest httpServletRequest,
@@ -131,10 +140,11 @@ public class AuthenticationService {
                 .matches(userSetNewPasswordRequestDto.currentPassword(), user.getPassword());
     }
 
-    private void isCreatedAndEnabled(UserLoginRequestDto requestDto) {
-        User user = userRepository.findByUserName(requestDto.userName())
+    private void isCreatedAndEnabled(String userName, String userNameType) {
+        User user = userRepository.findByUserName(userName)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "User with email " + requestDto.userName() + " was not found"));
+                        "User with " + userNameType + " " + userName
+                                + " was not found"));
         if (!user.isEnabled()) {
             passwordEmailService.sendActionMessage(user.getUsername(), CONFIRMATION);
             throw new LoginException(REGISTERED_BUT_NOT_ACTIVATED);
@@ -164,5 +174,27 @@ public class AuthenticationService {
             bearerToken = bearerToken.substring(SecurityConstants.BEGIN_INDEX);
         }
         return bearerToken;
+    }
+
+    private InnerUserLoginRequestDto interprete(
+            UserTelegramLoginRequestDto userTelegramLoginRequestDto) {
+        return userMapper.toInnerUserDto(userTelegramLoginRequestDto);
+    }
+
+    private InnerUserLoginRequestDto interprete(
+            UserEmailLoginRequestDto userEmailLoginRequestDto) {
+        return userMapper.toInnerUserDto(userEmailLoginRequestDto);
+    }
+
+    private UserLoginResponseDto getTokens(InnerUserLoginRequestDto innerUserLoginRequestDto) {
+        final Authentication authentication = authenticationManager
+                .authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                        innerUserLoginRequestDto.userName(), innerUserLoginRequestDto.password()));
+        JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
+        String accessToken = jwtAbstractUtil.generateToken(authentication.getName());
+        jwtAbstractUtil = jwtStrategy.getStrategy(REFRESH);
+        String refreshToken = jwtAbstractUtil.generateToken(authentication.getName());
+        return new UserLoginResponseDto(accessToken, refreshToken);
     }
 }

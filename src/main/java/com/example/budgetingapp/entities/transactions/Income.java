@@ -16,7 +16,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -35,9 +34,11 @@ public class Income {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = USER_ID, nullable = false)
     private User user;
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ACCOUNT_ID, nullable = false)
     private Account account;
+    @Column(nullable = false)
+    private String currency;
     @Column(nullable = false)
     private BigDecimal amount;
     @Column(nullable = false)

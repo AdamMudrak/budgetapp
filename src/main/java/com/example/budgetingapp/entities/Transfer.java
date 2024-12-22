@@ -41,4 +41,6 @@ public class Transfer {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = TO_ACCOUNT_ID, nullable = false)
     private Account toAccount;
+    @Column(nullable = false)
+    private String currency;
 }

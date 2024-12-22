@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-incomes-table
+      author: AdamMudrak
+      changes:
+        - createTable:
+            tableName: incomes
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: comment
+                  type: varchar(512)
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_i_user_id
+                    references: users(id)
+              - column:
+                  name: account_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_i_account_id
+                    references: accounts(id)
+              - column:
+                  name: income_category_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_i_category_id
+                    references: income_categories(id)
+              - column:
+                  name: currency
+                  type: varchar(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: decimal(11,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: transaction_date
+                  type: date
+                  constraints:
+                    nullable: false

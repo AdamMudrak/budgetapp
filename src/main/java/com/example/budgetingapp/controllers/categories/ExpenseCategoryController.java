@@ -27,7 +27,7 @@ import com.example.budgetingapp.dtos.categories.request.CreateCategoryDto;
 import com.example.budgetingapp.dtos.categories.request.UpdateCategoryDto;
 import com.example.budgetingapp.dtos.categories.response.ResponseCategoryDto;
 import com.example.budgetingapp.entities.User;
-import com.example.budgetingapp.services.CategoryService;
+import com.example.budgetingapp.services.interfaces.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -99,6 +99,7 @@ public class ExpenseCategoryController {
     @Operation(summary = DELETE_CATEGORY_SUMMARY)
     @ApiResponse(responseCode = CODE_204, description =
             SUCCESSFULLY_DELETE_CATEGORY)
+    @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @DeleteMapping(DELETE_CATEGORY_BY_ID)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategory(@AuthenticationPrincipal User user,

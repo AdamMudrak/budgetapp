@@ -12,12 +12,13 @@ public class AuthControllerConstants {
     public static final String AUTH = "/auth";
     public static final String REGISTER = "/register";
     public static final String CONFIRM_REGISTRATION = "/register-success";
-    public static final String LOGIN = "/login";
+    public static final String LOGIN_EMAIL = "/login-email";
+    public static final String LOGIN_TELEGRAM = "/login-telegram";
     public static final String FORGOT_PASSWORD = "/forgot-password";
     public static final String RESET_PASSWORD = "/reset-password";
     public static final String CHANGE_PASSWORD = "/change-password";
     public static final String TELEGRAM_AUTH = "/telegram-auth";
-    public static final String REFRESH_ACCESS_TOKEN = "/refreshAccessToken";
+    public static final String REFRESH_ACCESS_TOKEN = "/refresh-access-token";
 
     public static final String REGISTER_SUMMARY = "Register a new user in the app";
     public static final String SUCCESSFULLY_REGISTERED = "Successfully registered a new user";
@@ -25,8 +26,10 @@ public class AuthControllerConstants {
     public static final String CONFIRM_SUMMARY = "Confirm registration of a new user in the app";
     public static final String SUCCESSFULLY_CONFIRMED = "Successfully confirmed registration";
 
-    public static final String LOGIN_SUMMARY = "Log in using existing account";
+    public static final String TELEGRAM_LOGIN_SUMMARY = "Log in using existing telegram account";
     public static final String SUCCESSFULLY_LOGGED_IN = "Successfully logged in in the app";
+
+    public static final String EMAIL_LOGIN_SUMMARY = "Log in using existing email account";
 
     public static final String INITIATE_PASSWORD_RESET_SUMMARY =
             "Initiate password reset via a link sent to your email";

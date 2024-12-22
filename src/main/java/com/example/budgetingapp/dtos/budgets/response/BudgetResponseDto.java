@@ -2,7 +2,6 @@ package com.example.budgetingapp.dtos.budgets.response;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +12,8 @@ public class BudgetResponseDto {
     private String name;
     private LocalDate fromDate;
     private LocalDate toDate;
-    private Set<Long> categoryIds;
+    private Long categoryId;
+    private String currency;
     private BigDecimal limitSum;
     private BigDecimal currentSum;
     private boolean isExceeded;

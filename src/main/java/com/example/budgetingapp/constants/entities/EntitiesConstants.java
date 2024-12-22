@@ -42,20 +42,19 @@ public class EntitiesConstants {
     public static final String DEFAULT_ACCOUNT_NAME = "Default account";
     public static final String DEFAULT_ACCOUNT_CURRENCY = "USD";
 
-    public static final String DEFAULT_BUDGET_NAME = "Top level budget";
-    public static final int DEFAULT_YEARS_STEP = 3;
-
     public static final List<String> DEFAULT_INCOME_CATEGORIES_LIST = List.of(
             "Salary",
             "Freelance",
             "Investments",
             "Rental Income",
-            "Gifts");
+            "Other");
 
     public static final List<String> DEFAULT_EXPENSE_CATEGORIES_LIST = List.of(
             "Groceries",
             "Utilities",
             "Transportation",
             "Entertainment",
-            "Healthcare");
+            "Other");
+
+    public static final String DEFAULT_CATEGORY_NAME = "Other";
 }

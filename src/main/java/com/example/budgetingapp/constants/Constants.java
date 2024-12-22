@@ -1,14 +1,22 @@
 package com.example.budgetingapp.constants;
 
 public class Constants {
+    public static final String REGISTRATION_CONFIRMATION_LINK = "https://my.budgetapp.space/#/";
+    public static final String PASSWORD_RESET_CONFIRMATION_LINK = "https://my.budgetapp.space/#/";
+    public static final String SUPPORT_RESET_SENT_LINK = "https://my.budgetapp.space/#/";
+
+    public static final String TELEGRAM_PHONE_NUMBER = "telegram phone number";
+    public static final String EMAIL = "email";
     public static final String MONTH = "MONTH";
     public static final String YEAR = "YEAR";
 
-    public static final String NO_ACCOUNT = "";
+    public static final String NO_VALUE = "";
 
     public static final int MONTHS_IN_A_YEAR = 12;
 
     public static final String SPLITERATOR = "=";
+    public static final String LEFT_PARENTHESIS = "(";
+    public static final String RIGHT_PARENTHESIS = ")";
 
     public static final String INVALID_ENTITY_VALUE =
             "One of the parameters is invalid. API will show which one";

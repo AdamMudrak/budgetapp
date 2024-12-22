@@ -2,6 +2,7 @@ package com.example.budgetingapp.mappers;
 
 import com.example.budgetingapp.config.MapperConfig;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
+import com.example.budgetingapp.dtos.transactions.request.UpdateRequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
 import com.example.budgetingapp.entities.transactions.Expense;
 import com.example.budgetingapp.entities.transactions.Income;
@@ -19,9 +20,19 @@ public interface TransactionMapper {
     Expense toExpense(RequestTransactionDto requestTransactionDto);
 
     @Mapping(source = "accountId", target = "account.id")
+    @Mapping(source = "categoryId", target = "expenseCategory.id")
+    @Mapping(target = "transactionDate", ignore = true)
+    Expense toExpense(UpdateRequestTransactionDto requestTransactionDto);
+
+    @Mapping(source = "accountId", target = "account.id")
     @Mapping(source = "categoryId", target = "incomeCategory.id")
     @Mapping(target = "transactionDate", ignore = true)
     Income toIncome(RequestTransactionDto requestTransactionDto);
+
+    @Mapping(source = "accountId", target = "account.id")
+    @Mapping(source = "categoryId", target = "incomeCategory.id")
+    @Mapping(target = "transactionDate", ignore = true)
+    Income toIncome(UpdateRequestTransactionDto requestTransactionDto);
 
     @AfterMapping
     default void setTransactionDate(@MappingTarget Expense expense,

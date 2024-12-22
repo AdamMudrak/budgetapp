@@ -33,7 +33,7 @@ public class Target {
     @Column(nullable = false)
     private BigDecimal currentSum = BigDecimal.ZERO;
     @Column(nullable = false)
-    private BigDecimal monthlyDownPayment;
+    private BigDecimal downPayment;
     @Column(nullable = false)
     private LocalDate achievedBefore;
     @Column(nullable = false)

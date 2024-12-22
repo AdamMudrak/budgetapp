@@ -15,7 +15,7 @@ public class TransactionDtoConstants {
     public static final String EXPECTED_SUM_EXAMPLE = "999.99";
 
     public static final String ACCOUNT_ID = "accountId";
-    public static final String ACCOUNT_ID_EXAMPLE = "3";
+    public static final String ACCOUNT_ID_EXAMPLE = "1";
     public static final String FROM_ACCOUNT_ID = "fromAccountId";
     public static final String FROM_ACCOUNT_ID_EXAMPLE = "1";
     public static final String TO_ACCOUNT_ID = "toAccountId";
@@ -28,19 +28,19 @@ public class TransactionDtoConstants {
     public static final String TO_DATE = "toDate";
     public static final String TO_DATE_EXAMPLE = "2024-10-31";
     public static final String DATE_DESCRIPTION =
-            "date format should be: YYYY / YYYY-MM / YYYY-MM-dd";
+            "date format should be: YYYY-MM-dd";
     public static final String ACHIEVED_BEFORE = "achievedBefore";
     public static final String ACHIEVED_BEFORE_EXAMPLE = "2040-10-29";
 
     public static final String CATEGORY_IDS = "categoryIds";
-    public static final String CATEGORY_IDS_EXAMPLE = "[\"1\", \"2\"]";
+    public static final String CATEGORY_IDS_EXAMPLE = "[1, 2]";
     public static final String CATEGORY_ID = "categoryId";
-    public static final String CATEGORY_ID_EXAMPLE = "3";
+    public static final String CATEGORY_ID_EXAMPLE = "1";
 
     public static final String TARGET_ID = "targetId";
-    public static final String TARGET_ID_EXAMPLE = "3";
+    public static final String TARGET_ID_EXAMPLE = "1";
     public static final String TO_TARGET_ID = "toTargetId";
-    public static final String TO_TARGET_ID_EXAMPLE = "2";
+    public static final String TO_TARGET_ID_EXAMPLE = "1";
 
     public static final String CURRENCY = "currency";
     public static final String CURRENCY_EXAMPLE = "USD";

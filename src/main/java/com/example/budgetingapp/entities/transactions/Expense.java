@@ -38,6 +38,8 @@ public class Expense {
     @JoinColumn(name = ACCOUNT_ID, nullable = false)
     private Account account;
     @Column(nullable = false)
+    private String currency;
+    @Column(nullable = false)
     private BigDecimal amount;
     @Column(nullable = false)
     private LocalDate transactionDate;

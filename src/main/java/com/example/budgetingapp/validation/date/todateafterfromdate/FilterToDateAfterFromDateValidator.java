@@ -10,7 +10,8 @@ public class FilterToDateAfterFromDateValidator
     @Override
     public boolean isValid(FilterTransactionsDto requestDto,
                            ConstraintValidatorContext constraintValidatorContext) {
-        return LocalDate.parse(requestDto.toDate())
+        return (requestDto.toDate() == null || requestDto.fromDate() == null)
+                || LocalDate.parse(requestDto.toDate())
                 .isAfter(LocalDate.parse(requestDto.fromDate()));
     }
 }

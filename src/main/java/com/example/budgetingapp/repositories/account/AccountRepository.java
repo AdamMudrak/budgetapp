@@ -11,11 +11,15 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             + " WHERE account.user.id=:userId")
     int countAccountsByUserId(Long userId);
 
-    List<Account> getAllByUserId(Long userId);
+    List<Account> findAllByUserId(Long userId);
+
+    boolean existsByUserIdAndCurrency(Long userId, String currency);
 
     boolean existsByUserIdAndName(Long userId, String name);
 
     boolean existsByUserIdAndByDefault(Long userId, boolean byDefault);
+
+    boolean existsByIdAndUserId(Long id, Long userId);
 
     Optional<Account> findByIdAndUserId(Long id, Long userId);
 

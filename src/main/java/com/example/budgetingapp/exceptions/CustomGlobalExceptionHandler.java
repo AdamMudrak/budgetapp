@@ -24,6 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -40,6 +41,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     private static final String STATUS = "status";
     private static final String ERRORS = "errors";
     private static final String SPLITERATOR = " ";
+    private static final String DOT = ".";
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -73,142 +75,94 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     @ExceptionHandler(EntityNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFound(
-            RuntimeException ex, WebRequest request) {
-        return handleExceptionInternal(
-                ex,
-                ex.getMessage(),
-                new HttpHeaders(),
-                NOT_FOUND,
-                request);
+            RuntimeException ex) {
+        return getUnifiedResponse(ex, NOT_FOUND);
     }
 
     @ExceptionHandler(SpecificationProviderNotFoundException.class)
     protected ResponseEntity<Object> handleSpecificationNotFound(
             RuntimeException ex, WebRequest request) {
-        return handleExceptionInternal(
-                ex,
-                ex.getMessage(),
-                new HttpHeaders(),
-                NOT_FOUND,
-                request);
-    }
-
-    @ExceptionHandler(RegistrationException.class)
-    protected ResponseEntity<Object> handleRegistrationException(
-            Exception ex, WebRequest request) {
-        return handleExceptionInternal(
-                ex,
-                ex.getMessage(),
-                new HttpHeaders(),
-                BAD_REQUEST,
-                request);
-    }
-
-    @ExceptionHandler(PasswordMismatch.class)
-    protected ResponseEntity<Object> handlePasswordMismatch(
-            Exception ex, WebRequest request) {
-        return handleExceptionInternal(
-                ex,
-                ex.getMessage(),
-                new HttpHeaders(),
-                UNAUTHORIZED,
-                request);
-    }
-
-    @ExceptionHandler(LinkExpiredException.class)
-    protected ResponseEntity<Object> handleLinkExpired(
-            Exception ex, WebRequest request) {
-        return handleExceptionInternal(
-                ex,
-                ex.getMessage(),
-                new HttpHeaders(),
-                GONE,
-                request);
-    }
-
-    @ExceptionHandler(LoginException.class)
-    protected ResponseEntity<Object> handleLoginException(
-            Exception ex, WebRequest request) {
-        return handleExceptionInternal(
-                ex,
-                ex.getMessage(),
-                new HttpHeaders(),
-                FORBIDDEN,
-                request);
+        return getUnifiedResponse(ex, NOT_FOUND);
     }
 
     @ExceptionHandler(ActionNotFoundException.class)
     protected ResponseEntity<Object> handleActionNotFound(
             Exception ex, WebRequest request) {
-        return handleExceptionInternal(
-                ex,
-                ex.getMessage(),
-                new HttpHeaders(),
-                NOT_FOUND,
-                request);
+        return getUnifiedResponse(ex, NOT_FOUND);
     }
 
-    @ExceptionHandler(AlreadyExistsException.class)
-    protected ResponseEntity<Object> handleAlreadyExists(
+    @ExceptionHandler(RegistrationException.class)
+    protected ResponseEntity<Object> handleRegistrationException(
             Exception ex, WebRequest request) {
-        return handleExceptionInternal(
-                ex,
-                ex.getMessage(),
-                new HttpHeaders(),
-                CONFLICT,
-                request);
+        return getUnifiedResponse(ex, BAD_REQUEST);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseEntity<Object> handleIllegalArgumentException(
             Exception ex, WebRequest request) {
-        return handleExceptionInternal(
-                ex,
-                ex.getMessage(),
-                new HttpHeaders(),
-                BAD_REQUEST,
-                request);
+        return getUnifiedResponse(ex, BAD_REQUEST);
     }
 
     @ExceptionHandler(NumberFormatException.class)
     protected ResponseEntity<Object> handleNumberFormatException(
             Exception ex, WebRequest request) {
-        return handleExceptionInternal(
-                ex,
-                ex.getMessage(),
-                new HttpHeaders(),
-                BAD_REQUEST,
-                request);
+        return getUnifiedResponse(ex, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PasswordMismatch.class)
+    protected ResponseEntity<Object> handlePasswordMismatch(
+            Exception ex, WebRequest request) {
+        return getUnifiedResponse(ex, UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(LinkExpiredException.class)
+    protected ResponseEntity<Object> handleLinkExpired(
+            Exception ex, WebRequest request) {
+        return getUnifiedResponse(ex, GONE);
+    }
+
+    @ExceptionHandler(LoginException.class)
+    protected ResponseEntity<Object> handleLoginException(
+            Exception ex, WebRequest request) {
+        return getUnifiedResponse(ex, FORBIDDEN);
+    }
+
+    @ExceptionHandler(AlreadyExistsException.class)
+    protected ResponseEntity<Object> handleAlreadyExists(
+            Exception ex, WebRequest request) {
+        return getUnifiedResponse(ex, CONFLICT);
     }
 
     @ExceptionHandler(ConflictException.class)
     protected ResponseEntity<Object> handleConflict(
             Exception ex, WebRequest request) {
-        return handleExceptionInternal(
-                ex,
-                ex.getMessage(),
-                new HttpHeaders(),
-                CONFLICT,
-                request);
+        return getUnifiedResponse(ex, CONFLICT);
     }
 
     @ExceptionHandler(TransactionFailedException.class)
     protected ResponseEntity<Object> handleFailedTransaction(
             Exception ex, WebRequest request) {
-        return handleExceptionInternal(
-                ex,
-                ex.getMessage(),
-                new HttpHeaders(),
-                CONFLICT,
-                request);
+        return getUnifiedResponse(ex, CONFLICT);
     }
 
     private String getErrorMessage(ObjectError e) {
         if (e instanceof FieldError fieldError) {
             String field = fieldError.getField();
             String message = e.getDefaultMessage();
-            return field + SPLITERATOR + message;
+            return field + SPLITERATOR + message + DOT;
         }
         return e.getDefaultMessage();
+    }
+
+    private ResponseEntity<Object> getUnifiedResponse(Exception exception, HttpStatus httpStatus) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put(TIMESTAMP, LocalDateTime.now());
+        body.put(STATUS, httpStatus);
+        String exceptionMessage = exception.getMessage();
+        if (!exceptionMessage.endsWith(DOT)) {
+            exceptionMessage += DOT;
+        }
+        body.put(ERRORS, exceptionMessage);
+        return new ResponseEntity<>(body, httpStatus);
     }
 }
