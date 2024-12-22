@@ -1,8 +1,9 @@
 package com.example.budgetingapp.constants;
 
 public class Constants {
-    public static final String SUPPORT_EMAIL = "${spring.mail.username}";
-    public static final String SUPPORT_EMAIL_SUBJECT = "A request from ";
+    public static final String REGISTRATION_CONFIRMATION_LINK = "https://my.budgetapp.space/#/";
+    public static final String PASSWORD_RESET_CONFIRMATION_LINK = "https://my.budgetapp.space/#/";
+    public static final String SUPPORT_RESET_SENT_LINK = "https://my.budgetapp.space/#/";
 
     public static final String TELEGRAM_PHONE_NUMBER = "telegram phone number";
     public static final String EMAIL = "email";

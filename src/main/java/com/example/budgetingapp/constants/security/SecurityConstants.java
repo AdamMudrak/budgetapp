@@ -1,6 +1,9 @@
 package com.example.budgetingapp.constants.security;
 
 public class SecurityConstants {
+    public static final String SUPPORT_EMAIL = "${spring.mail.username}";
+    public static final String SUPPORT_EMAIL_SUBJECT = "A request from ";
+
     public static final String PLUS = "+";
     public static final String SPLITERATOR = "&";
     public static final int STRENGTH = 10;
