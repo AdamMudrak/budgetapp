@@ -1,7 +1,7 @@
 package com.example.budgetingapp.services.email;
 
-import static com.example.budgetingapp.constants.Constants.SUPPORT_EMAIL;
-import static com.example.budgetingapp.constants.Constants.SUPPORT_EMAIL_SUBJECT;
+import static com.example.budgetingapp.constants.security.SecurityConstants.SUPPORT_EMAIL;
+import static com.example.budgetingapp.constants.security.SecurityConstants.SUPPORT_EMAIL_SUBJECT;
 
 import com.example.budgetingapp.constants.Constants;
 import com.example.budgetingapp.dtos.emails.ContactUsByEmailDto;
