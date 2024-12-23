@@ -40,13 +40,13 @@ import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -66,23 +66,21 @@ public class AuthenticationService {
 
     public UserLoginResponseDto authenticateTelegram(UserTelegramLoginRequestDto requestDto) {
         InnerUserLoginRequestDto innerUserLoginRequestDto = interprete(requestDto);
-        isCreatedAndEnabled(innerUserLoginRequestDto.userName(), TELEGRAM_PHONE_NUMBER);
-        return getTokens(innerUserLoginRequestDto);
+        User currentUser = isCreated(innerUserLoginRequestDto.userName(), TELEGRAM_PHONE_NUMBER);
+        isEnabled(currentUser);
+        return getTokens(innerUserLoginRequestDto, TELEGRAM_PHONE_NUMBER);
     }
 
     public UserLoginResponseDto authenticateEmail(UserEmailLoginRequestDto requestDto) {
         InnerUserLoginRequestDto innerUserLoginRequestDto = interprete(requestDto);
-        isCreatedAndEnabled(innerUserLoginRequestDto.userName(), EMAIL);
-        return getTokens(innerUserLoginRequestDto);
+        User currentUser = isCreated(innerUserLoginRequestDto.userName(), EMAIL);
+        isEnabled(currentUser);
+        return getTokens(innerUserLoginRequestDto, EMAIL);
     }
 
     public UserPasswordResetResponseDto initiatePasswordReset(String email) {
-        Optional<User> user = userRepository.findByUserName(email);
-        if (user.isEmpty()) {
-            throw new EntityNotFoundException(
-                    "User with email " + email + " was not found");
-        }
-        isCreatedAndEnabled(email, EMAIL);
+        User currentUser = isCreated(email);
+        isEnabled(currentUser);
         passwordEmailService.sendActionMessage(email, RESET);
         return new UserPasswordResetResponseDto(SUCCESS_EMAIL);
     }
@@ -140,11 +138,19 @@ public class AuthenticationService {
                 .matches(userSetNewPasswordRequestDto.currentPassword(), user.getPassword());
     }
 
-    private void isCreatedAndEnabled(String userName, String userNameType) {
-        User user = userRepository.findByUserName(userName)
+    private User isCreated(String userName, String userNameType) {
+        return userRepository.findByUserName(userName)
+                .orElseThrow(() -> new LoginException(
+                        "Either " + userNameType + " or password is invalid"));
+    }
+
+    private User isCreated(String userName) {
+        return userRepository.findByUserName(userName)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "User with " + userNameType + " " + userName
-                                + " was not found"));
+                        "User with email " + userName + " was not found"));
+    }
+
+    private void isEnabled(User user) {
         if (!user.isEnabled()) {
             passwordEmailService.sendActionMessage(user.getUsername(), CONFIRMATION);
             throw new LoginException(REGISTERED_BUT_NOT_ACTIVATED);
@@ -186,11 +192,18 @@ public class AuthenticationService {
         return userMapper.toInnerUserDto(userEmailLoginRequestDto);
     }
 
-    private UserLoginResponseDto getTokens(InnerUserLoginRequestDto innerUserLoginRequestDto) {
-        final Authentication authentication = authenticationManager
-                .authenticate(
+    private UserLoginResponseDto getTokens(InnerUserLoginRequestDto innerUserLoginRequestDto,
+                                           String userNameType) {
+        final Authentication authentication;
+        try {
+            authentication = authenticationManager
+                    .authenticate(
                         new UsernamePasswordAuthenticationToken(
                         innerUserLoginRequestDto.userName(), innerUserLoginRequestDto.password()));
+
+        } catch (AuthenticationException authenticationException) {
+            throw new LoginException("Either " + userNameType + " or password is invalid");
+        }
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
         String accessToken = jwtAbstractUtil.generateToken(authentication.getName());
         jwtAbstractUtil = jwtStrategy.getStrategy(REFRESH);
