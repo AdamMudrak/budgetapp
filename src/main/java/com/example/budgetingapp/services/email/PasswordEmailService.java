@@ -49,7 +49,9 @@ public class PasswordEmailService extends EmailService {
         this.sendMessage(toEmail, RANDOM_PASSWORD_SUBJECT,
                     RANDOM_PASSWORD_BODY
                             + System.lineSeparator()
+                            + System.lineSeparator()
                             + randomPassword
+                            + System.lineSeparator()
                             + System.lineSeparator()
                             + RANDOM_PASSWORD_BODY_2
                             + System.lineSeparator()
