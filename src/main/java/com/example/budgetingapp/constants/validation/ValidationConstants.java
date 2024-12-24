@@ -28,8 +28,7 @@ public class ValidationConstants {
                     + " 1 lowercase letter,"
                     + " 1 uppercase letter,"
                     + " 1 digit,"
-                    + " 1 special character,"
-                    + " and be 8 to 32 characters long.";
+                    + " 1 special character.";
     public static final String ESCAPED_SPECIAL_CHARS =
             Pattern.quote("^$*{}[]()|~`!@#%&-_=+;:'\"<>,./?");
     public static final String PASSWORD_PATTERN = "(?=^.*[A-Z])(?=^.*[a-z])(?=^.*\\d)"
