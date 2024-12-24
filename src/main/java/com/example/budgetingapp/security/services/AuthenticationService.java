@@ -1,8 +1,8 @@
 package com.example.budgetingapp.security.services;
 
 import static com.example.budgetingapp.constants.Constants.EMAIL;
-import static com.example.budgetingapp.constants.Constants.PASSWORD_RESET_CONFIRMATION_LINK;
 import static com.example.budgetingapp.constants.Constants.TELEGRAM_PHONE_NUMBER;
+import static com.example.budgetingapp.constants.redirects.RedirectConstants.PASSWORD_RESET_CONFIRMATION_LINK;
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACCESS;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_STRENGTH;

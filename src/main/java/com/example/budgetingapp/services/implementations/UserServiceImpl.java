@@ -1,6 +1,6 @@
 package com.example.budgetingapp.services.implementations;
 
-import static com.example.budgetingapp.constants.Constants.REGISTRATION_CONFIRMATION_LINK;
+import static com.example.budgetingapp.constants.redirects.RedirectConstants.REGISTRATION_CONFIRMATION_LINK;
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACTION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.REGISTERED;
