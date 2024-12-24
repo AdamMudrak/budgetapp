@@ -29,5 +29,5 @@ public class ValidationConstants {
                     + " 1 special character,"
                     + " and be 8 to 32 characters long.";
     public static final String PASSWORD_PATTERN = "(?=^.*[A-Z])(?=^.*[a-z])(?=^.*\\d)"
-            + "(?=^.*[?!@#$%^&*~]).{8,32}$";
+            + "(?=^.*[!@#$%^&*()_+-=~`[]{}:;'\",.<>/№]).{8,32}$";
 }
