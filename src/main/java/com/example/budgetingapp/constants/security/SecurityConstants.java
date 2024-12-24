@@ -48,6 +48,10 @@ public class SecurityConstants {
     public static final String RANDOM_PASSWORD_BODY = """
             Your new random password:
             """;
+    public static final String RANDOM_PASSWORD_BODY_2 =
+            "Follow the link and log in using new password:";
+    public static final String RANDOM_PASSWORD_BODY_3 =
+            "Feel free to change password to something you will remember!";
     public static final String SUCCESSFUL_CHANGE_MESSAGE =
             "New password has been set successfully.";
     public static final String REGISTERED_BUT_NOT_ACTIVATED =

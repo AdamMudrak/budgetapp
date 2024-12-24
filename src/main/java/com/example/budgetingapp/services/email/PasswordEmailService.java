@@ -1,6 +1,7 @@
 package com.example.budgetingapp.services.email;
 
 import static com.example.budgetingapp.constants.Constants.SPLITERATOR;
+import static com.example.budgetingapp.constants.redirects.RedirectConstants.RANDOM_PASSWORD_REDIRECT_LINK;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION_PATH;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRM_REGISTRATION_BODY;
@@ -8,6 +9,8 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.CONF
 import static com.example.budgetingapp.constants.security.SecurityConstants.INITIATE_RANDOM_PASSWORD_BODY;
 import static com.example.budgetingapp.constants.security.SecurityConstants.INITIATE_RANDOM_PASSWORD_SUBJECT;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_BODY;
+import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_BODY_2;
+import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_BODY_3;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_SUBJECT;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RESET;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RESET_PATH;
@@ -44,7 +47,13 @@ public class PasswordEmailService extends EmailService {
 
     public void sendResetPassword(String toEmail, String randomPassword) {
         this.sendMessage(toEmail, RANDOM_PASSWORD_SUBJECT,
-                    RANDOM_PASSWORD_BODY + System.lineSeparator() + randomPassword);
+                    RANDOM_PASSWORD_BODY
+                            + System.lineSeparator()
+                            + randomPassword
+                            + RANDOM_PASSWORD_BODY_2
+                            + System.lineSeparator()
+                            + RANDOM_PASSWORD_REDIRECT_LINK
+                            + RANDOM_PASSWORD_BODY_3);
     }
 
     private String formTextForAction(String toEmail, String body, String actionPath) {
