@@ -50,9 +50,11 @@ public class PasswordEmailService extends EmailService {
                     RANDOM_PASSWORD_BODY
                             + System.lineSeparator()
                             + randomPassword
+                            + System.lineSeparator()
                             + RANDOM_PASSWORD_BODY_2
                             + System.lineSeparator()
                             + RANDOM_PASSWORD_REDIRECT_LINK
+                            + System.lineSeparator()
                             + RANDOM_PASSWORD_BODY_3);
     }
 
