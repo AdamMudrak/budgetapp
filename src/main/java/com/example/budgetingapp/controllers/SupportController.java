@@ -1,10 +1,10 @@
 package com.example.budgetingapp.controllers;
 
-import static com.example.budgetingapp.constants.Constants.SUPPORT_SEND_SUCCESS;
 import static com.example.budgetingapp.constants.controllers.SupportControllerConstants.SEND_REQUEST_TO_EMAIL;
 import static com.example.budgetingapp.constants.controllers.SupportControllerConstants.SUPPORT;
 import static com.example.budgetingapp.constants.controllers.SupportControllerConstants.SUPPORT_API_DESCRIPTION;
 import static com.example.budgetingapp.constants.controllers.SupportControllerConstants.SUPPORT_API_NAME;
+import static com.example.budgetingapp.constants.dtos.SupportDtoConstants.SUPPORT_SEND_SUCCESS;
 
 import com.example.budgetingapp.dtos.emails.request.ContactUsByEmailDto;
 import com.example.budgetingapp.dtos.support.response.SupportResponseDto;
