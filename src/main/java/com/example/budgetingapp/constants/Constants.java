@@ -27,7 +27,6 @@ public class Constants {
     public static final String CODE_403 = "403";
 
     public static final String ROLE_USER = "hasRole('ROLE_USER')";
-    public static final String ROLE_ADMIN = "hasRole('ROLE_ADMIN')";
 
     public static final String CATEGORY_PAGEABLE_EXAMPLE = """
             {
@@ -42,6 +41,14 @@ public class Constants {
               "page": 0,
               "size": 10,
               "sort":"transactionDate,ASC"
+            }
+            """;
+
+    public static final String TARGET_PAGEABLE_EXAMPLE = """
+            {
+              "page": 0,
+              "size": 5,
+              "sort":"name,ASC"
             }
             """;
 }
