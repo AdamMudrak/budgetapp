@@ -10,6 +10,8 @@ public record ResponseTransactionDto(
         BigDecimal amount,
         LocalDate transactionDate,
         Long accountId,
-        Long categoryId
+        String accountName,
+        Long categoryId,
+        String categoryName
 ) {
 }

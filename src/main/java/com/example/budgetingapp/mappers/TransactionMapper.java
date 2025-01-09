@@ -48,9 +48,15 @@ public interface TransactionMapper {
 
     @Mapping(source = "account.id", target = "accountId")
     @Mapping(source = "incomeCategory.id", target = "categoryId")
+    //TODO might want to delete later if becomes unnecessary
+    @Mapping(source = "account.name", target = "accountName")
+    @Mapping(source = "incomeCategory.name", target = "categoryName")
     ResponseTransactionDto toIncomeDto(Income income);
 
     @Mapping(source = "account.id", target = "accountId")
     @Mapping(source = "expenseCategory.id", target = "categoryId")
+    //TODO might want to delete later if becomes unnecessary
+    @Mapping(source = "account.name", target = "accountName")
+    @Mapping(source = "expenseCategory.name", target = "categoryName")
     ResponseTransactionDto toExpenseDto(Expense expense);
 }
