@@ -76,7 +76,7 @@ public class TransferServiceImpl implements TransferService {
                 .findAllByUserId(userId, pageable)
                 .stream()
                 .map(transferMapper::toTransferDto)
-                .sorted(Comparator.comparing(TransferResponseDto::transactionDate))
+                .sorted(Comparator.comparing(TransferResponseDto::transactionDate).reversed())
                 .toList();
     }
 
