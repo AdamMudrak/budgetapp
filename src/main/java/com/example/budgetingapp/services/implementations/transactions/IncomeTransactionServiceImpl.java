@@ -78,8 +78,8 @@ public class IncomeTransactionServiceImpl implements TransactionService {
         Specification<Income> incomeSpecification = incomeSpecificationBuilder.build(filterDto);
         return incomeRepository.findAllByUserIdPaged(userId, incomeSpecification, pageable)
                 .stream()
-                .sorted(Comparator.comparing(Income::getTransactionDate))
                 .map(transactionMapper::toIncomeDto)
+                .sorted(Comparator.comparing(ResponseTransactionDto::transactionDate))
                 .toList();
     }
 
