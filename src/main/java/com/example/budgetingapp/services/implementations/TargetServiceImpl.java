@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -92,6 +93,8 @@ public class TargetServiceImpl implements TargetService {
         return targetRepository.findAllByUserId(userId, pageable)
                 .stream()
                 .map(targetMapper::toTargetDto)
+                .sorted(Comparator.comparing(
+                        TargetTransactionResponseDto::getId))
                 .toList();
     }
 

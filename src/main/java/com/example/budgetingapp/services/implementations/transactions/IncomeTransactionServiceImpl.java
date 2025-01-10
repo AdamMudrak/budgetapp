@@ -80,7 +80,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
         return incomeRepository.findAllByUserIdPaged(userId, incomeSpecification, pageable)
                 .stream()
                 .map(transactionMapper::toIncomeDto)
-                .sorted(Comparator.comparing(GetResponseTransactionDto::transactionDate))
+                .sorted(Comparator.comparing(GetResponseTransactionDto::transactionDate).reversed())
                 .toList();
     }
 

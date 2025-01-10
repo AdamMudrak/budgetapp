@@ -84,7 +84,7 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
         return expenseRepository.findAllByUserIdPaged(userId, expenseSpecification, pageable)
                 .stream()
                 .map(transactionMapper::toExpenseDto)
-                .sorted(Comparator.comparing(GetResponseTransactionDto::transactionDate))
+                .sorted(Comparator.comparing(GetResponseTransactionDto::transactionDate).reversed())
                 .toList();
     }
 
