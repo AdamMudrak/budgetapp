@@ -7,7 +7,8 @@ import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.UpdateRequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByMonthOrYear;
 import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
-import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
+import com.example.budgetingapp.dtos.transactions.response.GetResponseTransactionDto;
+import com.example.budgetingapp.dtos.transactions.response.SaveAndUpdateResponseTransactionDto;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.transactions.Income;
@@ -49,8 +50,8 @@ public class IncomeTransactionServiceImpl implements TransactionService {
 
     @Transactional
     @Override
-    public ResponseTransactionDto saveTransaction(Long userId,
-                                                  RequestTransactionDto requestTransactionDto) {
+    public SaveAndUpdateResponseTransactionDto saveTransaction(Long userId,
+                                                   RequestTransactionDto requestTransactionDto) {
         isCategoryPresentInDb(userId, requestTransactionDto.categoryId());
         Income income = transactionMapper.toIncome(requestTransactionDto);
         Account account = accountRepository
@@ -67,19 +68,19 @@ public class IncomeTransactionServiceImpl implements TransactionService {
         income.setUser(currentUser);
         income.setCurrency(account.getCurrency());
         incomeRepository.save(income);
-        return transactionMapper.toIncomeDto(income);
+        return transactionMapper.toPersistIncomeDto(income);
     }
 
     @Override
-    public List<ResponseTransactionDto> getAllTransactions(Long userId,
-                                                           FilterTransactionsDto filterDto,
-                                                           Pageable pageable) {
+    public List<GetResponseTransactionDto> getAllTransactions(Long userId,
+                                                              FilterTransactionsDto filterDto,
+                                                              Pageable pageable) {
         presenceCheck(userId, filterDto);
         Specification<Income> incomeSpecification = incomeSpecificationBuilder.build(filterDto);
         return incomeRepository.findAllByUserIdPaged(userId, incomeSpecification, pageable)
                 .stream()
                 .map(transactionMapper::toIncomeDto)
-                .sorted(Comparator.comparing(ResponseTransactionDto::transactionDate))
+                .sorted(Comparator.comparing(GetResponseTransactionDto::transactionDate))
                 .toList();
     }
 
@@ -127,9 +128,10 @@ public class IncomeTransactionServiceImpl implements TransactionService {
 
     @Transactional
     @Override
-    public ResponseTransactionDto updateTransaction(Long userId,
-                                                UpdateRequestTransactionDto requestTransactionDto,
-                                                Long transactionId) {
+    public SaveAndUpdateResponseTransactionDto updateTransaction(
+                                               Long userId,
+                                               UpdateRequestTransactionDto requestTransactionDto,
+                                               Long transactionId) {
         String currency = "";
         presenceCheck(userId, requestTransactionDto);
         Income previousIncome = incomeRepository
@@ -179,7 +181,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
             newIncome.setCurrency(currency);
         }
         incomeRepository.save(newIncome);
-        return transactionMapper.toIncomeDto(newIncome);
+        return transactionMapper.toPersistIncomeDto(newIncome);
     }
 
     @Transactional

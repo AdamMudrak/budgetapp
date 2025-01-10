@@ -3,7 +3,8 @@ package com.example.budgetingapp.mappers;
 import com.example.budgetingapp.config.MapperConfig;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.UpdateRequestTransactionDto;
-import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
+import com.example.budgetingapp.dtos.transactions.response.GetResponseTransactionDto;
+import com.example.budgetingapp.dtos.transactions.response.SaveAndUpdateResponseTransactionDto;
 import com.example.budgetingapp.entities.transactions.Expense;
 import com.example.budgetingapp.entities.transactions.Income;
 import java.time.LocalDate;
@@ -48,15 +49,21 @@ public interface TransactionMapper {
 
     @Mapping(source = "account.id", target = "accountId")
     @Mapping(source = "incomeCategory.id", target = "categoryId")
-    //TODO might want to delete later if becomes unnecessary
     @Mapping(source = "account.name", target = "accountName")
     @Mapping(source = "incomeCategory.name", target = "categoryName")
-    ResponseTransactionDto toIncomeDto(Income income);
+    GetResponseTransactionDto toIncomeDto(Income income);
 
     @Mapping(source = "account.id", target = "accountId")
     @Mapping(source = "expenseCategory.id", target = "categoryId")
-    //TODO might want to delete later if becomes unnecessary
     @Mapping(source = "account.name", target = "accountName")
     @Mapping(source = "expenseCategory.name", target = "categoryName")
-    ResponseTransactionDto toExpenseDto(Expense expense);
+    GetResponseTransactionDto toExpenseDto(Expense expense);
+
+    @Mapping(source = "account.id", target = "accountId")
+    @Mapping(source = "incomeCategory.id", target = "categoryId")
+    SaveAndUpdateResponseTransactionDto toPersistIncomeDto(Income income);
+
+    @Mapping(source = "account.id", target = "accountId")
+    @Mapping(source = "expenseCategory.id", target = "categoryId")
+    SaveAndUpdateResponseTransactionDto toPersistExpenseDto(Expense expense);
 }
