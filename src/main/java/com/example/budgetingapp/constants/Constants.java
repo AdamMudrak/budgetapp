@@ -1,10 +1,6 @@
 package com.example.budgetingapp.constants;
 
 public class Constants {
-    public static final String REGISTRATION_CONFIRMATION_LINK = "https://my.budgetapp.space/#/";
-    public static final String PASSWORD_RESET_CONFIRMATION_LINK = "https://my.budgetapp.space/#/";
-    public static final String SUPPORT_RESET_SENT_LINK = "https://my.budgetapp.space/#/";
-
     public static final String TELEGRAM_PHONE_NUMBER = "telegram phone number";
     public static final String EMAIL = "email";
     public static final String MONTH = "MONTH";
@@ -31,7 +27,6 @@ public class Constants {
     public static final String CODE_403 = "403";
 
     public static final String ROLE_USER = "hasRole('ROLE_USER')";
-    public static final String ROLE_ADMIN = "hasRole('ROLE_ADMIN')";
 
     public static final String CATEGORY_PAGEABLE_EXAMPLE = """
             {
@@ -46,6 +41,14 @@ public class Constants {
               "page": 0,
               "size": 10,
               "sort":"transactionDate,ASC"
+            }
+            """;
+
+    public static final String TARGET_PAGEABLE_EXAMPLE = """
+            {
+              "page": 0,
+              "size": 5,
+              "sort":"name,ASC"
             }
             """;
 }

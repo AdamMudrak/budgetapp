@@ -132,8 +132,8 @@ public class AuthController {
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_INITIATED_PASSWORD_RESET)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @GetMapping(FORGOT_PASSWORD)
-    public UserPasswordResetResponseDto initiatePasswordReset(@Valid
+    @PostMapping(FORGOT_PASSWORD)
+    public UserPasswordResetResponseDto initiatePasswordReset(@Valid @RequestBody
                                               UserGetLinkToSetRandomPasswordRequestDto request) {
         return authenticationService.initiatePasswordReset(request.email());
     }

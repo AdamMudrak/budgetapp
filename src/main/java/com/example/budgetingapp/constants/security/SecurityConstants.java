@@ -35,19 +35,20 @@ public class SecurityConstants {
     public static final String CONFIRM_REGISTRATION_SUBJECT =
             "Finish registration in Moneta";
     public static final String CONFIRM_REGISTRATION_BODY = """
-            Good day! This email is to help you
-            confirm you registration of moneta account.
-            Please, use this link finish it.""";
+            Good day! This email is here to help you confirm your registration
+            of Moneta account. Please, use this link to finish it:""";
     public static final String INITIATE_RANDOM_PASSWORD_SUBJECT =
             "Initiate password reset for Moneta";
     public static final String RANDOM_PASSWORD_SUBJECT = "New password for Moneta";
     public static final String INITIATE_RANDOM_PASSWORD_BODY = """
-            Good day! This email is to help you
-            reset password for your moneta account.
-            Please, use this link to get a random password.""";
-    public static final String RANDOM_PASSWORD_BODY = """
-            Your new random password:
-            """;
+            Good day! This email is here to help you reset
+            password for your Moneta account. Please, use
+            this link to confirm your request of password reset:""";
+    public static final String RANDOM_PASSWORD_BODY = "Your new random password:";
+    public static final String RANDOM_PASSWORD_BODY_2 =
+            "Follow the link and log in using new password:";
+    public static final String RANDOM_PASSWORD_BODY_3 =
+            "Feel free to change password to something you will remember!";
     public static final String SUCCESSFUL_CHANGE_MESSAGE =
             "New password has been set successfully.";
     public static final String REGISTERED_BUT_NOT_ACTIVATED =

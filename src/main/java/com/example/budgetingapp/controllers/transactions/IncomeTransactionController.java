@@ -34,7 +34,8 @@ import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.UpdateRequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByMonthOrYear;
 import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
-import com.example.budgetingapp.dtos.transactions.response.ResponseTransactionDto;
+import com.example.budgetingapp.dtos.transactions.response.GetResponseTransactionDto;
+import com.example.budgetingapp.dtos.transactions.response.SaveAndUpdateResponseTransactionDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.services.interfaces.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -79,8 +80,9 @@ public class IncomeTransactionController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PostMapping(ADD_INCOME)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseTransactionDto addIncomeTransaction(@AuthenticationPrincipal User user,
-                               @Valid @RequestBody RequestTransactionDto requestTransactionDto) {
+    public SaveAndUpdateResponseTransactionDto addIncomeTransaction(
+                                @AuthenticationPrincipal User user,
+                                @Valid @RequestBody RequestTransactionDto requestTransactionDto) {
         return incomeTransactionService.saveTransaction(user.getId(), requestTransactionDto);
     }
 
@@ -89,7 +91,7 @@ public class IncomeTransactionController {
             SUCCESSFULLY_RETRIEVED_INCOMES)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @GetMapping(GET_ALL_INCOMES)
-    public List<ResponseTransactionDto> getAllIncomesTransactions(
+    public List<GetResponseTransactionDto> getAllIncomesTransactions(
             @AuthenticationPrincipal User user,
             @Valid FilterTransactionsDto filterTransactionsDto,
             @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE) Pageable pageable) {
@@ -128,9 +130,10 @@ public class IncomeTransactionController {
             SUCCESSFULLY_UPDATED_INCOME)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PutMapping(UPDATE_INCOME_BY_ID)
-    public ResponseTransactionDto updateIncomeTransaction(@AuthenticationPrincipal User user,
-                              @Valid @RequestBody UpdateRequestTransactionDto requestTransactionDto,
-                              @PathVariable Long transactionId) {
+    public SaveAndUpdateResponseTransactionDto updateIncomeTransaction(
+                             @AuthenticationPrincipal User user,
+                             @Valid @RequestBody UpdateRequestTransactionDto requestTransactionDto,
+                             @PathVariable Long transactionId) {
         return incomeTransactionService.updateTransaction(user.getId(),
                 requestTransactionDto, transactionId);
     }

@@ -1,4 +1,4 @@
-package com.example.budgetingapp.dtos.emails;
+package com.example.budgetingapp.dtos.emails.request;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 

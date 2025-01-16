@@ -6,6 +6,7 @@ import static com.example.budgetingapp.constants.Constants.CODE_204;
 import static com.example.budgetingapp.constants.Constants.CODE_400;
 import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
+import static com.example.budgetingapp.constants.Constants.TARGET_PAGEABLE_EXAMPLE;
 import static com.example.budgetingapp.constants.controllers.TargetControllerConstants.ADD_TARGET;
 import static com.example.budgetingapp.constants.controllers.TargetControllerConstants.ADD_TARGET_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TargetControllerConstants.DESTROY_TARGET;
@@ -29,6 +30,7 @@ import com.example.budgetingapp.dtos.targets.response.TargetTransactionResponseD
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.services.interfaces.TargetService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -77,7 +79,7 @@ public class TargetController {
     @ApiResponse(responseCode = CODE_200, description = SUCCESSFULLY_RETRIEVED_TARGETS)
     @GetMapping(GET_ALL_TARGETS)
     public List<TargetTransactionResponseDto> getAllTargets(@AuthenticationPrincipal User user,
-                                                            Pageable pageable) {
+                            @Parameter(example = TARGET_PAGEABLE_EXAMPLE) Pageable pageable) {
         return targetService.getAllTargets(user.getId(), pageable);
     }
 

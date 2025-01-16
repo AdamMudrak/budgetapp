@@ -20,6 +20,7 @@ import com.example.budgetingapp.repositories.transactions.transactionsspecs.expe
 import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.interfaces.BudgetService;
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +66,7 @@ public class BudgetServiceImpl implements BudgetService {
                 .findAllByUserId(userId)
                 .stream()
                 .map(budgetMapper::toBudgetDto)
+                .sorted(Comparator.comparing(BudgetResponseDto::getId))
                 .toList();
     }
 

@@ -4,17 +4,17 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.SUPP
 import static com.example.budgetingapp.constants.security.SecurityConstants.SUPPORT_EMAIL_SUBJECT;
 
 import com.example.budgetingapp.constants.Constants;
-import com.example.budgetingapp.dtos.emails.ContactUsByEmailDto;
+import com.example.budgetingapp.dtos.emails.request.ContactUsByEmailDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ContactUsEmailService extends EmailService {
+public class ContactUsByEmailService extends EmailService {
     @Value(SUPPORT_EMAIL)
     private String supportEmail;
 
-    public ContactUsEmailService(JavaMailSender mailSender) {
+    public ContactUsByEmailService(JavaMailSender mailSender) {
         super(mailSender);
     }
 

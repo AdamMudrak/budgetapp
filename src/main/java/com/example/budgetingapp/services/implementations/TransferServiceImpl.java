@@ -15,6 +15,7 @@ import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.interfaces.TransferService;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -75,6 +76,7 @@ public class TransferServiceImpl implements TransferService {
                 .findAllByUserId(userId, pageable)
                 .stream()
                 .map(transferMapper::toTransferDto)
+                .sorted(Comparator.comparing(TransferResponseDto::transactionDate).reversed())
                 .toList();
     }
 

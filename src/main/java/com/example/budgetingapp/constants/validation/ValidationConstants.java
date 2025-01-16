@@ -1,5 +1,7 @@
 package com.example.budgetingapp.constants.validation;
 
+import java.util.regex.Pattern;
+
 public class ValidationConstants {
     public static final String INVALID_DATE_FORMAT = ": invalid date format. Should be YYYY-MM-dd.";
     public static final String INVALID_FILTER = ": invalid filter. Must be MONTH or YEAR.";
@@ -8,10 +10,10 @@ public class ValidationConstants {
             + "to-date can't be earlier than from-date.";
     public static final String DATE_PATTERN = "^\\d{4}-\\d{2}-\\d{2}$";
 
-    public static final String INVALID_EMAIL = ": invalid email used as userName";
+    public static final String INVALID_EMAIL = ": invalid email";
     public static final String PATTERN_OF_EMAIL = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*"
             + "@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
-    public static final String INVALID_PHONE = ": invalid phone used as userName";
+    public static final String INVALID_PHONE = ": invalid phone";
     public static final String PATTERN_OF_PHONE = "^\\+[1-9]\\d{1,14}$";
 
     public static final String PASSWORD_COLLISION =
@@ -26,8 +28,9 @@ public class ValidationConstants {
                     + " 1 lowercase letter,"
                     + " 1 uppercase letter,"
                     + " 1 digit,"
-                    + " 1 special character,"
-                    + " and be 8 to 32 characters long.";
+                    + " 1 special character.";
+    public static final String ESCAPED_SPECIAL_CHARS =
+            Pattern.quote("^$*{}[]()|~`!@#%&-_=+;:'\"<>,./?");
     public static final String PASSWORD_PATTERN = "(?=^.*[A-Z])(?=^.*[a-z])(?=^.*\\d)"
-            + "(?=^.*[?!@#$%^&*~]).{8,32}$";
+            + "(?=^.*[" + ESCAPED_SPECIAL_CHARS + "]).{8,32}$";
 }
