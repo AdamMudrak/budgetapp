@@ -7,7 +7,6 @@ import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.UpdateRequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByMonthOrYear;
 import com.example.budgetingapp.dtos.transactions.response.ChartsAccumulatedResultDto;
-import com.example.budgetingapp.dtos.transactions.response.GetResponseTransactionDto;
 import com.example.budgetingapp.dtos.transactions.response.GetTransactionsPageDto;
 import com.example.budgetingapp.dtos.transactions.response.SaveAndUpdateResponseTransactionDto;
 import com.example.budgetingapp.entities.Account;
@@ -25,7 +24,6 @@ import com.example.budgetingapp.services.interfaces.TransactionService;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,17 +81,12 @@ public class IncomeTransactionServiceImpl implements TransactionService {
         Page<Income> incomePage =
                 incomeRepository.findAllByUserIdPaged(userId, incomeSpecification, pageable);
 
-        List<GetResponseTransactionDto> transactionDtos = incomePage.stream()
-                .map(transactionMapper::toIncomeDto)
-                .sorted(Comparator.comparing(GetResponseTransactionDto::transactionDate).reversed())
-                .toList();
-
         return new GetTransactionsPageDto(incomePage.getNumber(),
                 incomePage.getSize(),
                 incomePage.getNumberOfElements(),
                 incomePage.getTotalElements(),
                 incomePage.getTotalPages(),
-                transactionDtos);
+                transactionMapper.toIncomeDtoList(incomePage.getContent()));
     }
 
     @Override
