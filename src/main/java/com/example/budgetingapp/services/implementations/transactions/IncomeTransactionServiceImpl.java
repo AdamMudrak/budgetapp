@@ -6,8 +6,9 @@ import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.UpdateRequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByMonthOrYear;
-import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
+import com.example.budgetingapp.dtos.transactions.response.ChartsAccumulatedResultDto;
 import com.example.budgetingapp.dtos.transactions.response.GetResponseTransactionDto;
+import com.example.budgetingapp.dtos.transactions.response.GetTransactionsPageDto;
 import com.example.budgetingapp.dtos.transactions.response.SaveAndUpdateResponseTransactionDto;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.User;
@@ -32,6 +33,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -72,21 +74,31 @@ public class IncomeTransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<GetResponseTransactionDto> getAllTransactions(Long userId,
-                                                              FilterTransactionsDto filterDto,
-                                                              Pageable pageable) {
+    public GetTransactionsPageDto getAllTransactions(Long userId,
+                                                     FilterTransactionsDto filterDto,
+                                                     Pageable pageable) {
         presenceCheck(userId, filterDto);
         Specification<Income> incomeSpecification = incomeSpecificationBuilder.build(filterDto);
-        return incomeRepository.findAllByUserIdPaged(userId, incomeSpecification, pageable)
-                .stream()
+
+        Page<Income> incomePage =
+                incomeRepository.findAllByUserIdPaged(userId, incomeSpecification, pageable);
+
+        List<GetResponseTransactionDto> transactionDtos = incomePage.stream()
                 .map(transactionMapper::toIncomeDto)
                 .sorted(Comparator.comparing(GetResponseTransactionDto::transactionDate).reversed())
                 .toList();
+
+        return new GetTransactionsPageDto(incomePage.getNumber(),
+                incomePage.getSize(),
+                incomePage.getNumberOfElements(),
+                incomePage.getTotalElements(),
+                incomePage.getTotalPages(),
+                transactionDtos);
     }
 
     @Override
-    public List<AccumulatedResultDto> getSumOfTransactionsForPeriodOfTime(Long userId,
-                                                          FilterTransactionsDto transactionsDto) {
+    public List<ChartsAccumulatedResultDto> getSumOfTransactionsForPeriodOfTime(Long userId,
+                                                            FilterTransactionsDto transactionsDto) {
         if (transactionsDto.accountId() == null) {
             throw new IllegalArgumentException("Account id can't be null so as to prevent mixing "
                     + "transactions with different currencies");
@@ -103,8 +115,8 @@ public class IncomeTransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<AccumulatedResultDto> getSumOfTransactionsForMonthOrYear(Long userId,
-                ChartTransactionRequestDtoByMonthOrYear chartTransactionRequestDtoByMonthOrYear) {
+    public List<ChartsAccumulatedResultDto> getSumOfTransactionsForMonthOrYear(Long userId,
+               ChartTransactionRequestDtoByMonthOrYear chartTransactionRequestDtoByMonthOrYear) {
         if (chartTransactionRequestDtoByMonthOrYear.accountId() == null) {
             throw new IllegalArgumentException("Account id can't be null so as to prevent mixing "
                     + "transactions with different currencies");
