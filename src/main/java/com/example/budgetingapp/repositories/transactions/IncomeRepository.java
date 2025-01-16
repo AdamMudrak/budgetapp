@@ -5,6 +5,7 @@ import com.example.budgetingapp.entities.transactions.Income;
 import jakarta.persistence.criteria.Join;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,14 +27,14 @@ public interface IncomeRepository extends JpaRepository<Income, Long>,
         return findAll(userIdSpecification);
     }
 
-    default List<Income> findAllByUserIdPaged(Long userId,
-                                               Specification<Income> specification,
-                                               Pageable pageable) {
+    default Page<Income> findAllByUserIdPaged(Long userId,
+                                              Specification<Income> specification,
+                                              Pageable pageable) {
         Specification<Income> userIdSpecification = getUserIdSpecification(userId);
         if (specification != null) {
             userIdSpecification = userIdSpecification.and(specification);
         }
-        return findAll(userIdSpecification, pageable).getContent();
+        return findAll(userIdSpecification, pageable);
     }
 
     private Specification<Income> getUserIdSpecification(Long userId) {
