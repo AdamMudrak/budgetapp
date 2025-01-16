@@ -34,7 +34,8 @@ public interface IncomeRepository extends JpaRepository<Income, Long>,
         if (specification != null) {
             userIdSpecification = userIdSpecification.and(specification);
         }
-        return findAll(userIdSpecification, pageable);
+        return findAll(userIdSpecification,
+                TransactionsSorter.getSortOrSortByDefault(pageable));
     }
 
     private Specification<Income> getUserIdSpecification(Long userId) {

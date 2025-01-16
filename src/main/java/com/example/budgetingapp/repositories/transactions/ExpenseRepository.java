@@ -34,7 +34,8 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long>,
         if (specification != null) {
             userIdSpecification = userIdSpecification.and(specification);
         }
-        return findAll(userIdSpecification, pageable);
+        return findAll(userIdSpecification,
+                TransactionsSorter.getSortOrSortByDefault(pageable));
     }
 
     private Specification<Expense> getUserIdSpecification(Long userId) {
