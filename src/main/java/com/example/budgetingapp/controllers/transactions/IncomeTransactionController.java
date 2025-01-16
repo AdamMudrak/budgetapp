@@ -33,8 +33,8 @@ import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.UpdateRequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByMonthOrYear;
-import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
-import com.example.budgetingapp.dtos.transactions.response.GetResponseTransactionDto;
+import com.example.budgetingapp.dtos.transactions.response.ChartsAccumulatedResultDto;
+import com.example.budgetingapp.dtos.transactions.response.GetTransactionsPageDto;
 import com.example.budgetingapp.dtos.transactions.response.SaveAndUpdateResponseTransactionDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.services.interfaces.TransactionService;
@@ -91,7 +91,7 @@ public class IncomeTransactionController {
             SUCCESSFULLY_RETRIEVED_INCOMES)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @GetMapping(GET_ALL_INCOMES)
-    public List<GetResponseTransactionDto> getAllIncomesTransactions(
+    public GetTransactionsPageDto getAllIncomesTransactions(
             @AuthenticationPrincipal User user,
             @Valid FilterTransactionsDto filterTransactionsDto,
             @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE) Pageable pageable) {
@@ -104,8 +104,9 @@ public class IncomeTransactionController {
             SUCCESSFULLY_RETRIEVED_INCOMES_FOR_CHARTS_DAY)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @GetMapping(GET_ALL_INCOMES_FOR_CHARTS_DAYS)
-    public List<AccumulatedResultDto> getIncomesForDaysCharts(@AuthenticationPrincipal User user,
-                          @Valid FilterTransactionsDto filterTransactionsDto) {
+    public List<ChartsAccumulatedResultDto> getIncomesForDaysCharts(
+            @AuthenticationPrincipal User user,
+            @Valid FilterTransactionsDto filterTransactionsDto) {
         return incomeTransactionService
                 .getSumOfTransactionsForPeriodOfTime(
                         user.getId(), filterTransactionsDto);
@@ -116,7 +117,7 @@ public class IncomeTransactionController {
             SUCCESSFULLY_RETRIEVED_INCOMES_FOR_CHARTS)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @GetMapping(GET_ALL_INCOMES_FOR_CHARTS_MONTHS_YEARS)
-    public List<AccumulatedResultDto> getIncomesForMonthOrYearCharts(
+    public List<ChartsAccumulatedResultDto> getIncomesForMonthOrYearCharts(
             @AuthenticationPrincipal User user,
             @Valid ChartTransactionRequestDtoByMonthOrYear
                     chartTransactionRequestDtoByMonthOrYear) {
