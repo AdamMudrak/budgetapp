@@ -8,7 +8,7 @@ import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.UpdateRequestTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByMonthOrYear;
-import com.example.budgetingapp.dtos.transactions.response.AccumulatedResultDto;
+import com.example.budgetingapp.dtos.transactions.response.ChartsAccumulatedResultDto;
 import com.example.budgetingapp.dtos.transactions.response.helper.TransactionSumByCategoryDto;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.transactions.Income;
@@ -61,7 +61,7 @@ public class TransactionsCommonFunctionsUtil {
                 NO_VALUE, NO_VALUE);
     }
 
-    List<AccumulatedResultDto> prepareListOfAccumulatedDtos(
+    List<ChartsAccumulatedResultDto> prepareListOfAccumulatedDtos(
             Map<LocalDate, Map<String, BigDecimal>> categorizedExpenseSums) {
         return categorizedExpenseSums.entrySet().stream()
                 .map(entry -> {
@@ -73,9 +73,9 @@ public class TransactionsCommonFunctionsUtil {
                                     dateEntry.getKey(),
                                     dateEntry.getValue()))
                             .collect(Collectors.toList());
-                    return new AccumulatedResultDto(entry.getKey(), sumsByDate);
+                    return new ChartsAccumulatedResultDto(entry.getKey(), sumsByDate);
                 })
-                .sorted(Comparator.comparing(AccumulatedResultDto::localDate))
+                .sorted(Comparator.comparing(ChartsAccumulatedResultDto::localDate))
                 .collect(Collectors.toList());
     }
 }
