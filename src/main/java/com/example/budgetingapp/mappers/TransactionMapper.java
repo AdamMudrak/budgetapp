@@ -8,6 +8,7 @@ import com.example.budgetingapp.dtos.transactions.response.SaveAndUpdateResponse
 import com.example.budgetingapp.entities.transactions.Expense;
 import com.example.budgetingapp.entities.transactions.Income;
 import java.time.LocalDate;
+import java.util.List;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -47,17 +48,21 @@ public interface TransactionMapper {
         income.setTransactionDate(LocalDate.parse(requestTransactionDto.transactionDate()));
     }
 
+    List<GetResponseTransactionDto> toIncomeDtoList(List<Income> incomes);
+
     @Mapping(source = "account.id", target = "accountId")
     @Mapping(source = "incomeCategory.id", target = "categoryId")
     @Mapping(source = "account.name", target = "accountName")
     @Mapping(source = "incomeCategory.name", target = "categoryName")
     GetResponseTransactionDto toIncomeDto(Income income);
 
+    List<GetResponseTransactionDto> toExpenseDtoList(List<Expense> expenses);
+
     @Mapping(source = "account.id", target = "accountId")
     @Mapping(source = "expenseCategory.id", target = "categoryId")
     @Mapping(source = "account.name", target = "accountName")
     @Mapping(source = "expenseCategory.name", target = "categoryName")
-    GetResponseTransactionDto toExpenseDto(Expense expense);
+    GetResponseTransactionDto toExpenseDtoList(Expense expense);
 
     @Mapping(source = "account.id", target = "accountId")
     @Mapping(source = "incomeCategory.id", target = "categoryId")
