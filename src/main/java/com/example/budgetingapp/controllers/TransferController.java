@@ -16,6 +16,7 @@ import static com.example.budgetingapp.constants.controllers.TransferControllerC
 import static com.example.budgetingapp.constants.controllers.TransferControllerConstants.TRANSFERS;
 
 import com.example.budgetingapp.dtos.transfers.request.TransferRequestDto;
+import com.example.budgetingapp.dtos.transfers.response.GetTransfersPageDto;
 import com.example.budgetingapp.dtos.transfers.response.TransferResponseDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.services.interfaces.TransferService;
@@ -24,7 +25,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -58,8 +58,8 @@ public class TransferController {
     @Operation(summary = GET_ALL_TRANSFERS_SUMMARY)
     @ApiResponse(responseCode = CODE_200, description = SUCCESSFULLY_RETRIEVED_TRANSFERS)
     @GetMapping(GET_ALL_TRANSFERS)
-    public List<TransferResponseDto> getAllTransfers(@AuthenticationPrincipal User user,
-                             @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE) Pageable pageable) {
+    public GetTransfersPageDto getAllTransfers(@AuthenticationPrincipal User user,
+                           @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE) Pageable pageable) {
         return transferService.getAllTransfersByUserId(user.getId(), pageable);
     }
 }

@@ -1,10 +1,27 @@
 package com.example.budgetingapp.repositories.transfer;
 
 import com.example.budgetingapp.entities.Transfer;
-import java.util.List;
+import com.example.budgetingapp.entities.User;
+import com.example.budgetingapp.repositories.TransactionsSorter;
+import jakarta.persistence.criteria.Join;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface TransferRepository extends JpaRepository<Transfer, Long> {
-    List<Transfer> findAllByUserId(Long userId, Pageable pageable);
+public interface TransferRepository extends JpaRepository<Transfer, Long>,
+        JpaSpecificationExecutor<Transfer> {
+
+    default Page<Transfer> findAllByUserIdPaged(Long userId, Pageable pageable) {
+        return findAll(getUserIdSpecification(userId),
+                TransactionsSorter.getSortOrSortByDefault(pageable));
+    }
+
+    private Specification<Transfer> getUserIdSpecification(Long userId) {
+        return (((root, query, criteriaBuilder) -> {
+            Join<Transfer, User> transferUserJoin = root.join("user");
+            return criteriaBuilder.equal(transferUserJoin.get("id"), userId);
+        }));
+    }
 }
