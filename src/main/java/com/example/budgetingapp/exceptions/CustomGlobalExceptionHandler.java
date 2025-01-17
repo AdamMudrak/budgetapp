@@ -5,19 +5,18 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.GONE;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
 import com.example.budgetingapp.exceptions.badrequest.RegistrationException;
 import com.example.budgetingapp.exceptions.conflictexpections.AlreadyExistsException;
 import com.example.budgetingapp.exceptions.conflictexpections.ConflictException;
+import com.example.budgetingapp.exceptions.conflictexpections.PasswordMismatch;
 import com.example.budgetingapp.exceptions.conflictexpections.TransactionFailedException;
 import com.example.budgetingapp.exceptions.forbidden.LoginException;
 import com.example.budgetingapp.exceptions.gone.LinkExpiredException;
 import com.example.budgetingapp.exceptions.notfoundexceptions.ActionNotFoundException;
 import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
 import com.example.budgetingapp.exceptions.notfoundexceptions.SpecificationProviderNotFoundException;
-import com.example.budgetingapp.exceptions.unauthorized.PasswordMismatch;
 import jakarta.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
@@ -112,7 +111,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler(PasswordMismatch.class)
     protected ResponseEntity<Object> handlePasswordMismatch(
             Exception ex, WebRequest request) {
-        return getUnifiedResponse(ex, UNAUTHORIZED);
+        return getUnifiedResponse(ex, CONFLICT);
     }
 
     @ExceptionHandler(LinkExpiredException.class)

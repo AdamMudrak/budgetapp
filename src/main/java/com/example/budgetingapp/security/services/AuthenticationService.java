@@ -5,12 +5,12 @@ import static com.example.budgetingapp.constants.Constants.TELEGRAM_PHONE_NUMBER
 import static com.example.budgetingapp.constants.redirects.RedirectConstants.PASSWORD_RESET_CONFIRMATION_LINK;
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACCESS;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION;
+import static com.example.budgetingapp.constants.security.SecurityConstants.PASSWORD_SET_SUCCESSFULLY;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_STRENGTH;
 import static com.example.budgetingapp.constants.security.SecurityConstants.REFRESH;
 import static com.example.budgetingapp.constants.security.SecurityConstants.REFRESH_TOKEN;
 import static com.example.budgetingapp.constants.security.SecurityConstants.REGISTERED_BUT_NOT_ACTIVATED;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RESET;
-import static com.example.budgetingapp.constants.security.SecurityConstants.SUCCESSFUL_CHANGE_MESSAGE;
 import static com.example.budgetingapp.constants.security.SecurityConstants.SUCCESS_EMAIL;
 
 import com.example.budgetingapp.constants.controllers.AuthControllerConstants;
@@ -24,10 +24,10 @@ import com.example.budgetingapp.dtos.users.response.StartPasswordResetDto;
 import com.example.budgetingapp.dtos.users.response.UserLoginDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.tokens.ParamToken;
+import com.example.budgetingapp.exceptions.conflictexpections.PasswordMismatch;
 import com.example.budgetingapp.exceptions.forbidden.LoginException;
 import com.example.budgetingapp.exceptions.gone.LinkExpiredException;
 import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
-import com.example.budgetingapp.exceptions.unauthorized.PasswordMismatch;
 import com.example.budgetingapp.mappers.UserMapper;
 import com.example.budgetingapp.repositories.paramtoken.ParamTokenRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
@@ -117,7 +117,7 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder
                 .encode(userSetNewPasswordRequestDto.newPassword()));
         userRepository.save(user);
-        return new StartPasswordResetDto(SUCCESSFUL_CHANGE_MESSAGE);
+        return new StartPasswordResetDto(PASSWORD_SET_SUCCESSFULLY);
     }
 
     public AccessTokenDto refreshToken(HttpServletRequest httpServletRequest) {
