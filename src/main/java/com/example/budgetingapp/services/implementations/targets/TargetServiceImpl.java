@@ -1,4 +1,4 @@
-package com.example.budgetingapp.services.implementations;
+package com.example.budgetingapp.services.implementations.targets;
 
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGET_QUANTITY_THRESHOLD;
 
@@ -25,10 +25,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -40,7 +38,7 @@ public class TargetServiceImpl implements TargetService {
     private final TargetRepository targetRepository;
     private final AccountRepository accountRepository;
     private final TargetMapper targetMapper;
-    private final TargetTransactionsMapperUtil targetTransactionsMapperUtil;
+    private final TargetTransactionsFactoryUtil targetTransactionsMapperUtil;
 
     @Override
     public TargetDto saveTarget(Long userId,
@@ -105,13 +103,8 @@ public class TargetServiceImpl implements TargetService {
     }
 
     @Override
-    public List<TargetDto> getAllTargets(Long userId, Pageable pageable) {
-        return targetRepository.findAllByUserId(userId, pageable)
-                .stream()
-                .map(targetMapper::toTargetDto)
-                .sorted(Comparator.comparing(
-                        TargetDto::getId))
-                .toList();
+    public List<TargetDto> getAllTargets(Long userId) {
+        return targetMapper.toTargetDtoList(targetRepository.findAllByUserId(userId));
     }
 
     @Transactional

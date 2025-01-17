@@ -1,13 +1,13 @@
-package com.example.budgetingapp.repositories.transactions;
+package com.example.budgetingapp.repositories;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-class TransactionsSorter {
+public class TransactionsSorter {
     private static final String DEFAULT_SORTING_FIELD = "transactionDate";
 
-    static Pageable getSortOrSortByDefault(Pageable pageable) {
+    public static Pageable getSortOrSortByDefault(Pageable pageable) {
         if (pageable.getSort().isSorted()) {
             return pageable;
         }

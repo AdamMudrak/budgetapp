@@ -5,7 +5,6 @@ import com.example.budgetingapp.dtos.targets.request.DeleteTargetDto;
 import com.example.budgetingapp.dtos.targets.request.ReplenishTargetDto;
 import com.example.budgetingapp.dtos.targets.response.TargetDto;
 import java.util.List;
-import org.springframework.data.domain.Pageable;
 
 public interface TargetService {
     TargetDto saveTarget(Long userId,
@@ -14,8 +13,7 @@ public interface TargetService {
     TargetDto replenishTarget(Long userId,
                               ReplenishTargetDto replenishTargetRequestDto);
 
-    List<TargetDto> getAllTargets(Long userId,
-                                  Pageable pageable);
+    List<TargetDto> getAllTargets(Long userId);
 
     void deleteByTargetId(Long userId, DeleteTargetDto deleteTargetRequestDto);
 }

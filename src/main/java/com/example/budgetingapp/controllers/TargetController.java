@@ -6,7 +6,6 @@ import static com.example.budgetingapp.constants.Constants.CODE_204;
 import static com.example.budgetingapp.constants.Constants.CODE_400;
 import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
-import static com.example.budgetingapp.constants.Constants.TARGET_PAGEABLE_EXAMPLE;
 import static com.example.budgetingapp.constants.controllers.TargetControllerConstants.ADD_TARGET;
 import static com.example.budgetingapp.constants.controllers.TargetControllerConstants.ADD_TARGET_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TargetControllerConstants.DESTROY_TARGET;
@@ -30,13 +29,11 @@ import com.example.budgetingapp.dtos.targets.response.TargetDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.services.interfaces.TargetService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -78,9 +75,8 @@ public class TargetController {
     @Operation(summary = GET_ALL_TARGETS_SUMMARY)
     @ApiResponse(responseCode = CODE_200, description = SUCCESSFULLY_RETRIEVED_TARGETS)
     @GetMapping(GET_ALL_TARGETS)
-    public List<TargetDto> getAllTargets(@AuthenticationPrincipal User user,
-                             @Parameter(example = TARGET_PAGEABLE_EXAMPLE) Pageable pageable) {
-        return targetService.getAllTargets(user.getId(), pageable);
+    public List<TargetDto> getAllTargets(@AuthenticationPrincipal User user) {
+        return targetService.getAllTargets(user.getId());
     }
 
     @Operation(summary = DESTROY_TARGET_SUMMARY)

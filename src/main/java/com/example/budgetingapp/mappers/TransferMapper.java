@@ -5,6 +5,7 @@ import com.example.budgetingapp.dtos.transfers.request.TransferRequestDto;
 import com.example.budgetingapp.dtos.transfers.response.TransferResponseDto;
 import com.example.budgetingapp.entities.Transfer;
 import java.time.LocalDate;
+import java.util.List;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -27,4 +28,6 @@ public interface TransferMapper {
     @Mapping(source = "fromAccount.id", target = "fromAccountId")
     @Mapping(source = "toAccount.id", target = "toAccountId")
     TransferResponseDto toTransferDto(Transfer transfer);
+
+    List<TransferResponseDto> toTransferDtoList(List<Transfer> transfers);
 }

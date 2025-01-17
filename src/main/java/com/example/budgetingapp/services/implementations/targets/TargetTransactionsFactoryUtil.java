@@ -1,4 +1,4 @@
-package com.example.budgetingapp.services.implementations;
+package com.example.budgetingapp.services.implementations.targets;
 
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGET_EXPENSE_CATEGORY;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGET_INCOME_CATEGORY;

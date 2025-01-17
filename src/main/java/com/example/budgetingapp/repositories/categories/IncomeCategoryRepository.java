@@ -4,7 +4,6 @@ import com.example.budgetingapp.entities.categories.IncomeCategory;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,7 +17,7 @@ public interface IncomeCategoryRepository extends JpaRepository<IncomeCategory, 
 
     boolean existsByNameAndUserId(String name, Long userId);
 
-    List<IncomeCategory> findAllByUserId(Long userId, Pageable pageable);
+    List<IncomeCategory> findAllByUserId(Long userId);
 
     Optional<IncomeCategory> findByIdAndUserId(Long id, Long userId);
 

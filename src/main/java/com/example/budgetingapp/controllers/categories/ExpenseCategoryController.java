@@ -1,6 +1,5 @@
 package com.example.budgetingapp.controllers.categories;
 
-import static com.example.budgetingapp.constants.Constants.CATEGORY_PAGEABLE_EXAMPLE;
 import static com.example.budgetingapp.constants.Constants.CODE_200;
 import static com.example.budgetingapp.constants.Constants.CODE_201;
 import static com.example.budgetingapp.constants.Constants.CODE_204;
@@ -91,9 +90,8 @@ public class ExpenseCategoryController {
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_RETRIEVED_CATEGORIES)
     @GetMapping(GET_ALL_CATEGORIES)
-    public List<CategoryDto> getAllExpenseCategories(@AuthenticationPrincipal User user,
-                             @Parameter(example = CATEGORY_PAGEABLE_EXAMPLE) Pageable pageable) {
-        return expenseCategoryService.getAllCategoriesByUserId(user.getId(), pageable);
+    public List<CategoryDto> getAllExpenseCategories(@AuthenticationPrincipal User user) {
+        return expenseCategoryService.getAllCategoriesByUserId(user.getId());
     }
 
     @Operation(summary = DELETE_CATEGORY_SUMMARY)

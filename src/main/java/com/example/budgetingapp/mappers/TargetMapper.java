@@ -8,6 +8,7 @@ import com.example.budgetingapp.dtos.targets.response.TargetDto;
 import com.example.budgetingapp.entities.Target;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -20,6 +21,8 @@ public interface TargetMapper {
 
     @Mapping(target = "periodLeft", ignore = true)
     TargetDto toTargetDto(Target target);
+
+    List<TargetDto> toTargetDtoList(List<Target> targets);
 
     @AfterMapping
     default void setMonthLeft(@MappingTarget

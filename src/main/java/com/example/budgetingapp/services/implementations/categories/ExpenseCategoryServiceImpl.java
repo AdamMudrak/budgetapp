@@ -18,11 +18,9 @@ import com.example.budgetingapp.repositories.categories.ExpenseCategoryRepositor
 import com.example.budgetingapp.repositories.transactions.ExpenseRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.interfaces.CategoryService;
-import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -77,10 +75,10 @@ public class ExpenseCategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDto> getAllCategoriesByUserId(Long userId, Pageable pageable) {
+    public List<CategoryDto> getAllCategoriesByUserId(Long userId) {
         return categoryMapper
                 .toExpenseCategoryDtoList(expenseCategoryRepository
-                .findAllByUserId(userId, pageable));
+                .findAllByUserId(userId));
     }
 
     @Override

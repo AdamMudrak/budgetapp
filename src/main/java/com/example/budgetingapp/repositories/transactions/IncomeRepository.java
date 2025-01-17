@@ -2,6 +2,7 @@ package com.example.budgetingapp.repositories.transactions;
 
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.transactions.Income;
+import com.example.budgetingapp.repositories.TransactionsSorter;
 import jakarta.persistence.criteria.Join;
 import java.util.List;
 import java.util.Optional;
