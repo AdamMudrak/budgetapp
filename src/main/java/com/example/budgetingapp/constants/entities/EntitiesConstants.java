@@ -54,7 +54,9 @@ public class EntitiesConstants {
             "Utilities",
             "Transportation",
             "Entertainment",
-            "Other");
+            "Other",
+            "Target Replenishment");
 
     public static final String DEFAULT_CATEGORY_NAME = "Other";
+    public static final String TARGET_EXPENSE_CATEGORY = "Target Replenishment";
 }
