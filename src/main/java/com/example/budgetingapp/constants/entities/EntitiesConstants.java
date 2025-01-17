@@ -47,7 +47,8 @@ public class EntitiesConstants {
             "Freelance",
             "Investments",
             "Rental Income",
-            "Other");
+            "Other",
+            "Target Deletion");
 
     public static final List<String> DEFAULT_EXPENSE_CATEGORIES_LIST = List.of(
             "Groceries",
@@ -59,4 +60,5 @@ public class EntitiesConstants {
 
     public static final String DEFAULT_CATEGORY_NAME = "Other";
     public static final String TARGET_EXPENSE_CATEGORY = "Target Replenishment";
+    public static final String TARGET_INCOME_CATEGORY = "Target Deletion";
 }
