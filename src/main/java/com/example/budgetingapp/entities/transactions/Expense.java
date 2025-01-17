@@ -34,7 +34,7 @@ public class Expense {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = USER_ID, nullable = false)
     private User user;
-    @ManyToOne (fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ACCOUNT_ID, nullable = false)
     private Account account;
     @Column(nullable = false)
@@ -43,7 +43,7 @@ public class Expense {
     private BigDecimal amount;
     @Column(nullable = false)
     private LocalDate transactionDate;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = EXPENSE_CATEGORY_ID, nullable = false)
     private ExpenseCategory expenseCategory;
 }

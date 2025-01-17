@@ -43,7 +43,7 @@ public class Income {
     private BigDecimal amount;
     @Column(nullable = false)
     private LocalDate transactionDate;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = INCOME_CATEGORY_ID, nullable = false)
     private IncomeCategory incomeCategory;
 }
