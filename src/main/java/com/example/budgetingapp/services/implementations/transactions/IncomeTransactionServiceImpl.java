@@ -1,6 +1,7 @@
 package com.example.budgetingapp.services.implementations.transactions;
 
 import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.INCOME;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGET_INCOME_CATEGORY;
 
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
@@ -12,6 +13,7 @@ import com.example.budgetingapp.dtos.transactions.response.SaveAndUpdateResponse
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.transactions.Income;
+import com.example.budgetingapp.exceptions.conflictexpections.ConflictException;
 import com.example.budgetingapp.exceptions.conflictexpections.TransactionFailedException;
 import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
 import com.example.budgetingapp.mappers.TransactionMapper;
@@ -137,13 +139,23 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                                                Long userId,
                                                UpdateRequestTransactionDto requestTransactionDto,
                                                Long transactionId) {
-        String currency = "";
         presenceCheck(userId, requestTransactionDto);
+        if (incomeCategoryRepository.findByIdAndUserId(requestTransactionDto.categoryId(), userId)
+                .get().getName().equals(TARGET_INCOME_CATEGORY)) {
+            throw new ConflictException("Can't assign " + TARGET_INCOME_CATEGORY
+                    + " inside an update");
+        }
+
         Income previousIncome = incomeRepository
                 .findById(transactionId)
                 .orElseThrow(() ->
                         new EntityNotFoundException(
                                 "No income with id " + transactionId + " was found"));
+        if (previousIncome.getIncomeCategory().getName().equals(TARGET_INCOME_CATEGORY)) {
+            throw new ConflictException("Can't modify incomes with "
+                    + TARGET_INCOME_CATEGORY + " category");
+        }
+        String currency = "";
         if (requestTransactionDto.amount() != null) {
             Account thisIncomeAccount = accountRepository
                     .findByIdAndUserId(previousIncome.getAccount().getId(), userId)
@@ -197,6 +209,10 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                 .orElseThrow(() ->
                         new EntityNotFoundException("No income with id "
                                 + transactionId + " was found for user with id " + userId));
+        if (income.getIncomeCategory().getName().equals(TARGET_INCOME_CATEGORY)) {
+            throw new ConflictException("Can't modify incomes with "
+                    + TARGET_INCOME_CATEGORY + " category");
+        }
         Account account = accountRepository
                 .findByIdAndUserId(income.getAccount().getId(), userId)
                 .orElseThrow(() -> new EntityNotFoundException(

@@ -1,6 +1,7 @@
 package com.example.budgetingapp.services.implementations.transactions;
 
 import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.EXPENSE;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGET_EXPENSE_CATEGORY;
 
 import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
 import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
@@ -12,6 +13,7 @@ import com.example.budgetingapp.dtos.transactions.response.SaveAndUpdateResponse
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.transactions.Expense;
+import com.example.budgetingapp.exceptions.conflictexpections.ConflictException;
 import com.example.budgetingapp.exceptions.conflictexpections.TransactionFailedException;
 import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
 import com.example.budgetingapp.mappers.TransactionMapper;
@@ -142,14 +144,24 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
                                                Long userId,
                                                UpdateRequestTransactionDto requestTransactionDto,
                                                Long transactionId) {
-        String currency = "";
         presenceCheck(userId, requestTransactionDto);
+        if (expenseCategoryRepository.findByIdAndUserId(requestTransactionDto.categoryId(), userId)
+                .get().getName().equals(TARGET_EXPENSE_CATEGORY)) {
+            throw new ConflictException("Can't assign " + TARGET_EXPENSE_CATEGORY
+                    + " inside an update");
+        }
+
         Expense previousExpense = expenseRepository
                 .findByIdAndUserId(transactionId, userId)
                 .orElseThrow(() ->
-                        new EntityNotFoundException(
-                                "No expense with id " + transactionId
-                                        + " was found for user with id " + userId));
+                    new EntityNotFoundException(
+                            "No expense with id " + transactionId
+                                    + " was found for user with id " + userId));
+        if (previousExpense.getExpenseCategory().getName().equals(TARGET_EXPENSE_CATEGORY)) {
+            throw new ConflictException("Can't modify expenses with "
+                    + TARGET_EXPENSE_CATEGORY + " category");
+        }
+        String currency = "";
         if (requestTransactionDto.amount() != null) {
             Account thisExpenseAccount = accountRepository
                     .findByIdAndUserId(previousExpense.getAccount().getId(), userId)
@@ -203,6 +215,10 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
                 .orElseThrow(() ->
                         new EntityNotFoundException("No expense with id "
                                 + transactionId + " was found for user with id " + userId));
+        if (expense.getExpenseCategory().getName().equals(TARGET_EXPENSE_CATEGORY)) {
+            throw new ConflictException("Can't modify expenses with "
+                    + TARGET_EXPENSE_CATEGORY + " category");
+        }
         Account account = accountRepository
                 .findByIdAndUserId(expense.getAccount().getId(), userId)
                 .orElseThrow(() -> new EntityNotFoundException(
