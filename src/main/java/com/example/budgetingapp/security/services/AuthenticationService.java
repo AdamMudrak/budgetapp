@@ -15,13 +15,13 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.SUCC
 
 import com.example.budgetingapp.constants.controllers.AuthControllerConstants;
 import com.example.budgetingapp.constants.security.SecurityConstants;
-import com.example.budgetingapp.dtos.users.request.UserSetNewPasswordRequestDto;
-import com.example.budgetingapp.dtos.users.request.userloginrequestdtos.InnerUserLoginRequestDto;
-import com.example.budgetingapp.dtos.users.request.userloginrequestdtos.UserEmailLoginRequestDto;
-import com.example.budgetingapp.dtos.users.request.userloginrequestdtos.UserTelegramLoginRequestDto;
-import com.example.budgetingapp.dtos.users.response.AccessTokenResponseDto;
-import com.example.budgetingapp.dtos.users.response.UserLoginResponseDto;
-import com.example.budgetingapp.dtos.users.response.UserPasswordResetResponseDto;
+import com.example.budgetingapp.dtos.users.request.SetNewPasswordDto;
+import com.example.budgetingapp.dtos.users.request.userlogindtos.InnerUserLoginDto;
+import com.example.budgetingapp.dtos.users.request.userlogindtos.UserEmailLoginDto;
+import com.example.budgetingapp.dtos.users.request.userlogindtos.UserTelegramLoginDto;
+import com.example.budgetingapp.dtos.users.response.AccessTokenDto;
+import com.example.budgetingapp.dtos.users.response.StartPasswordResetDto;
+import com.example.budgetingapp.dtos.users.response.UserLoginDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.tokens.ParamToken;
 import com.example.budgetingapp.exceptions.forbidden.LoginException;
@@ -64,25 +64,25 @@ public class AuthenticationService {
     private final RandomStringUtil randomStringUtil;
     private final ParamTokenRepository paramTokenRepository;
 
-    public UserLoginResponseDto authenticateTelegram(UserTelegramLoginRequestDto requestDto) {
-        InnerUserLoginRequestDto innerUserLoginRequestDto = interprete(requestDto);
+    public UserLoginDto authenticateTelegram(UserTelegramLoginDto requestDto) {
+        InnerUserLoginDto innerUserLoginRequestDto = interprete(requestDto);
         User currentUser = isCreated(innerUserLoginRequestDto.userName(), TELEGRAM_PHONE_NUMBER);
         isEnabled(currentUser);
         return getTokens(innerUserLoginRequestDto, TELEGRAM_PHONE_NUMBER);
     }
 
-    public UserLoginResponseDto authenticateEmail(UserEmailLoginRequestDto requestDto) {
-        InnerUserLoginRequestDto innerUserLoginRequestDto = interprete(requestDto);
+    public UserLoginDto authenticateEmail(UserEmailLoginDto requestDto) {
+        InnerUserLoginDto innerUserLoginRequestDto = interprete(requestDto);
         User currentUser = isCreated(innerUserLoginRequestDto.userName(), EMAIL);
         isEnabled(currentUser);
         return getTokens(innerUserLoginRequestDto, EMAIL);
     }
 
-    public UserPasswordResetResponseDto initiatePasswordReset(String email) {
+    public StartPasswordResetDto initiatePasswordReset(String email) {
         User currentUser = isCreated(email);
         isEnabled(currentUser);
         passwordEmailService.sendActionMessage(email, RESET);
-        return new UserPasswordResetResponseDto(SUCCESS_EMAIL);
+        return new StartPasswordResetDto(SUCCESS_EMAIL);
     }
 
     public ResponseEntity<Void> confirmResetPassword(String token) {
@@ -103,8 +103,8 @@ public class AuthenticationService {
         return redirectUtil.redirect(PASSWORD_RESET_CONFIRMATION_LINK);
     }
 
-    public UserPasswordResetResponseDto changePassword(HttpServletRequest httpServletRequest,
-                                       UserSetNewPasswordRequestDto userSetNewPasswordRequestDto) {
+    public StartPasswordResetDto changePassword(HttpServletRequest httpServletRequest,
+                                                SetNewPasswordDto userSetNewPasswordRequestDto) {
         String token = parseToken(httpServletRequest);
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
         String email = jwtAbstractUtil.getUsername(token);
@@ -117,23 +117,23 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder
                 .encode(userSetNewPasswordRequestDto.newPassword()));
         userRepository.save(user);
-        return new UserPasswordResetResponseDto(SUCCESSFUL_CHANGE_MESSAGE);
+        return new StartPasswordResetDto(SUCCESSFUL_CHANGE_MESSAGE);
     }
 
-    public AccessTokenResponseDto refreshToken(HttpServletRequest httpServletRequest) {
+    public AccessTokenDto refreshToken(HttpServletRequest httpServletRequest) {
         Cookie cookie = findRefreshCookie(httpServletRequest);
         JwtAbstractUtil refreshUtil = jwtStrategy.getStrategy(REFRESH);
         JwtAbstractUtil accessUtil = jwtStrategy.getStrategy(ACCESS);
         String refreshToken = cookie.getValue();
         if (refreshUtil.isValidToken(refreshToken)) {
             String username = refreshUtil.getUsername(refreshToken);
-            return new AccessTokenResponseDto(accessUtil.generateToken(username));
+            return new AccessTokenDto(accessUtil.generateToken(username));
         }
         throw new LoginException("Something went wrong with your access");
     }
 
     private boolean isCurrentPasswordValid(User user,
-                                       UserSetNewPasswordRequestDto userSetNewPasswordRequestDto) {
+                                       SetNewPasswordDto userSetNewPasswordRequestDto) {
         return passwordEncoder
                 .matches(userSetNewPasswordRequestDto.currentPassword(), user.getPassword());
     }
@@ -182,18 +182,18 @@ public class AuthenticationService {
         return bearerToken;
     }
 
-    private InnerUserLoginRequestDto interprete(
-            UserTelegramLoginRequestDto userTelegramLoginRequestDto) {
+    private InnerUserLoginDto interprete(
+            UserTelegramLoginDto userTelegramLoginRequestDto) {
         return userMapper.toInnerUserDto(userTelegramLoginRequestDto);
     }
 
-    private InnerUserLoginRequestDto interprete(
-            UserEmailLoginRequestDto userEmailLoginRequestDto) {
+    private InnerUserLoginDto interprete(
+            UserEmailLoginDto userEmailLoginRequestDto) {
         return userMapper.toInnerUserDto(userEmailLoginRequestDto);
     }
 
-    private UserLoginResponseDto getTokens(InnerUserLoginRequestDto innerUserLoginRequestDto,
-                                           String userNameType) {
+    private UserLoginDto getTokens(InnerUserLoginDto innerUserLoginRequestDto,
+                                   String userNameType) {
         final Authentication authentication;
         try {
             authentication = authenticationManager
@@ -208,6 +208,6 @@ public class AuthenticationService {
         String accessToken = jwtAbstractUtil.generateToken(authentication.getName());
         jwtAbstractUtil = jwtStrategy.getStrategy(REFRESH);
         String refreshToken = jwtAbstractUtil.generateToken(authentication.getName());
-        return new UserLoginResponseDto(accessToken, refreshToken);
+        return new UserLoginDto(accessToken, refreshToken);
     }
 }

@@ -3,13 +3,13 @@ package com.example.budgetingapp.services.implementations.transactions;
 import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.EXPENSE;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGET_EXPENSE_CATEGORY;
 
-import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
-import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
-import com.example.budgetingapp.dtos.transactions.request.UpdateRequestTransactionDto;
-import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByMonthOrYear;
-import com.example.budgetingapp.dtos.transactions.response.ChartsAccumulatedResultDto;
+import com.example.budgetingapp.dtos.transactions.request.CreateTransactionDto;
+import com.example.budgetingapp.dtos.transactions.request.UpdateTransactionDto;
+import com.example.budgetingapp.dtos.transactions.request.filters.FilterTransactionByDaysDto;
+import com.example.budgetingapp.dtos.transactions.request.filters.FilterTransactionByMonthsYearsDto;
 import com.example.budgetingapp.dtos.transactions.response.GetTransactionsPageDto;
-import com.example.budgetingapp.dtos.transactions.response.SaveAndUpdateResponseTransactionDto;
+import com.example.budgetingapp.dtos.transactions.response.SaveAndUpdateResponseDto;
+import com.example.budgetingapp.dtos.transactions.response.charts.SumsByPeriodDto;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.transactions.Expense;
@@ -52,8 +52,8 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
 
     @Transactional
     @Override
-    public SaveAndUpdateResponseTransactionDto saveTransaction(Long userId,
-                                                   RequestTransactionDto requestTransactionDto) {
+    public SaveAndUpdateResponseDto saveTransaction(Long userId,
+                                                    CreateTransactionDto requestTransactionDto) {
         isCategoryPresentInDb(userId, requestTransactionDto.categoryId());
         Account account = accountRepository
                 .findByIdAndUserId(requestTransactionDto.accountId(), userId)
@@ -79,7 +79,7 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
 
     @Override
     public GetTransactionsPageDto getAllTransactions(Long userId,
-                                                              FilterTransactionsDto filterDto,
+                                                              FilterTransactionByDaysDto filterDto,
                                                               Pageable pageable) {
         presenceCheck(userId, filterDto);
         Specification<Expense> expenseSpecification = expenseSpecificationBuilder.build(filterDto);
@@ -96,8 +96,8 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<ChartsAccumulatedResultDto> getSumOfTransactionsForPeriodOfTime(Long userId,
-                                                            FilterTransactionsDto transactionsDto) {
+    public List<SumsByPeriodDto> getSumOfTransactionsForPeriodOfTime(Long userId,
+                                                      FilterTransactionByDaysDto transactionsDto) {
         if (transactionsDto.accountId() == null) {
             throw new IllegalArgumentException("Account id can't be null so as to prevent mixing "
                     + "transactions with different currencies");
@@ -114,14 +114,14 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<ChartsAccumulatedResultDto> getSumOfTransactionsForMonthOrYear(
+    public List<SumsByPeriodDto> getSumOfTransactionsForMonthOrYear(
             Long userId,
-            ChartTransactionRequestDtoByMonthOrYear chartTransactionRequestDtoByMonthOrYear) {
+            FilterTransactionByMonthsYearsDto chartTransactionRequestDtoByMonthOrYear) {
         if (chartTransactionRequestDtoByMonthOrYear.accountId() == null) {
             throw new IllegalArgumentException("Account id can't be null so as to prevent mixing "
                     + "transactions with different currencies");
         }
-        FilterTransactionsDto filterTransactionsDto = transactionsCommonFunctionsUtil
+        FilterTransactionByDaysDto filterTransactionsDto = transactionsCommonFunctionsUtil
                 .getFilterDtoWithNoDates(chartTransactionRequestDtoByMonthOrYear);
         presenceCheck(userId, filterTransactionsDto);
         Specification<Expense> specification =
@@ -140,9 +140,9 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
 
     @Transactional
     @Override
-    public SaveAndUpdateResponseTransactionDto updateTransaction(
+    public SaveAndUpdateResponseDto updateTransaction(
                                                Long userId,
-                                               UpdateRequestTransactionDto requestTransactionDto,
+                                               UpdateTransactionDto requestTransactionDto,
                                                Long transactionId) {
         presenceCheck(userId, requestTransactionDto);
         if (expenseCategoryRepository.findByIdAndUserId(requestTransactionDto.categoryId(), userId)
@@ -257,7 +257,7 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
         }
     }
 
-    private void presenceCheck(Long userId, FilterTransactionsDto filterTransactionsDto) {
+    private void presenceCheck(Long userId, FilterTransactionByDaysDto filterTransactionsDto) {
         if (filterTransactionsDto.accountId() != null) {
             if (!accountRepository.existsByIdAndUserId(filterTransactionsDto.accountId(), userId)) {
                 throw new EntityNotFoundException("No account with id "
@@ -272,7 +272,7 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
         }
     }
 
-    private void presenceCheck(Long userId, UpdateRequestTransactionDto requestTransactionDto) {
+    private void presenceCheck(Long userId, UpdateTransactionDto requestTransactionDto) {
         if (!accountRepository.existsByIdAndUserId(requestTransactionDto.accountId(), userId)) {
             throw new EntityNotFoundException("No account with id "
                     + requestTransactionDto.accountId() + " for user with id "

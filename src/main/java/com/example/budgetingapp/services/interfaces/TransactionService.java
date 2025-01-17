@@ -1,33 +1,33 @@
 package com.example.budgetingapp.services.interfaces;
 
-import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
-import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
-import com.example.budgetingapp.dtos.transactions.request.UpdateRequestTransactionDto;
-import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByMonthOrYear;
-import com.example.budgetingapp.dtos.transactions.response.ChartsAccumulatedResultDto;
+import com.example.budgetingapp.dtos.transactions.request.CreateTransactionDto;
+import com.example.budgetingapp.dtos.transactions.request.UpdateTransactionDto;
+import com.example.budgetingapp.dtos.transactions.request.filters.FilterTransactionByDaysDto;
+import com.example.budgetingapp.dtos.transactions.request.filters.FilterTransactionByMonthsYearsDto;
 import com.example.budgetingapp.dtos.transactions.response.GetTransactionsPageDto;
-import com.example.budgetingapp.dtos.transactions.response.SaveAndUpdateResponseTransactionDto;
+import com.example.budgetingapp.dtos.transactions.response.SaveAndUpdateResponseDto;
+import com.example.budgetingapp.dtos.transactions.response.charts.SumsByPeriodDto;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 
 public interface TransactionService {
 
-    SaveAndUpdateResponseTransactionDto saveTransaction(Long userId,
-                                                    RequestTransactionDto requestTransactionDto);
+    SaveAndUpdateResponseDto saveTransaction(Long userId,
+                                             CreateTransactionDto requestTransactionDto);
 
-    SaveAndUpdateResponseTransactionDto updateTransaction(Long userId,
-                                                UpdateRequestTransactionDto requestTransactionDto,
-                                                Long transactionId);
+    SaveAndUpdateResponseDto updateTransaction(Long userId,
+                                               UpdateTransactionDto requestTransactionDto,
+                                               Long transactionId);
 
     GetTransactionsPageDto getAllTransactions(Long userId,
-                                              FilterTransactionsDto transactionsDto,
+                                              FilterTransactionByDaysDto transactionsDto,
                                               Pageable pageable);
 
-    List<ChartsAccumulatedResultDto> getSumOfTransactionsForPeriodOfTime(Long userId,
-                                                             FilterTransactionsDto transactionsDto);
+    List<SumsByPeriodDto> getSumOfTransactionsForPeriodOfTime(Long userId,
+                                                       FilterTransactionByDaysDto transactionsDto);
 
-    List<ChartsAccumulatedResultDto> getSumOfTransactionsForMonthOrYear(Long userId,
-                ChartTransactionRequestDtoByMonthOrYear chartTransactionRequestDtoByMonthOrYear);
+    List<SumsByPeriodDto> getSumOfTransactionsForMonthOrYear(Long userId,
+                      FilterTransactionByMonthsYearsDto chartTransactionRequestDtoByMonthOrYear);
 
     void deleteByTransactionId(Long userId, Long transactionId);
 }

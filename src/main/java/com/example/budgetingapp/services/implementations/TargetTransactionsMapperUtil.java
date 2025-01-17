@@ -3,7 +3,7 @@ package com.example.budgetingapp.services.implementations;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGET_EXPENSE_CATEGORY;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGET_INCOME_CATEGORY;
 
-import com.example.budgetingapp.dtos.targets.request.ReplenishTargetRequestDto;
+import com.example.budgetingapp.dtos.targets.request.ReplenishTargetDto;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.Target;
 import com.example.budgetingapp.entities.User;
@@ -22,9 +22,9 @@ class TargetTransactionsMapperUtil {
     private final ExpenseCategoryRepository expenseCategoryRepository;
     private final IncomeCategoryRepository incomeCategoryRepository;
 
-    protected Expense formExpense(ReplenishTargetRequestDto requestDto,
-                                Account account,
-                                User user) {
+    protected Expense formExpense(ReplenishTargetDto requestDto,
+                                  Account account,
+                                  User user) {
         Expense replenishmentExpense = new Expense();
         replenishmentExpense.setAccount(account);
         replenishmentExpense.setCurrency(account.getCurrency());

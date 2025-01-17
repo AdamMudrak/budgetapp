@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record UpdateRequestTransactionDto(
+public record UpdateTransactionDto(
         @Schema(name = TransactionDtoConstants.COMMENT,
                 example = TransactionDtoConstants.COMMENT_EXAMPLE)
         String comment,
@@ -25,11 +25,9 @@ public record UpdateRequestTransactionDto(
         @Schema(name = TransactionDtoConstants.ACCOUNT_ID,
                 example = TransactionDtoConstants.ACCOUNT_ID_EXAMPLE)
         @Positive
-        @Digits(integer = 9, fraction = 0)
         Long accountId,
         @Schema(name = TransactionDtoConstants.CATEGORY_ID,
                 example = TransactionDtoConstants.CATEGORY_ID_EXAMPLE)
         @Positive
-        @Digits(integer = 9, fraction = 0)
         Long categoryId) {
 }

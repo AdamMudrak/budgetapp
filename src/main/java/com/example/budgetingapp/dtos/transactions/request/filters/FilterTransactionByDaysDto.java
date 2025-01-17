@@ -1,4 +1,4 @@
-package com.example.budgetingapp.dtos.transactions.request;
+package com.example.budgetingapp.dtos.transactions.request.filters;
 
 import com.example.budgetingapp.constants.dtos.TransactionDtoConstants;
 import com.example.budgetingapp.validation.date.Date;
@@ -9,7 +9,7 @@ import java.util.Set;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @FilterToDateAfterFromDate
-public record FilterTransactionsDto(
+public record FilterTransactionByDaysDto(
         @Schema(name = TransactionDtoConstants.ACCOUNT_ID,
                 example = TransactionDtoConstants.ACCOUNT_ID_EXAMPLE)
         Long accountId,

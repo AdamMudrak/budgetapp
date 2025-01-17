@@ -14,7 +14,7 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record TargetTransactionRequestDto(
+public record CreateTargetDto(
         @Schema(name = TransactionDtoConstants.NAME,
                 example = TransactionDtoConstants.NAME_EXAMPLE,
                 requiredMode = REQUIRED)

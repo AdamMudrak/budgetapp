@@ -14,7 +14,7 @@ import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @FieldSetNewPasswordMatch
 @FieldCurrentAndNewPasswordCollision
-public record UserSetNewPasswordRequestDto(
+public record SetNewPasswordDto(
         @Schema(name = UserDtoConstants.CURRENT_PASSWORD,
                 example = UserDtoConstants.PASSWORD_EXAMPLE,
                 description = UserDtoConstants.PASSWORD_DESCRIPTION,

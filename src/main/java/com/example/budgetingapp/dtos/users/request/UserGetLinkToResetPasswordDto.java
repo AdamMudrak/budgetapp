@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record UserGetLinkToSetRandomPasswordRequestDto(
+public record UserGetLinkToResetPasswordDto(
         @Schema(name = UserDtoConstants.EMAIL,
                 example = UserDtoConstants.EMAIL_EXAMPLE,
                 requiredMode = REQUIRED)

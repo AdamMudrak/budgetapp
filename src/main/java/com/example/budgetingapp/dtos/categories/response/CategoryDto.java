@@ -1,6 +1,6 @@
 package com.example.budgetingapp.dtos.categories.response;
 
-public record ResponseCategoryDto(
+public record CategoryDto(
         Long id,
         String name) {
 }

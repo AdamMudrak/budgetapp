@@ -6,7 +6,7 @@ import static com.example.budgetingapp.constants.controllers.SupportControllerCo
 import static com.example.budgetingapp.constants.controllers.SupportControllerConstants.SUPPORT_API_NAME;
 import static com.example.budgetingapp.constants.dtos.SupportDtoConstants.SUPPORT_SEND_SUCCESS;
 
-import com.example.budgetingapp.dtos.support.request.ContactUsByEmailDto;
+import com.example.budgetingapp.dtos.support.request.SupportRequestDto;
 import com.example.budgetingapp.dtos.support.response.SupportResponseDto;
 import com.example.budgetingapp.services.email.ContactUsByEmailService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,7 +26,7 @@ public class SupportController {
 
     @PostMapping(SEND_REQUEST_TO_EMAIL)
     public SupportResponseDto contactUsByEmail(@Valid @RequestBody
-                                                     ContactUsByEmailDto contactUsByEmailDto) {
+                                               SupportRequestDto contactUsByEmailDto) {
         contactUsByEmailService.sendMessageToHost(contactUsByEmailDto);
         return new SupportResponseDto(SUPPORT_SEND_SUCCESS);
     }

@@ -7,7 +7,7 @@ import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARG
 
 import com.example.budgetingapp.dtos.categories.request.CreateCategoryDto;
 import com.example.budgetingapp.dtos.categories.request.UpdateCategoryDto;
-import com.example.budgetingapp.dtos.categories.response.ResponseCategoryDto;
+import com.example.budgetingapp.dtos.categories.response.CategoryDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.categories.ExpenseCategory;
 import com.example.budgetingapp.exceptions.conflictexpections.AlreadyExistsException;
@@ -35,7 +35,7 @@ public class ExpenseCategoryServiceImpl implements CategoryService {
     private final ExpenseRepository expenseRepository;
 
     @Override
-    public ResponseCategoryDto saveCategory(Long userId, CreateCategoryDto createCategoryDto) {
+    public CategoryDto saveCategory(Long userId, CreateCategoryDto createCategoryDto) {
         if (expenseCategoryRepository.countCategoriesByUserId(userId)
                 >= CATEGORY_QUANTITY_THRESHOLD) {
             throw new ConflictException("You can't have more than " + CATEGORY_QUANTITY_THRESHOLD
@@ -56,8 +56,8 @@ public class ExpenseCategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseCategoryDto updateCategory(Long userId, Long categoryId,
-                                              UpdateCategoryDto createCategoryDto) {
+    public CategoryDto updateCategory(Long userId, Long categoryId,
+                                      UpdateCategoryDto createCategoryDto) {
         if (expenseCategoryRepository.existsByNameAndUserId(createCategoryDto.newName(), userId)) {
             throw new AlreadyExistsException("You already have expense category named "
                     + createCategoryDto.newName());
@@ -77,12 +77,12 @@ public class ExpenseCategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<ResponseCategoryDto> getAllCategoriesByUserId(Long userId, Pageable pageable) {
+    public List<CategoryDto> getAllCategoriesByUserId(Long userId, Pageable pageable) {
         return categoryMapper
                 .toExpenseCategoryDtoList(expenseCategoryRepository
                 .findAllByUserId(userId, pageable))
                 .stream()
-                .sorted(Comparator.comparing(ResponseCategoryDto::id))
+                .sorted(Comparator.comparing(CategoryDto::id))
                 .toList();
     }
 

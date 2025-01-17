@@ -1,6 +1,5 @@
 package com.example.budgetingapp.dtos.targets.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import lombok.Getter;
@@ -8,8 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class TargetTransactionResponseDto {
+public class TargetDto {
     private Long id;
     private String name;
     private BigDecimal expectedSum;

@@ -4,7 +4,7 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.SUPP
 import static com.example.budgetingapp.constants.security.SecurityConstants.SUPPORT_EMAIL_SUBJECT;
 
 import com.example.budgetingapp.constants.Constants;
-import com.example.budgetingapp.dtos.support.request.ContactUsByEmailDto;
+import com.example.budgetingapp.dtos.support.request.SupportRequestDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -18,12 +18,12 @@ public class ContactUsByEmailService extends EmailService {
         super(mailSender);
     }
 
-    public void sendMessageToHost(ContactUsByEmailDto contactUsByEmailDto) {
+    public void sendMessageToHost(SupportRequestDto contactUsByEmailDto) {
         super.sendMessage(supportEmail, getSubject(contactUsByEmailDto),
                 contactUsByEmailDto.message());
     }
 
-    String getSubject(ContactUsByEmailDto contactUsByEmailDto) {
+    String getSubject(SupportRequestDto contactUsByEmailDto) {
         return SUPPORT_EMAIL_SUBJECT
                 + contactUsByEmailDto.name()
                 + System.lineSeparator()

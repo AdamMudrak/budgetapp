@@ -12,7 +12,7 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record RequestTransactionDto(
+public record CreateTransactionDto(
         @Schema(name = TransactionDtoConstants.COMMENT,
                 example = TransactionDtoConstants.COMMENT_EXAMPLE)
         String comment,
@@ -33,13 +33,11 @@ public record RequestTransactionDto(
                 requiredMode = REQUIRED)
         @NotNull
         @Positive
-        @Digits(integer = 9, fraction = 0)
         Long accountId,
         @Schema(name = TransactionDtoConstants.CATEGORY_ID,
                 example = TransactionDtoConstants.CATEGORY_ID_EXAMPLE,
                 requiredMode = REQUIRED)
         @NotNull
         @Positive
-        @Digits(integer = 9, fraction = 0)
         Long categoryId) {
 }

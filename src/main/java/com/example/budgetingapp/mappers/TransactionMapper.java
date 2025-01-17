@@ -1,10 +1,10 @@
 package com.example.budgetingapp.mappers;
 
 import com.example.budgetingapp.config.MapperConfig;
-import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
-import com.example.budgetingapp.dtos.transactions.request.UpdateRequestTransactionDto;
-import com.example.budgetingapp.dtos.transactions.response.GetResponseTransactionDto;
-import com.example.budgetingapp.dtos.transactions.response.SaveAndUpdateResponseTransactionDto;
+import com.example.budgetingapp.dtos.transactions.request.CreateTransactionDto;
+import com.example.budgetingapp.dtos.transactions.request.UpdateTransactionDto;
+import com.example.budgetingapp.dtos.transactions.response.GetTransactionDto;
+import com.example.budgetingapp.dtos.transactions.response.SaveAndUpdateResponseDto;
 import com.example.budgetingapp.entities.transactions.Expense;
 import com.example.budgetingapp.entities.transactions.Income;
 import java.time.LocalDate;
@@ -19,56 +19,56 @@ public interface TransactionMapper {
     @Mapping(source = "accountId", target = "account.id")
     @Mapping(source = "categoryId", target = "expenseCategory.id")
     @Mapping(target = "transactionDate", ignore = true)
-    Expense toExpense(RequestTransactionDto requestTransactionDto);
+    Expense toExpense(CreateTransactionDto requestTransactionDto);
 
     @Mapping(source = "accountId", target = "account.id")
     @Mapping(source = "categoryId", target = "expenseCategory.id")
     @Mapping(target = "transactionDate", ignore = true)
-    Expense toExpense(UpdateRequestTransactionDto requestTransactionDto);
+    Expense toExpense(UpdateTransactionDto requestTransactionDto);
 
     @Mapping(source = "accountId", target = "account.id")
     @Mapping(source = "categoryId", target = "incomeCategory.id")
     @Mapping(target = "transactionDate", ignore = true)
-    Income toIncome(RequestTransactionDto requestTransactionDto);
+    Income toIncome(CreateTransactionDto requestTransactionDto);
 
     @Mapping(source = "accountId", target = "account.id")
     @Mapping(source = "categoryId", target = "incomeCategory.id")
     @Mapping(target = "transactionDate", ignore = true)
-    Income toIncome(UpdateRequestTransactionDto requestTransactionDto);
+    Income toIncome(UpdateTransactionDto requestTransactionDto);
 
     @AfterMapping
     default void setTransactionDate(@MappingTarget Expense expense,
-                                   RequestTransactionDto requestTransactionDto) {
+                                   CreateTransactionDto requestTransactionDto) {
         expense.setTransactionDate(LocalDate.parse(requestTransactionDto.transactionDate()));
     }
 
     @AfterMapping
     default void setTransactionDate(@MappingTarget Income income,
-                                    RequestTransactionDto requestTransactionDto) {
+                                    CreateTransactionDto requestTransactionDto) {
         income.setTransactionDate(LocalDate.parse(requestTransactionDto.transactionDate()));
     }
 
-    List<GetResponseTransactionDto> toIncomeDtoList(List<Income> incomes);
+    List<GetTransactionDto> toIncomeDtoList(List<Income> incomes);
 
     @Mapping(source = "account.id", target = "accountId")
     @Mapping(source = "incomeCategory.id", target = "categoryId")
     @Mapping(source = "account.name", target = "accountName")
     @Mapping(source = "incomeCategory.name", target = "categoryName")
-    GetResponseTransactionDto toIncomeDto(Income income);
+    GetTransactionDto toIncomeDto(Income income);
 
-    List<GetResponseTransactionDto> toExpenseDtoList(List<Expense> expenses);
+    List<GetTransactionDto> toExpenseDtoList(List<Expense> expenses);
 
     @Mapping(source = "account.id", target = "accountId")
     @Mapping(source = "expenseCategory.id", target = "categoryId")
     @Mapping(source = "account.name", target = "accountName")
     @Mapping(source = "expenseCategory.name", target = "categoryName")
-    GetResponseTransactionDto toExpenseDtoList(Expense expense);
+    GetTransactionDto toExpenseDtoList(Expense expense);
 
     @Mapping(source = "account.id", target = "accountId")
     @Mapping(source = "incomeCategory.id", target = "categoryId")
-    SaveAndUpdateResponseTransactionDto toPersistIncomeDto(Income income);
+    SaveAndUpdateResponseDto toPersistIncomeDto(Income income);
 
     @Mapping(source = "account.id", target = "accountId")
     @Mapping(source = "expenseCategory.id", target = "categoryId")
-    SaveAndUpdateResponseTransactionDto toPersistExpenseDto(Expense expense);
+    SaveAndUpdateResponseDto toPersistExpenseDto(Expense expense);
 }

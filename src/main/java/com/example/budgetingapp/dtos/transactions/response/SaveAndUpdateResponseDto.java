@@ -3,7 +3,7 @@ package com.example.budgetingapp.dtos.transactions.response;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public record SaveAndUpdateResponseTransactionDto(
+public record SaveAndUpdateResponseDto(
         Long id,
         String comment,
         String currency,

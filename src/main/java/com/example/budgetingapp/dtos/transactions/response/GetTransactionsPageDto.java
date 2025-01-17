@@ -7,4 +7,4 @@ public record GetTransactionsPageDto(int pageNumber,
                                      int elementsPresentOnPage,
                                      long totalElements,
                                      int totalPages,
-                                     List<GetResponseTransactionDto> transactionsPageDtoList){}
+                                     List<GetTransactionDto> transactionsPageDtoList){}

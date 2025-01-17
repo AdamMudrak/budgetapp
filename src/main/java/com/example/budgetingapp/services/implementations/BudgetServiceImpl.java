@@ -4,7 +4,7 @@ import static com.example.budgetingapp.constants.entities.EntitiesConstants.BUDG
 
 import com.example.budgetingapp.dtos.budgets.request.BudgetRequestDto;
 import com.example.budgetingapp.dtos.budgets.response.BudgetResponseDto;
-import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
+import com.example.budgetingapp.dtos.transactions.request.filters.FilterTransactionByDaysDto;
 import com.example.budgetingapp.entities.Budget;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.transactions.Expense;
@@ -118,8 +118,8 @@ public class BudgetServiceImpl implements BudgetService {
         }
     }
 
-    private FilterTransactionsDto getFilterDtoWithNoAccount(Budget budget) {
-        return new FilterTransactionsDto(
+    private FilterTransactionByDaysDto getFilterDtoWithNoAccount(Budget budget) {
+        return new FilterTransactionByDaysDto(
                 null,
                 Set.of(budget.getExpenseCategory().getId()),
                 budget.getFromDate().toString(),

@@ -25,7 +25,7 @@ import static com.example.budgetingapp.constants.controllers.transactions.Income
 
 import com.example.budgetingapp.dtos.categories.request.CreateCategoryDto;
 import com.example.budgetingapp.dtos.categories.request.UpdateCategoryDto;
-import com.example.budgetingapp.dtos.categories.response.ResponseCategoryDto;
+import com.example.budgetingapp.dtos.categories.response.CategoryDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.services.interfaces.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -69,8 +69,8 @@ public class IncomeCategoryController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PostMapping(ADD_CATEGORY)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseCategoryDto addCategory(@AuthenticationPrincipal User user,
-                                       @Valid @RequestBody CreateCategoryDto createCategoryDto) {
+    public CategoryDto addCategory(@AuthenticationPrincipal User user,
+                                   @Valid @RequestBody CreateCategoryDto createCategoryDto) {
         return incomeCategoryService.saveCategory(user.getId(), createCategoryDto);
     }
 
@@ -79,10 +79,10 @@ public class IncomeCategoryController {
             SUCCESSFULLY_UPDATE_CATEGORY)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PutMapping(UPDATE_CATEGORY_BY_ID)
-    public ResponseCategoryDto updateCategory(@AuthenticationPrincipal User user,
-                                              @PathVariable
+    public CategoryDto updateCategory(@AuthenticationPrincipal User user,
+                                      @PathVariable
                                               @Positive Long categoryId,
-                                          @Valid @RequestBody UpdateCategoryDto updateCategoryDto) {
+                                      @Valid @RequestBody UpdateCategoryDto updateCategoryDto) {
         return incomeCategoryService.updateCategory(user.getId(), categoryId, updateCategoryDto);
     }
 
@@ -90,7 +90,7 @@ public class IncomeCategoryController {
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_RETRIEVED_CATEGORIES)
     @GetMapping(GET_ALL_CATEGORIES)
-    public List<ResponseCategoryDto> getAllIncomeCategories(@AuthenticationPrincipal User user,
+    public List<CategoryDto> getAllIncomeCategories(@AuthenticationPrincipal User user,
                                 @Parameter(example = CATEGORY_PAGEABLE_EXAMPLE) Pageable pageable) {
         return incomeCategoryService.getAllCategoriesByUserId(user.getId(), pageable);
     }

@@ -2,10 +2,10 @@ package com.example.budgetingapp.services.implementations;
 
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGET_QUANTITY_THRESHOLD;
 
-import com.example.budgetingapp.dtos.targets.request.DeleteTargetRequestDto;
-import com.example.budgetingapp.dtos.targets.request.ReplenishTargetRequestDto;
-import com.example.budgetingapp.dtos.targets.request.TargetTransactionRequestDto;
-import com.example.budgetingapp.dtos.targets.response.TargetTransactionResponseDto;
+import com.example.budgetingapp.dtos.targets.request.CreateTargetDto;
+import com.example.budgetingapp.dtos.targets.request.DeleteTargetDto;
+import com.example.budgetingapp.dtos.targets.request.ReplenishTargetDto;
+import com.example.budgetingapp.dtos.targets.response.TargetDto;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.Target;
 import com.example.budgetingapp.entities.User;
@@ -43,8 +43,8 @@ public class TargetServiceImpl implements TargetService {
     private final TargetTransactionsMapperUtil targetTransactionsMapperUtil;
 
     @Override
-    public TargetTransactionResponseDto saveTarget(Long userId,
-                                               TargetTransactionRequestDto requestTransactionDto) {
+    public TargetDto saveTarget(Long userId,
+                                CreateTargetDto requestTransactionDto) {
         if (targetRepository.countTargetsByUserId(userId) >= TARGET_QUANTITY_THRESHOLD) {
             throw new ConflictException("You can't have more than " + TARGET_QUANTITY_THRESHOLD
                     + " targets!");
@@ -63,8 +63,8 @@ public class TargetServiceImpl implements TargetService {
 
     @Transactional
     @Override
-    public TargetTransactionResponseDto replenishTarget(Long userId,
-                                            ReplenishTargetRequestDto replenishTargetRequestDto) {
+    public TargetDto replenishTarget(Long userId,
+                                     ReplenishTargetDto replenishTargetRequestDto) {
         Account account = accountRepository.findByIdAndUserId(
                 replenishTargetRequestDto.fromAccountId(), userId).orElseThrow(
                     () -> new EntityNotFoundException("No account with id "
@@ -105,18 +105,18 @@ public class TargetServiceImpl implements TargetService {
     }
 
     @Override
-    public List<TargetTransactionResponseDto> getAllTargets(Long userId, Pageable pageable) {
+    public List<TargetDto> getAllTargets(Long userId, Pageable pageable) {
         return targetRepository.findAllByUserId(userId, pageable)
                 .stream()
                 .map(targetMapper::toTargetDto)
                 .sorted(Comparator.comparing(
-                        TargetTransactionResponseDto::getId))
+                        TargetDto::getId))
                 .toList();
     }
 
     @Transactional
     @Override
-    public void deleteByTargetId(Long userId, DeleteTargetRequestDto deleteTargetRequestDto) {
+    public void deleteByTargetId(Long userId, DeleteTargetDto deleteTargetRequestDto) {
         Target target = targetRepository.findByIdAndUserId(deleteTargetRequestDto.targetId(),
                 userId).orElseThrow(() -> new EntityNotFoundException("No target with id "
                         + deleteTargetRequestDto.targetId() + " for user " + userId
@@ -138,7 +138,7 @@ public class TargetServiceImpl implements TargetService {
         targetRepository.deleteById(deleteTargetRequestDto.targetId());
     }
 
-    private int isSufficientAmount(Account account, ReplenishTargetRequestDto requestDto) {
+    private int isSufficientAmount(Account account, ReplenishTargetDto requestDto) {
         return (account.getBalance()
                 .subtract(requestDto.sumOfReplenishment()))
                 .compareTo(BigDecimal.ZERO);
@@ -161,7 +161,7 @@ public class TargetServiceImpl implements TargetService {
     }
 
     private void isAccountPresentByCurrencyAndUserId(Long userId,
-                                         TargetTransactionRequestDto targetTransactionRequestDto) {
+                                         CreateTargetDto targetTransactionRequestDto) {
         if (!accountRepository.existsByUserIdAndCurrency(
                 userId, targetTransactionRequestDto.currency())) {
             throw new EntityNotFoundException("No account with currency "

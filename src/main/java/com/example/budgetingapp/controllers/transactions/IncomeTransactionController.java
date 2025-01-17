@@ -29,13 +29,13 @@ import static com.example.budgetingapp.constants.controllers.transactions.Income
 import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.UPDATE_INCOME_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.transactions.TransactionsCommonConstants.TRANSACTION_API_NAME;
 
-import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
-import com.example.budgetingapp.dtos.transactions.request.RequestTransactionDto;
-import com.example.budgetingapp.dtos.transactions.request.UpdateRequestTransactionDto;
-import com.example.budgetingapp.dtos.transactions.request.helper.ChartTransactionRequestDtoByMonthOrYear;
-import com.example.budgetingapp.dtos.transactions.response.ChartsAccumulatedResultDto;
+import com.example.budgetingapp.dtos.transactions.request.CreateTransactionDto;
+import com.example.budgetingapp.dtos.transactions.request.UpdateTransactionDto;
+import com.example.budgetingapp.dtos.transactions.request.filters.FilterTransactionByDaysDto;
+import com.example.budgetingapp.dtos.transactions.request.filters.FilterTransactionByMonthsYearsDto;
 import com.example.budgetingapp.dtos.transactions.response.GetTransactionsPageDto;
-import com.example.budgetingapp.dtos.transactions.response.SaveAndUpdateResponseTransactionDto;
+import com.example.budgetingapp.dtos.transactions.response.SaveAndUpdateResponseDto;
+import com.example.budgetingapp.dtos.transactions.response.charts.SumsByPeriodDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.services.interfaces.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -80,9 +80,9 @@ public class IncomeTransactionController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PostMapping(ADD_INCOME)
     @ResponseStatus(HttpStatus.CREATED)
-    public SaveAndUpdateResponseTransactionDto addIncomeTransaction(
+    public SaveAndUpdateResponseDto addIncomeTransaction(
                                 @AuthenticationPrincipal User user,
-                                @Valid @RequestBody RequestTransactionDto requestTransactionDto) {
+                                @Valid @RequestBody CreateTransactionDto requestTransactionDto) {
         return incomeTransactionService.saveTransaction(user.getId(), requestTransactionDto);
     }
 
@@ -93,7 +93,7 @@ public class IncomeTransactionController {
     @GetMapping(GET_ALL_INCOMES)
     public GetTransactionsPageDto getAllIncomesTransactions(
             @AuthenticationPrincipal User user,
-            @Valid FilterTransactionsDto filterTransactionsDto,
+            @Valid FilterTransactionByDaysDto filterTransactionsDto,
             @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE) Pageable pageable) {
         return incomeTransactionService.getAllTransactions(user.getId(),
                 filterTransactionsDto, pageable);
@@ -104,9 +104,9 @@ public class IncomeTransactionController {
             SUCCESSFULLY_RETRIEVED_INCOMES_FOR_CHARTS_DAY)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @GetMapping(GET_ALL_INCOMES_FOR_CHARTS_DAYS)
-    public List<ChartsAccumulatedResultDto> getIncomesForDaysCharts(
+    public List<SumsByPeriodDto> getIncomesForDaysCharts(
             @AuthenticationPrincipal User user,
-            @Valid FilterTransactionsDto filterTransactionsDto) {
+            @Valid FilterTransactionByDaysDto filterTransactionsDto) {
         return incomeTransactionService
                 .getSumOfTransactionsForPeriodOfTime(
                         user.getId(), filterTransactionsDto);
@@ -117,9 +117,9 @@ public class IncomeTransactionController {
             SUCCESSFULLY_RETRIEVED_INCOMES_FOR_CHARTS)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @GetMapping(GET_ALL_INCOMES_FOR_CHARTS_MONTHS_YEARS)
-    public List<ChartsAccumulatedResultDto> getIncomesForMonthOrYearCharts(
+    public List<SumsByPeriodDto> getIncomesForMonthOrYearCharts(
             @AuthenticationPrincipal User user,
-            @Valid ChartTransactionRequestDtoByMonthOrYear
+            @Valid FilterTransactionByMonthsYearsDto
                     chartTransactionRequestDtoByMonthOrYear) {
         return incomeTransactionService
                 .getSumOfTransactionsForMonthOrYear(
@@ -131,9 +131,9 @@ public class IncomeTransactionController {
             SUCCESSFULLY_UPDATED_INCOME)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PutMapping(UPDATE_INCOME_BY_ID)
-    public SaveAndUpdateResponseTransactionDto updateIncomeTransaction(
+    public SaveAndUpdateResponseDto updateIncomeTransaction(
                              @AuthenticationPrincipal User user,
-                             @Valid @RequestBody UpdateRequestTransactionDto requestTransactionDto,
+                             @Valid @RequestBody UpdateTransactionDto requestTransactionDto,
                              @PathVariable Long transactionId) {
         return incomeTransactionService.updateTransaction(user.getId(),
                 requestTransactionDto, transactionId);

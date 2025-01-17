@@ -1,4 +1,4 @@
-package com.example.budgetingapp.dtos.users.request.userloginrequestdtos;
+package com.example.budgetingapp.dtos.users.request.userlogindtos;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record UserTelegramLoginRequestDto(
+public record UserTelegramLoginDto(
         @Schema(name = UserDtoConstants.TELEGRAM_PHONE_NUMBER,
         example = UserDtoConstants.TELEGRAM_PHONE_NUMBER_EXAMPLE,
         requiredMode = REQUIRED)
