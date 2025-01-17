@@ -8,6 +8,7 @@ import com.example.budgetingapp.dtos.targets.request.TargetTransactionRequestDto
 import com.example.budgetingapp.dtos.targets.response.TargetTransactionResponseDto;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.Target;
+import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.exceptions.conflictexpections.AlreadyExistsException;
 import com.example.budgetingapp.exceptions.conflictexpections.ConflictException;
 import com.example.budgetingapp.exceptions.conflictexpections.TransactionFailedException;
@@ -15,6 +16,8 @@ import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundExce
 import com.example.budgetingapp.mappers.TargetMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.target.TargetRepository;
+import com.example.budgetingapp.repositories.transactions.ExpenseRepository;
+import com.example.budgetingapp.repositories.transactions.IncomeRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.interfaces.TargetService;
 import jakarta.transaction.Transactional;
@@ -31,10 +34,13 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class TargetServiceImpl implements TargetService {
+    private final ExpenseRepository expenseRepository;
+    private final IncomeRepository incomeRepository;
     private final UserRepository userRepository;
     private final TargetRepository targetRepository;
     private final AccountRepository accountRepository;
     private final TargetMapper targetMapper;
+    private final TargetTransactionsMapperUtil targetTransactionsMapperUtil;
 
     @Override
     public TargetTransactionResponseDto saveTarget(Long userId,
@@ -64,15 +70,18 @@ public class TargetServiceImpl implements TargetService {
                     () -> new EntityNotFoundException("No account with id "
                         + replenishTargetRequestDto.fromAccountId() + " for user " + userId
                         + " was found"));
+
         Target target = targetRepository.findByIdAndUserId(replenishTargetRequestDto.toTargetId(),
                 userId).orElseThrow(() -> new EntityNotFoundException("No target with id "
                 + replenishTargetRequestDto.toTargetId() + " for user " + userId
                 + " was found"));
+
         if (!account.getCurrency().equals(target.getCurrency())) {
             throw new IllegalArgumentException(
                     "You can't transfer money from account with currency " + account.getCurrency()
                             + " to target with currency " + target.getCurrency());
         }
+
         if (isSufficientAmount(account, replenishTargetRequestDto) < 0) {
             throw new TransactionFailedException("Not enough money for transaction");
         }
@@ -81,6 +90,13 @@ public class TargetServiceImpl implements TargetService {
         target.setCurrentSum(target.getCurrentSum()
                 .add(replenishTargetRequestDto.sumOfReplenishment()));
         accountRepository.save(account);
+
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new EntityNotFoundException("No user with id " + userId + " was found"));
+
+        expenseRepository.save(targetTransactionsMapperUtil
+                .formExpense(replenishTargetRequestDto, account, user));
+
         if (target.getCurrentSum().compareTo(target.getExpectedSum()) >= 0) {
             target.setAchieved(true);
             target.setDownPayment(BigDecimal.ZERO);
@@ -109,10 +125,14 @@ public class TargetServiceImpl implements TargetService {
                         userId).orElseThrow(() -> new EntityNotFoundException("No account with id "
                         + deleteTargetRequestDto.accountId() + " for user " + userId
                         + " was found"));
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new EntityNotFoundException("No user with id " + userId + " was found"));
+
         if (!account.getCurrency().equals(target.getCurrency())) {
             throw new IllegalArgumentException("You can't transfer money from target with currency "
                     + target.getCurrency() + " to account with currency " + account.getCurrency());
         }
+        incomeRepository.save(targetTransactionsMapperUtil.formIncome(target, account, user));
         account.setBalance(account.getBalance().add(target.getCurrentSum()));
         accountRepository.save(account);
         targetRepository.deleteById(deleteTargetRequestDto.targetId());
