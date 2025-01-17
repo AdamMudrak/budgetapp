@@ -80,10 +80,7 @@ public class ExpenseCategoryServiceImpl implements CategoryService {
     public List<CategoryDto> getAllCategoriesByUserId(Long userId, Pageable pageable) {
         return categoryMapper
                 .toExpenseCategoryDtoList(expenseCategoryRepository
-                .findAllByUserId(userId, pageable))
-                .stream()
-                .sorted(Comparator.comparing(CategoryDto::id))
-                .toList();
+                .findAllByUserId(userId, pageable));
     }
 
     @Override
