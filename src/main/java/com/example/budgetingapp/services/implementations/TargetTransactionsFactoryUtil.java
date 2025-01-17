@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-class TargetTransactionsMapperUtil {
+class TargetTransactionsFactoryUtil {
     private final ExpenseCategoryRepository expenseCategoryRepository;
     private final IncomeCategoryRepository incomeCategoryRepository;
 
@@ -50,7 +50,7 @@ class TargetTransactionsMapperUtil {
         deletedTargetIncome.setIncomeCategory(incomeCategoryRepository
                 .findByNameAndUserId(TARGET_INCOME_CATEGORY, user.getId()).orElseThrow(
                         () -> new EntityNotFoundException("No category with name "
-                                + TARGET_EXPENSE_CATEGORY + " for user " + user.getId()
+                                + TARGET_INCOME_CATEGORY + " for user " + user.getId()
                                 + " was found")));
         deletedTargetIncome.setUser(user);
         return deletedTargetIncome;
