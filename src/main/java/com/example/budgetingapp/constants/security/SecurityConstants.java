@@ -70,6 +70,8 @@ public class SecurityConstants {
     public static final String STOPPED_SUCCESS = "The bot has been stopped!";
     public static final String UNKNOWN_COMMAND = "Unknown command. Please use /start, "
             + "or /stop commands or \"Share\" button";
+    public static final String KEYBOARD_BUTTON_TEXT = "Share";
+    public static final String PARSE_MODE = "MarkdownV2";
     public static final String TELEGRAM_REGISTRATION =
             "To register or login in our app, you'll need"
                     + System.lineSeparator()
