@@ -3,6 +3,7 @@ package com.example.budgetingapp.services.implementations.categories;
 import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.EXPENSE;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.CATEGORY_QUANTITY_THRESHOLD;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_CATEGORY_NAME;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGET_EXPENSE_CATEGORY;
 
 import com.example.budgetingapp.dtos.categories.request.CreateCategoryDto;
 import com.example.budgetingapp.dtos.categories.request.UpdateCategoryDto;
@@ -65,7 +66,8 @@ public class ExpenseCategoryServiceImpl implements CategoryService {
                 userId).orElseThrow(
                     () -> new EntityNotFoundException("No expense category with id "
                         + categoryId + " was found for user with id " + userId));
-        if (expenseCategory.getName().equals(DEFAULT_CATEGORY_NAME)) {
+        if (expenseCategory.getName().equals(DEFAULT_CATEGORY_NAME)
+                || expenseCategory.getName().equals(TARGET_EXPENSE_CATEGORY)) {
             throw new IllegalArgumentException("Can't update category by default");
         }
         expenseCategory.setName(createCategoryDto.newName());
@@ -90,7 +92,8 @@ public class ExpenseCategoryServiceImpl implements CategoryService {
                 .findByIdAndUserId(categoryId, userId).orElseThrow(
                         () -> new EntityNotFoundException(
                         "No category with id " + categoryId + " for user with id " + userId));
-        if (expenseCategory.getName().equals(DEFAULT_CATEGORY_NAME)) {
+        if (expenseCategory.getName().equals(DEFAULT_CATEGORY_NAME)
+                || expenseCategory.getName().equals(TARGET_EXPENSE_CATEGORY)) {
             throw new IllegalArgumentException("Can't delete category by default");
         }
         ExpenseCategory defaultCategory =
