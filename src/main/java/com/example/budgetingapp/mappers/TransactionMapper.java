@@ -62,7 +62,7 @@ public interface TransactionMapper {
     @Mapping(source = "expenseCategory.id", target = "categoryId")
     @Mapping(source = "account.name", target = "accountName")
     @Mapping(source = "expenseCategory.name", target = "categoryName")
-    GetTransactionDto toExpenseDtoList(Expense expense);
+    GetTransactionDto toExpenseDto(Expense expense);
 
     @Mapping(source = "account.id", target = "accountId")
     @Mapping(source = "incomeCategory.id", target = "categoryId")

@@ -92,7 +92,7 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
                 expensePage.getNumberOfElements(),
                 expensePage.getTotalElements(),
                 expensePage.getTotalPages(),
-                transactionMapper.toExpenseDtoList(expensePage.getContent()));
+                transactionMapper.toExpenseDto(expensePage.getContent()));
     }
 
     @Override
