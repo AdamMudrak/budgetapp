@@ -4,7 +4,7 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.SUPP
 import static com.example.budgetingapp.constants.security.SecurityConstants.SUPPORT_EMAIL_SUBJECT;
 
 import com.example.budgetingapp.constants.Constants;
-import com.example.budgetingapp.dtos.emails.request.ContactUsByEmailDto;
+import com.example.budgetingapp.dtos.support.request.ContactUsByEmailDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;

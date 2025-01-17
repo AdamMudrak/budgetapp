@@ -6,7 +6,7 @@ import static com.example.budgetingapp.constants.controllers.SupportControllerCo
 import static com.example.budgetingapp.constants.controllers.SupportControllerConstants.SUPPORT_API_NAME;
 import static com.example.budgetingapp.constants.dtos.SupportDtoConstants.SUPPORT_SEND_SUCCESS;
 
-import com.example.budgetingapp.dtos.emails.request.ContactUsByEmailDto;
+import com.example.budgetingapp.dtos.support.request.ContactUsByEmailDto;
 import com.example.budgetingapp.dtos.support.response.SupportResponseDto;
 import com.example.budgetingapp.services.email.ContactUsByEmailService;
 import io.swagger.v3.oas.annotations.tags.Tag;
