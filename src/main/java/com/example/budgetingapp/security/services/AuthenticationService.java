@@ -31,9 +31,9 @@ import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundExce
 import com.example.budgetingapp.mappers.UserMapper;
 import com.example.budgetingapp.repositories.paramtoken.ParamTokenRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
-import com.example.budgetingapp.security.RandomStringUtil;
 import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
+import com.example.budgetingapp.security.utils.RandomStringUtil;
 import com.example.budgetingapp.services.RedirectUtil;
 import com.example.budgetingapp.services.email.PasswordEmailService;
 import io.jsonwebtoken.JwtException;

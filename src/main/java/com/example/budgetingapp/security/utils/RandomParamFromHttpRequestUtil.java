@@ -1,4 +1,4 @@
-package com.example.budgetingapp.security;
+package com.example.budgetingapp.security.utils;
 
 import com.example.budgetingapp.entities.tokens.ParamToken;
 import com.example.budgetingapp.exceptions.notfoundexceptions.ActionNotFoundException;

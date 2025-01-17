@@ -51,9 +51,9 @@ import com.example.budgetingapp.dtos.users.response.TelegramAuthenticationRespon
 import com.example.budgetingapp.dtos.users.response.UserLoginDto;
 import com.example.budgetingapp.dtos.users.response.UserRegistrationResponseDto;
 import com.example.budgetingapp.exceptions.badrequest.RegistrationException;
-import com.example.budgetingapp.security.RandomParamFromHttpRequestUtil;
 import com.example.budgetingapp.security.services.AuthenticationService;
 import com.example.budgetingapp.security.services.TelegramAuthenticationService;
+import com.example.budgetingapp.security.utils.RandomParamFromHttpRequestUtil;
 import com.example.budgetingapp.services.interfaces.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

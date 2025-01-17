@@ -10,6 +10,7 @@ import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundExce
 import com.example.budgetingapp.mappers.UserMapper;
 import com.example.budgetingapp.repositories.actiontoken.ActionTokenRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
+import com.example.budgetingapp.security.utils.AssignDefaultUserObjectsUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class TelegramAuthenticationService {
-    private final RegistrationDefaultUserObjectsUtil defaultUserObjectsUtil;
+    private final AssignDefaultUserObjectsUtil defaultUserObjectsUtil;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final ActionTokenRepository actionTokenRepository;

@@ -1,4 +1,4 @@
-package com.example.budgetingapp.security.services;
+package com.example.budgetingapp.security.utils;
 
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_ACCOUNT_CURRENCY;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_ACCOUNT_NAME;
@@ -11,7 +11,6 @@ import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.categories.ExpenseCategory;
 import com.example.budgetingapp.entities.categories.IncomeCategory;
 import com.example.budgetingapp.repositories.account.AccountRepository;
-import com.example.budgetingapp.repositories.budget.BudgetRepository;
 import com.example.budgetingapp.repositories.categories.ExpenseCategoryRepository;
 import com.example.budgetingapp.repositories.categories.IncomeCategoryRepository;
 import com.example.budgetingapp.repositories.role.RoleRepository;
@@ -22,12 +21,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class RegistrationDefaultUserObjectsUtil {
+public class AssignDefaultUserObjectsUtil {
     private final AccountRepository accountRepository;
     private final ExpenseCategoryRepository expenseCategoryRepository;
     private final IncomeCategoryRepository incomeCategoryRepository;
     private final RoleRepository roleRepository;
-    private final BudgetRepository budgetRepository;
 
     public void assignUserRole(User user) {
         Role userRole = roleRepository.findByName(Role.RoleName.ROLE_USER);
