@@ -7,27 +7,31 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record UpdateTransactionDto(
-        @Schema(name = TransactionDtoConstants.COMMENT,
-                example = TransactionDtoConstants.COMMENT_EXAMPLE)
-        String comment,
-        @Schema(name = TransactionDtoConstants.AMOUNT,
-                example = TransactionDtoConstants.AMOUNT_EXAMPLE)
-        @Positive
-        @Digits(integer = 9, fraction = 2)
-        BigDecimal amount,
-        @Schema(name = TransactionDtoConstants.DATE,
-                example = TransactionDtoConstants.DATE_EXAMPLE)
-        @Date
-        String transactionDate,
-        @Schema(name = TransactionDtoConstants.ACCOUNT_ID,
-                example = TransactionDtoConstants.ACCOUNT_ID_EXAMPLE)
-        @Positive
-        Long accountId,
-        @Schema(name = TransactionDtoConstants.CATEGORY_ID,
-                example = TransactionDtoConstants.CATEGORY_ID_EXAMPLE)
-        @Positive
-        Long categoryId) {
+public class UpdateTransactionDto {
+    @Schema(name = TransactionDtoConstants.COMMENT,
+            example = TransactionDtoConstants.COMMENT_EXAMPLE)
+    private String comment;
+    @Schema(name = TransactionDtoConstants.AMOUNT,
+            example = TransactionDtoConstants.AMOUNT_EXAMPLE)
+    @Positive
+    @Digits(integer = 9, fraction = 2)
+    private BigDecimal amount;
+    @Schema(name = TransactionDtoConstants.DATE,
+            example = TransactionDtoConstants.DATE_EXAMPLE)
+    @Date
+    private String transactionDate;
+    @Schema(name = TransactionDtoConstants.ACCOUNT_ID,
+            example = TransactionDtoConstants.ACCOUNT_ID_EXAMPLE)
+    @Positive
+    private Long accountId;
+    @Schema(name = TransactionDtoConstants.CATEGORY_ID,
+            example = TransactionDtoConstants.CATEGORY_ID_EXAMPLE)
+    @Positive
+    private Long categoryId;
 }
