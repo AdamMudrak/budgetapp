@@ -32,7 +32,7 @@ public class TransactionsCommonFunctionsUtil {
 
     int isSufficientAmount(Account account, UpdateTransactionDto requestTransactionDto) {
         return (account.getBalance()
-                .subtract(requestTransactionDto.amount()))
+                .subtract(requestTransactionDto.getAmount()))
                 .compareTo(BigDecimal.ZERO);
     }
 

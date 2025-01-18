@@ -140,7 +140,8 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                                                UpdateTransactionDto requestTransactionDto,
                                                Long transactionId) {
         presenceCheck(userId, requestTransactionDto);
-        if (incomeCategoryRepository.findByIdAndUserId(requestTransactionDto.categoryId(), userId)
+        if (incomeCategoryRepository.findByIdAndUserId(
+                requestTransactionDto.getCategoryId(), userId)
                 .get().getName().equals(TARGET_INCOME_CATEGORY)) {
             throw new ConflictException("Can't assign " + TARGET_INCOME_CATEGORY
                     + " inside an update");
@@ -156,7 +157,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                     + TARGET_INCOME_CATEGORY + " category");
         }
         String currency = "";
-        if (requestTransactionDto.amount() != null) {
+        if (requestTransactionDto.getAmount() != null) {
             Account thisIncomeAccount = accountRepository
                     .findByIdAndUserId(previousIncome.getAccount().getId(), userId)
                     .orElseThrow(() -> new EntityNotFoundException(
@@ -173,18 +174,18 @@ public class IncomeTransactionServiceImpl implements TransactionService {
             }
 
             Account currentAccount;
-            if (requestTransactionDto.accountId() != null) {
+            if (requestTransactionDto.getAccountId() != null) {
                 currentAccount = accountRepository
-                        .findByIdAndUserId(requestTransactionDto.accountId(), userId)
+                        .findByIdAndUserId(requestTransactionDto.getAccountId(), userId)
                         .orElseThrow(() -> new EntityNotFoundException(
-                                "No account with id " + requestTransactionDto.accountId()
+                                "No account with id " + requestTransactionDto.getAccountId()
                                         + " was found for user with id " + userId));
                 currency = currentAccount.getCurrency();
             } else {
                 currentAccount = thisIncomeAccount;
             }
             currentAccount.setBalance(
-                    currentAccount.getBalance().add(requestTransactionDto.amount()));
+                    currentAccount.getBalance().add(requestTransactionDto.getAmount()));
             accountRepository.save(currentAccount);
         }
 
@@ -194,7 +195,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No user with id " + userId + " found"));
         newIncome.setUser(currentUser);
-        if (requestTransactionDto.accountId() != null) {
+        if (requestTransactionDto.getAccountId() != null) {
             newIncome.setCurrency(currency);
         }
         incomeRepository.save(newIncome);
@@ -270,11 +271,11 @@ public class IncomeTransactionServiceImpl implements TransactionService {
     }
 
     private void presenceCheck(Long userId, UpdateTransactionDto requestTransactionDto) {
-        if (!accountRepository.existsByIdAndUserId(requestTransactionDto.accountId(), userId)) {
+        if (!accountRepository.existsByIdAndUserId(requestTransactionDto.getAccountId(), userId)) {
             throw new EntityNotFoundException("No account with id "
-                    + requestTransactionDto.accountId() + " for user with id "
+                    + requestTransactionDto.getAccountId() + " for user with id "
                     + userId + " was found");
         }
-        isCategoryPresentInDb(userId, requestTransactionDto.categoryId());
+        isCategoryPresentInDb(userId, requestTransactionDto.getCategoryId());
     }
 }
