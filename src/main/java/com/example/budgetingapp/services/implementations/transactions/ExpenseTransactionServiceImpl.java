@@ -145,7 +145,8 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
                                                UpdateTransactionDto requestTransactionDto,
                                                Long transactionId) {
         presenceCheck(userId, requestTransactionDto);
-        if (expenseCategoryRepository.findByIdAndUserId(requestTransactionDto.categoryId(), userId)
+        if (expenseCategoryRepository.findByIdAndUserId(
+                requestTransactionDto.getCategoryId(), userId)
                 .get().getName().equals(TARGET_EXPENSE_CATEGORY)) {
             throw new ConflictException("Can't assign " + TARGET_EXPENSE_CATEGORY
                     + " inside an update");
@@ -162,7 +163,7 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
                     + TARGET_EXPENSE_CATEGORY + " category");
         }
         String currency = "";
-        if (requestTransactionDto.amount() != null) {
+        if (requestTransactionDto.getAmount() != null) {
             Account thisExpenseAccount = accountRepository
                     .findByIdAndUserId(previousExpense.getAccount().getId(), userId)
                     .orElseThrow(() -> new EntityNotFoundException(
@@ -173,36 +174,32 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
             accountRepository.save(thisExpenseAccount);
 
             Account currentAccount;
-            if (requestTransactionDto.accountId() != null) {
+            if (requestTransactionDto.getAccountId() != null) {
                 currentAccount = accountRepository
-                        .findByIdAndUserId(requestTransactionDto.accountId(), userId)
+                        .findByIdAndUserId(requestTransactionDto.getAccountId(), userId)
                         .orElseThrow(() -> new EntityNotFoundException(
-                                "No account with id " + requestTransactionDto.accountId()
+                                "No account with id " + requestTransactionDto.getAccountId()
                                         + " was found for user with id " + userId));
-                currency = currentAccount.getCurrency();
             } else {
                 currentAccount = thisExpenseAccount;
             }
+            currency = currentAccount.getCurrency();
 
             if (transactionsCommonFunctionsUtil
                     .isSufficientAmount(currentAccount, requestTransactionDto) < 0) {
                 throw new TransactionFailedException("Not enough money for transaction");
             } else {
                 currentAccount.setBalance(currentAccount.getBalance()
-                        .subtract(requestTransactionDto.amount()));
+                        .subtract(requestTransactionDto.getAmount()));
                 accountRepository.save(currentAccount);
             }
         }
 
-        Expense newExpense = transactionMapper.toExpense(requestTransactionDto);
+        Expense newExpense = transactionMapper.toExpense(
+                updatePresentFields(previousExpense, requestTransactionDto));
         newExpense.setId(transactionId);
-        User currentUser = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "No user with id " + userId + " found"));
-        newExpense.setUser(currentUser);
-        if (requestTransactionDto.accountId() != null) {
-            newExpense.setCurrency(currency);
-        }
+        newExpense.setUser(previousExpense.getUser());
+        newExpense.setCurrency(currency);
         expenseRepository.save(newExpense);
         return transactionMapper.toPersistExpenseDto(newExpense);
     }
@@ -273,11 +270,31 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
     }
 
     private void presenceCheck(Long userId, UpdateTransactionDto requestTransactionDto) {
-        if (!accountRepository.existsByIdAndUserId(requestTransactionDto.accountId(), userId)) {
+        if (!accountRepository.existsByIdAndUserId(requestTransactionDto.getAccountId(), userId)) {
             throw new EntityNotFoundException("No account with id "
-                    + requestTransactionDto.accountId() + " for user with id "
+                    + requestTransactionDto.getAccountId() + " for user with id "
                     + userId + " was found");
         }
-        isCategoryPresentInDb(userId, requestTransactionDto.categoryId());
+        isCategoryPresentInDb(userId, requestTransactionDto.getCategoryId());
+    }
+
+    private UpdateTransactionDto updatePresentFields(Expense expense,
+                                                     UpdateTransactionDto requestDto) {
+        if (requestDto.getAccountId() == null) {
+            requestDto.setAccountId(expense.getAccount().getId());
+        }
+        if (requestDto.getTransactionDate() == null) {
+            requestDto.setTransactionDate(String.valueOf(expense.getTransactionDate()));
+        }
+        if (requestDto.getCategoryId() == null) {
+            requestDto.setCategoryId(expense.getExpenseCategory().getId());
+        }
+        if (requestDto.getComment() == null) {
+            requestDto.setComment(expense.getComment());
+        }
+        if (requestDto.getAmount() == null) {
+            requestDto.setAmount(expense.getAmount());
+        }
+        return requestDto;
     }
 }
