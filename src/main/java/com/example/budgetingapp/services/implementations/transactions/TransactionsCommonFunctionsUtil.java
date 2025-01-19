@@ -4,14 +4,11 @@ import static com.example.budgetingapp.constants.Constants.MONTH;
 import static com.example.budgetingapp.constants.Constants.NO_VALUE;
 import static com.example.budgetingapp.constants.Constants.YEAR;
 
-import com.example.budgetingapp.dtos.transactions.request.CreateTransactionDto;
-import com.example.budgetingapp.dtos.transactions.request.UpdateTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.filters.FilterTransactionByDaysDto;
 import com.example.budgetingapp.dtos.transactions.request.filters.FilterTransactionByMonthsYearsDto;
 import com.example.budgetingapp.dtos.transactions.response.charts.SumsByPeriodDto;
 import com.example.budgetingapp.dtos.transactions.response.charts.inner.SumsByCategoryDto;
 import com.example.budgetingapp.entities.Account;
-import com.example.budgetingapp.entities.transactions.Income;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -24,21 +21,9 @@ import org.springframework.stereotype.Component;
 public class TransactionsCommonFunctionsUtil {
     private static final int FIRST_DAY = 1;
 
-    int isSufficientAmount(Account account, CreateTransactionDto requestTransactionDto) {
+    int isSufficientAmount(Account account, BigDecimal newAmount) {
         return (account.getBalance()
-                .subtract(requestTransactionDto.amount()))
-                .compareTo(BigDecimal.ZERO);
-    }
-
-    int isSufficientAmount(Account account, UpdateTransactionDto requestTransactionDto) {
-        return (account.getBalance()
-                .subtract(requestTransactionDto.getAmount()))
-                .compareTo(BigDecimal.ZERO);
-    }
-
-    int isSufficientAmount(Account account, Income income) {
-        return (account.getBalance()
-                .subtract(income.getAmount()))
+                .subtract(newAmount))
                 .compareTo(BigDecimal.ZERO);
     }
 
