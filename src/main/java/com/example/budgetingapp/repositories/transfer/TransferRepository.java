@@ -4,6 +4,7 @@ import com.example.budgetingapp.entities.Transfer;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.repositories.TransactionsSorter;
 import jakarta.persistence.criteria.Join;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,6 +13,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface TransferRepository extends JpaRepository<Transfer, Long>,
         JpaSpecificationExecutor<Transfer> {
+
+    Optional<Transfer> findByIdAndUserId(Long id, Long userId);
 
     default Page<Transfer> findAllByUserIdPaged(Long userId, Pageable pageable) {
         return findAll(getUserIdSpecification(userId),
