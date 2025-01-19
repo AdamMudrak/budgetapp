@@ -12,6 +12,7 @@ import com.example.budgetingapp.dtos.transactions.response.SaveAndUpdateResponse
 import com.example.budgetingapp.dtos.transactions.response.charts.SumsByPeriodDto;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.User;
+import com.example.budgetingapp.entities.categories.IncomeCategory;
 import com.example.budgetingapp.entities.transactions.Income;
 import com.example.budgetingapp.exceptions.conflictexpections.ConflictException;
 import com.example.budgetingapp.exceptions.conflictexpections.TransactionFailedException;
@@ -139,67 +140,82 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                                                Long userId,
                                                UpdateTransactionDto requestTransactionDto,
                                                Long transactionId) {
-        presenceCheck(userId, requestTransactionDto);
-        if (incomeCategoryRepository.findByIdAndUserId(
-                requestTransactionDto.getCategoryId(), userId)
-                .get().getName().equals(TARGET_INCOME_CATEGORY)) {
-            throw new ConflictException("Can't assign " + TARGET_INCOME_CATEGORY
-                    + " inside an update");
-        }
-
-        Income previousIncome = incomeRepository
-                .findById(transactionId)
+        Income thisIncome = incomeRepository
+                .findByIdAndUserId(transactionId, userId)
                 .orElseThrow(() ->
                         new EntityNotFoundException(
-                                "No income with id " + transactionId + " was found"));
-        if (previousIncome.getIncomeCategory().getName().equals(TARGET_INCOME_CATEGORY)) {
+                                "No income with id " + transactionId
+                                        + " was found for user with id " + userId));
+
+        if (thisIncome.getIncomeCategory().getName().equals(TARGET_INCOME_CATEGORY)) {
             throw new ConflictException("Can't modify incomes with "
                     + TARGET_INCOME_CATEGORY + " category");
         }
-        String currency = "";
-        if (requestTransactionDto.getAmount() != null) {
-            Account thisIncomeAccount = accountRepository
-                    .findByIdAndUserId(previousIncome.getAccount().getId(), userId)
-                    .orElseThrow(() -> new EntityNotFoundException(
-                            "No account with id " + previousIncome.getAccount().getId()
-                                    + " was found for user with id " + userId));
 
-            if (transactionsCommonFunctionsUtil
-                    .isSufficientAmount(thisIncomeAccount, previousIncome) < 0) {
-                throw new TransactionFailedException("Not enough money for transaction");
-            } else {
-                thisIncomeAccount.setBalance(thisIncomeAccount.getBalance()
-                        .subtract(previousIncome.getAmount()));
-                accountRepository.save(thisIncomeAccount);
-            }
-
-            Account currentAccount;
-            if (requestTransactionDto.getAccountId() != null) {
-                currentAccount = accountRepository
-                        .findByIdAndUserId(requestTransactionDto.getAccountId(), userId)
-                        .orElseThrow(() -> new EntityNotFoundException(
-                                "No account with id " + requestTransactionDto.getAccountId()
-                                        + " was found for user with id " + userId));
-                currency = currentAccount.getCurrency();
-            } else {
-                currentAccount = thisIncomeAccount;
-            }
-            currentAccount.setBalance(
-                    currentAccount.getBalance().add(requestTransactionDto.getAmount()));
-            accountRepository.save(currentAccount);
+        if (requestTransactionDto.getCategoryId() != null) {
+            thisIncome.setIncomeCategory(getNewCategoryIfValid(requestTransactionDto, userId));
         }
 
-        Income newIncome = transactionMapper.toIncome(requestTransactionDto);
-        newIncome.setId(transactionId);
-        User currentUser = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "No user with id " + userId + " found"));
-        newIncome.setUser(currentUser);
+        Account newAccount = null;
         if (requestTransactionDto.getAccountId() != null) {
-            newIncome.setCurrency(currency);
+            newAccount = getNewAccountIfValid(requestTransactionDto, userId);
         }
-        incomeRepository.save(newIncome);
-        return transactionMapper.toPersistIncomeDto(newIncome);
+
+        //Change transactionAmount within the same account
+        Account thisIncomeAccount = thisIncome.getAccount();
+        if (newAccount == null && requestTransactionDto.getAmount() != null) {
+            if (transactionsCommonFunctionsUtil
+                    .isSufficientAmount(
+                            thisIncomeAccount, thisIncome.getAmount()) < 0) {
+                throw new TransactionFailedException("Not enough money for transaction");
+            }
+            thisIncomeAccount.setBalance(thisIncomeAccount.getBalance()
+                    .subtract(thisIncome.getAmount()));
+            thisIncomeAccount.setBalance(thisIncomeAccount.getBalance()
+                    .add(requestTransactionDto.getAmount()));
+            accountRepository.save(thisIncomeAccount);
+            thisIncome.setAmount(requestTransactionDto.getAmount());
+
+            //Change account, but not the sum
+        } else if (newAccount != null && requestTransactionDto.getAmount() == null) {
+            if (transactionsCommonFunctionsUtil
+                    .isSufficientAmount(thisIncomeAccount, thisIncome.getAmount()) < 0) {
+                throw new TransactionFailedException("Not enough money for transaction");
+            }
+            thisIncomeAccount.setBalance(thisIncomeAccount.getBalance()
+                    .subtract(thisIncome.getAmount()));
+            newAccount.setBalance(thisIncomeAccount.getBalance()
+                    .add(thisIncome.getAmount()));
+            accountRepository.save(thisIncomeAccount);
+            accountRepository.save(newAccount);
+            thisIncome.setAccount(newAccount);
+            thisIncome.setCurrency(newAccount.getCurrency());
+
+            //Change both
+        } else if (newAccount != null) {
+            if (transactionsCommonFunctionsUtil
+                    .isSufficientAmount(thisIncomeAccount, requestTransactionDto.getAmount()) < 0) {
+                throw new TransactionFailedException("Not enough money for transaction");
+            }
+            thisIncomeAccount.setBalance(thisIncomeAccount.getBalance()
+                    .subtract(thisIncome.getAmount()));
+            newAccount.setBalance(thisIncomeAccount.getBalance()
+                    .add(requestTransactionDto.getAmount()));
+            accountRepository.save(thisIncomeAccount);
+            accountRepository.save(newAccount);
+            thisIncome.setAccount(newAccount);
+            thisIncome.setAmount(requestTransactionDto.getAmount());
+            thisIncome.setCurrency(newAccount.getCurrency());
+        }
+        if (requestTransactionDto.getTransactionDate() != null) {
+            thisIncome.setTransactionDate(
+                    LocalDate.parse(requestTransactionDto.getTransactionDate()));
+        }
+        if (requestTransactionDto.getComment() != null) {
+            thisIncome.setComment(requestTransactionDto.getComment());
+        }
+        incomeRepository.save(thisIncome);
+        return transactionMapper.toPersistIncomeDto(thisIncome);
     }
 
     @Transactional
@@ -219,7 +235,7 @@ public class IncomeTransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No account with id " + income.getAccount().getId()
                                 + " was found for user with id " + userId));
-        if (transactionsCommonFunctionsUtil.isSufficientAmount(account, income) < 0) {
+        if (transactionsCommonFunctionsUtil.isSufficientAmount(account, income.getAmount()) < 0) {
             throw new TransactionFailedException("Not enough money for transaction");
         }
         account.setBalance(account.getBalance().subtract(income.getAmount()));
@@ -270,12 +286,26 @@ public class IncomeTransactionServiceImpl implements TransactionService {
         }
     }
 
-    private void presenceCheck(Long userId, UpdateTransactionDto requestTransactionDto) {
-        if (!accountRepository.existsByIdAndUserId(requestTransactionDto.getAccountId(), userId)) {
-            throw new EntityNotFoundException("No account with id "
-                    + requestTransactionDto.getAccountId() + " for user with id "
-                    + userId + " was found");
+    private IncomeCategory getNewCategoryIfValid(UpdateTransactionDto requestTransactionDto,
+                                                 Long userId) {
+        IncomeCategory newIncomeCategory = incomeCategoryRepository.findByIdAndUserId(
+                        requestTransactionDto.getCategoryId(), userId)
+                .orElseThrow(() -> new EntityNotFoundException("No category with id "
+                        + requestTransactionDto.getCategoryId()
+                        + " was found for user with id " + userId));
+
+        if (newIncomeCategory.getName().equals(TARGET_INCOME_CATEGORY)) {
+            throw new ConflictException("Can't assign " + TARGET_INCOME_CATEGORY
+                    + " inside an update");
         }
-        isCategoryPresentInDb(userId, requestTransactionDto.getCategoryId());
+        return newIncomeCategory;
+    }
+
+    private Account getNewAccountIfValid(UpdateTransactionDto requestTransactionDto, Long userId) {
+        return accountRepository
+                .findByIdAndUserId(requestTransactionDto.getAccountId(), userId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "No account with id " + requestTransactionDto.getAccountId()
+                                + " was found for user with id " + userId));
     }
 }
