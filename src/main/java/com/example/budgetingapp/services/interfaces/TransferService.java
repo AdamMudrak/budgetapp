@@ -10,4 +10,6 @@ public interface TransferService {
                                  TransferRequestDto requestTransactionDto);
 
     GetTransfersPageDto getAllTransfersByUserId(Long userId, Pageable pageable);
+
+    void deleteByTransferId(Long userId, Long transferId);
 }
