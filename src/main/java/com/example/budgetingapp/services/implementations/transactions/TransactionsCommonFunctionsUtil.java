@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 public class TransactionsCommonFunctionsUtil {
     private static final int FIRST_DAY = 1;
 
-    int isSufficientAmount(Account account, BigDecimal newAmount) {
+    public int isSufficientAmount(Account account, BigDecimal newAmount) {
         return (account.getBalance()
                 .subtract(newAmount))
                 .compareTo(BigDecimal.ZERO);
