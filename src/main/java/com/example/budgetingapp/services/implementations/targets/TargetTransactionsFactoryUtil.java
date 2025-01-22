@@ -24,12 +24,14 @@ class TargetTransactionsFactoryUtil {
 
     protected Expense formExpense(ReplenishTargetDto requestDto,
                                   Account account,
-                                  User user) {
+                                  User user,
+                                  String targetName) {
         Expense replenishmentExpense = new Expense();
         replenishmentExpense.setAccount(account);
         replenishmentExpense.setCurrency(account.getCurrency());
         replenishmentExpense.setAmount(requestDto.sumOfReplenishment());
         replenishmentExpense.setTransactionDate(LocalDate.now());
+        replenishmentExpense.setComment(targetName);
 
         replenishmentExpense.setExpenseCategory(expenseCategoryRepository
                 .findByNameAndUserId(TARGET_EXPENSE_CATEGORY, user.getId()).orElseThrow(
@@ -41,12 +43,15 @@ class TargetTransactionsFactoryUtil {
         return replenishmentExpense;
     }
 
-    protected Income formIncome(Target target, Account account, User user) {
+    protected Income formIncome(Target target,
+                                Account account,
+                                User user) {
         Income deletedTargetIncome = new Income();
         deletedTargetIncome.setAccount(account);
         deletedTargetIncome.setCurrency(account.getCurrency());
         deletedTargetIncome.setAmount(target.getCurrentSum());
         deletedTargetIncome.setTransactionDate(LocalDate.now());
+        deletedTargetIncome.setComment(target.getName());
         deletedTargetIncome.setIncomeCategory(incomeCategoryRepository
                 .findByNameAndUserId(TARGET_INCOME_CATEGORY, user.getId()).orElseThrow(
                         () -> new EntityNotFoundException("No category with name "

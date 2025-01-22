@@ -93,7 +93,7 @@ public class TargetServiceImpl implements TargetService {
                 () -> new EntityNotFoundException("No user with id " + userId + " was found"));
 
         expenseRepository.save(targetTransactionsMapperUtil
-                .formExpense(replenishTargetRequestDto, account, user));
+                .formExpense(replenishTargetRequestDto, account, user, target.getName()));
 
         if (target.getCurrentSum().compareTo(target.getExpectedSum()) >= 0) {
             target.setAchieved(true);
