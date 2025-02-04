@@ -27,6 +27,8 @@ public interface TransferMapper {
 
     @Mapping(source = "fromAccount.id", target = "fromAccountId")
     @Mapping(source = "toAccount.id", target = "toAccountId")
+    @Mapping(source = "fromAccount.name", target = "fromAccountName")
+    @Mapping(source = "toAccount.name", target = "toAccountName")
     TransferResponseDto toTransferDto(Transfer transfer);
 
     List<TransferResponseDto> toTransferDtoList(List<Transfer> transfers);
