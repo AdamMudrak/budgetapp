@@ -258,10 +258,9 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
                             .reduce(BigDecimal.ZERO, BigDecimal::add);
                     Map<String, BigDecimal> resultMap =
                             new LinkedHashMap<>();
-                    resultMap.put("Sum for date:", dailyTotal);
+                    resultMap.put("Sum:", dailyTotal);
                     categoryMap.forEach((category, amount) ->
-                            resultMap.put("Sum for category "
-                                    + category.getName() + ":", amount));
+                            resultMap.put(category.getName() + ":", amount));
                     return resultMap;
                 }
         );
