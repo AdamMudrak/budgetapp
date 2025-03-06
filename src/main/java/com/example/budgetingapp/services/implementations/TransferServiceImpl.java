@@ -1,6 +1,7 @@
 package com.example.budgetingapp.services.implementations;
 
 import com.example.budgetingapp.dtos.transfers.request.TransferRequestDto;
+import com.example.budgetingapp.dtos.transfers.response.GetTransfersPageDto;
 import com.example.budgetingapp.dtos.transfers.response.TransferResponseDto;
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.Transfer;
@@ -12,12 +13,12 @@ import com.example.budgetingapp.mappers.TransferMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.transfer.TransferRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
+import com.example.budgetingapp.services.implementations.transactions.TransactionsCommonFunctionsUtil;
 import com.example.budgetingapp.services.interfaces.TransferService;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.Comparator;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,7 @@ public class TransferServiceImpl implements TransferService {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
     private final TransferMapper transferMapper;
+    private final TransactionsCommonFunctionsUtil transactionsCommonFunctionsUtil;
 
     @Transactional
     @Override
@@ -71,13 +73,36 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public List<TransferResponseDto> getAllTransfersByUserId(Long userId, Pageable pageable) {
-        return transferRepository
-                .findAllByUserId(userId, pageable)
-                .stream()
-                .map(transferMapper::toTransferDto)
-                .sorted(Comparator.comparing(TransferResponseDto::transactionDate).reversed())
-                .toList();
+    public GetTransfersPageDto getAllTransfersByUserId(Long userId, Pageable pageable) {
+
+        Page<Transfer> transferPage = transferRepository
+                .findAllByUserIdPaged(userId, pageable);
+
+        return new GetTransfersPageDto(transferPage.getNumber(),
+                transferPage.getSize(),
+                transferPage.getNumberOfElements(),
+                transferPage.getTotalElements(),
+                transferPage.getTotalPages(),
+                transferMapper.toTransferDtoList(transferPage.getContent()));
+    }
+
+    @Transactional
+    @Override
+    public void deleteByTransferId(Long userId, Long transferId) {
+        Transfer transfer = transferRepository.findByIdAndUserId(transferId, userId)
+                .orElseThrow(() -> new EntityNotFoundException("No transfer with id " + transferId
+                        + " was found for user with id " + userId));
+        Account fromAccount = transfer.getFromAccount();
+        Account toAccount = transfer.getToAccount();
+        if (transactionsCommonFunctionsUtil
+                .isSufficientAmount(toAccount, transfer.getAmount()) < 0) {
+            throw new TransactionFailedException("Not enough money for transaction");
+        }
+        toAccount.setBalance(toAccount.getBalance().subtract(transfer.getAmount()));
+        fromAccount.setBalance(fromAccount.getBalance().add(transfer.getAmount()));
+        accountRepository.save(toAccount);
+        accountRepository.save(fromAccount);
+        transferRepository.deleteById(transferId);
     }
 
     private int isSufficientAmount(Account account, TransferRequestDto requestDto) {

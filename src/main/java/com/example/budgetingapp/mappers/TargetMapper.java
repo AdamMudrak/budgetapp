@@ -3,11 +3,12 @@ package com.example.budgetingapp.mappers;
 import static com.example.budgetingapp.constants.Constants.MONTHS_IN_A_YEAR;
 
 import com.example.budgetingapp.config.MapperConfig;
-import com.example.budgetingapp.dtos.targets.request.TargetTransactionRequestDto;
-import com.example.budgetingapp.dtos.targets.response.TargetTransactionResponseDto;
+import com.example.budgetingapp.dtos.targets.request.CreateTargetDto;
+import com.example.budgetingapp.dtos.targets.response.TargetDto;
 import com.example.budgetingapp.entities.Target;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,14 +17,16 @@ import org.mapstruct.MappingTarget;
 @Mapper(config = MapperConfig.class)
 public interface TargetMapper {
     @Mapping(target = "achievedBefore", ignore = true)
-    Target toTarget(TargetTransactionRequestDto targetTransactionRequestDto);
+    Target toTarget(CreateTargetDto targetTransactionRequestDto);
 
     @Mapping(target = "periodLeft", ignore = true)
-    TargetTransactionResponseDto toTargetDto(Target target);
+    TargetDto toTargetDto(Target target);
+
+    List<TargetDto> toTargetDtoList(List<Target> targets);
 
     @AfterMapping
     default void setMonthLeft(@MappingTarget
-                              TargetTransactionResponseDto targetTransactionResponseDto,
+                                  TargetDto targetTransactionResponseDto,
                               Target target) {
         Period period = Period.between(LocalDate.now(), target.getAchievedBefore());
         int months = period.getMonths() + (period.getYears() * MONTHS_IN_A_YEAR);
@@ -37,7 +40,7 @@ public interface TargetMapper {
 
     @AfterMapping
     default void setAchievedBefore(@MappingTarget Target target,
-                                   TargetTransactionRequestDto targetTransactionRequestDto) {
+                                   CreateTargetDto targetTransactionRequestDto) {
         target.setAchievedBefore(LocalDate.parse(targetTransactionRequestDto.achievedBefore()));
     }
 }

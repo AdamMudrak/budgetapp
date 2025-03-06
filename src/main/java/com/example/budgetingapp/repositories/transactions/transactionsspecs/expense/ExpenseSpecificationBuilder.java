@@ -1,6 +1,6 @@
 package com.example.budgetingapp.repositories.transactions.transactionsspecs.expense;
 
-import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
+import com.example.budgetingapp.dtos.transactions.request.filters.FilterTransactionByDaysDto;
 import com.example.budgetingapp.entities.transactions.Expense;
 import com.example.budgetingapp.repositories.specifications.SpecificationBuilder;
 import com.example.budgetingapp.repositories.specifications.SpecificationProviderManager;
@@ -14,7 +14,7 @@ public class ExpenseSpecificationBuilder implements SpecificationBuilder<Expense
     private final SpecificationProviderManager<Expense> expenseSpecificationProviderManager;
 
     @Override
-    public Specification<Expense> build(FilterTransactionsDto transactionsDto) {
+    public Specification<Expense> build(FilterTransactionByDaysDto transactionsDto) {
         Specification<Expense> specification = Specification.where(null);
         if ((transactionsDto.accountId() == null
                 && transactionsDto.fromDate() == null

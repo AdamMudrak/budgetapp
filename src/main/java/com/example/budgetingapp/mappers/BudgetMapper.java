@@ -4,6 +4,7 @@ import com.example.budgetingapp.config.MapperConfig;
 import com.example.budgetingapp.dtos.budgets.request.BudgetRequestDto;
 import com.example.budgetingapp.dtos.budgets.response.BudgetResponseDto;
 import com.example.budgetingapp.entities.Budget;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -14,4 +15,6 @@ public interface BudgetMapper {
 
     @Mapping(source = "expenseCategory.id", target = "categoryId")
     BudgetResponseDto toBudgetDto(Budget budget);
+
+    List<BudgetResponseDto> toBudgetDtoList(List<Budget> budgets);
 }

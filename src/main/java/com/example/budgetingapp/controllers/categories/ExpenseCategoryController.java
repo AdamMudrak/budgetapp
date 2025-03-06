@@ -1,6 +1,5 @@
 package com.example.budgetingapp.controllers.categories;
 
-import static com.example.budgetingapp.constants.Constants.CATEGORY_PAGEABLE_EXAMPLE;
 import static com.example.budgetingapp.constants.Constants.CODE_200;
 import static com.example.budgetingapp.constants.Constants.CODE_201;
 import static com.example.budgetingapp.constants.Constants.CODE_204;
@@ -25,18 +24,16 @@ import static com.example.budgetingapp.constants.controllers.transactions.Expens
 
 import com.example.budgetingapp.dtos.categories.request.CreateCategoryDto;
 import com.example.budgetingapp.dtos.categories.request.UpdateCategoryDto;
-import com.example.budgetingapp.dtos.categories.response.ResponseCategoryDto;
+import com.example.budgetingapp.dtos.categories.response.CategoryDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.services.interfaces.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -69,8 +66,8 @@ public class ExpenseCategoryController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PostMapping(ADD_CATEGORY)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseCategoryDto addCategory(@AuthenticationPrincipal User user,
-                                       @Valid @RequestBody CreateCategoryDto createCategoryDto) {
+    public CategoryDto addCategory(@AuthenticationPrincipal User user,
+                                   @Valid @RequestBody CreateCategoryDto createCategoryDto) {
         return expenseCategoryService.saveCategory(user.getId(), createCategoryDto);
     }
 
@@ -79,11 +76,11 @@ public class ExpenseCategoryController {
             SUCCESSFULLY_UPDATE_CATEGORY)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PutMapping(UPDATE_CATEGORY_BY_ID)
-    public ResponseCategoryDto updateCategory(@AuthenticationPrincipal User user,
-                                              @PathVariable
+    public CategoryDto updateCategory(@AuthenticationPrincipal User user,
+                                      @PathVariable
                                               @Positive
                                               Long categoryId,
-                                          @Valid @RequestBody UpdateCategoryDto updateCategoryDto) {
+                                      @Valid @RequestBody UpdateCategoryDto updateCategoryDto) {
         return expenseCategoryService.updateCategory(user.getId(), categoryId, updateCategoryDto);
     }
 
@@ -91,9 +88,8 @@ public class ExpenseCategoryController {
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_RETRIEVED_CATEGORIES)
     @GetMapping(GET_ALL_CATEGORIES)
-    public List<ResponseCategoryDto> getAllExpenseCategories(@AuthenticationPrincipal User user,
-                             @Parameter(example = CATEGORY_PAGEABLE_EXAMPLE) Pageable pageable) {
-        return expenseCategoryService.getAllCategoriesByUserId(user.getId(), pageable);
+    public List<CategoryDto> getAllExpenseCategories(@AuthenticationPrincipal User user) {
+        return expenseCategoryService.getAllCategoriesByUserId(user.getId());
     }
 
     @Operation(summary = DELETE_CATEGORY_SUMMARY)

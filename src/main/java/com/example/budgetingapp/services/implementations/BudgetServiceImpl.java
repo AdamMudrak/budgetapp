@@ -4,7 +4,7 @@ import static com.example.budgetingapp.constants.entities.EntitiesConstants.BUDG
 
 import com.example.budgetingapp.dtos.budgets.request.BudgetRequestDto;
 import com.example.budgetingapp.dtos.budgets.response.BudgetResponseDto;
-import com.example.budgetingapp.dtos.transactions.request.FilterTransactionsDto;
+import com.example.budgetingapp.dtos.transactions.request.filters.FilterTransactionByDaysDto;
 import com.example.budgetingapp.entities.Budget;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.transactions.Expense;
@@ -20,7 +20,6 @@ import com.example.budgetingapp.repositories.transactions.transactionsspecs.expe
 import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.interfaces.BudgetService;
 import java.math.BigDecimal;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -62,12 +61,8 @@ public class BudgetServiceImpl implements BudgetService {
     @Override
     public List<BudgetResponseDto> updateAndGetAllBudgets(Long userId) {
         updateBudgetsBeforeRetrieval(userId);
-        return budgetRepository
-                .findAllByUserId(userId)
-                .stream()
-                .map(budgetMapper::toBudgetDto)
-                .sorted(Comparator.comparing(BudgetResponseDto::getId))
-                .toList();
+        return budgetMapper.toBudgetDtoList(budgetRepository
+                        .findAllByUserId(userId));
     }
 
     @Override
@@ -118,8 +113,8 @@ public class BudgetServiceImpl implements BudgetService {
         }
     }
 
-    private FilterTransactionsDto getFilterDtoWithNoAccount(Budget budget) {
-        return new FilterTransactionsDto(
+    private FilterTransactionByDaysDto getFilterDtoWithNoAccount(Budget budget) {
+        return new FilterTransactionByDaysDto(
                 null,
                 Set.of(budget.getExpenseCategory().getId()),
                 budget.getFromDate().toString(),

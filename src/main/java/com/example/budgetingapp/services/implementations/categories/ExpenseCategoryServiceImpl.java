@@ -3,10 +3,11 @@ package com.example.budgetingapp.services.implementations.categories;
 import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.EXPENSE;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.CATEGORY_QUANTITY_THRESHOLD;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_CATEGORY_NAME;
+import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGET_EXPENSE_CATEGORY;
 
 import com.example.budgetingapp.dtos.categories.request.CreateCategoryDto;
 import com.example.budgetingapp.dtos.categories.request.UpdateCategoryDto;
-import com.example.budgetingapp.dtos.categories.response.ResponseCategoryDto;
+import com.example.budgetingapp.dtos.categories.response.CategoryDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.categories.ExpenseCategory;
 import com.example.budgetingapp.exceptions.conflictexpections.AlreadyExistsException;
@@ -17,11 +18,9 @@ import com.example.budgetingapp.repositories.categories.ExpenseCategoryRepositor
 import com.example.budgetingapp.repositories.transactions.ExpenseRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.services.interfaces.CategoryService;
-import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,7 +33,7 @@ public class ExpenseCategoryServiceImpl implements CategoryService {
     private final ExpenseRepository expenseRepository;
 
     @Override
-    public ResponseCategoryDto saveCategory(Long userId, CreateCategoryDto createCategoryDto) {
+    public CategoryDto saveCategory(Long userId, CreateCategoryDto createCategoryDto) {
         if (expenseCategoryRepository.countCategoriesByUserId(userId)
                 >= CATEGORY_QUANTITY_THRESHOLD) {
             throw new ConflictException("You can't have more than " + CATEGORY_QUANTITY_THRESHOLD
@@ -55,8 +54,8 @@ public class ExpenseCategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseCategoryDto updateCategory(Long userId, Long categoryId,
-                                              UpdateCategoryDto createCategoryDto) {
+    public CategoryDto updateCategory(Long userId, Long categoryId,
+                                      UpdateCategoryDto createCategoryDto) {
         if (expenseCategoryRepository.existsByNameAndUserId(createCategoryDto.newName(), userId)) {
             throw new AlreadyExistsException("You already have expense category named "
                     + createCategoryDto.newName());
@@ -65,7 +64,8 @@ public class ExpenseCategoryServiceImpl implements CategoryService {
                 userId).orElseThrow(
                     () -> new EntityNotFoundException("No expense category with id "
                         + categoryId + " was found for user with id " + userId));
-        if (expenseCategory.getName().equals(DEFAULT_CATEGORY_NAME)) {
+        if (expenseCategory.getName().equals(DEFAULT_CATEGORY_NAME)
+                || expenseCategory.getName().equals(TARGET_EXPENSE_CATEGORY)) {
             throw new IllegalArgumentException("Can't update category by default");
         }
         expenseCategory.setName(createCategoryDto.newName());
@@ -75,13 +75,10 @@ public class ExpenseCategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<ResponseCategoryDto> getAllCategoriesByUserId(Long userId, Pageable pageable) {
+    public List<CategoryDto> getAllCategoriesByUserId(Long userId) {
         return categoryMapper
                 .toExpenseCategoryDtoList(expenseCategoryRepository
-                .findAllByUserId(userId, pageable))
-                .stream()
-                .sorted(Comparator.comparing(ResponseCategoryDto::id))
-                .toList();
+                .findAllByUserId(userId));
     }
 
     @Override
@@ -90,7 +87,8 @@ public class ExpenseCategoryServiceImpl implements CategoryService {
                 .findByIdAndUserId(categoryId, userId).orElseThrow(
                         () -> new EntityNotFoundException(
                         "No category with id " + categoryId + " for user with id " + userId));
-        if (expenseCategory.getName().equals(DEFAULT_CATEGORY_NAME)) {
+        if (expenseCategory.getName().equals(DEFAULT_CATEGORY_NAME)
+                || expenseCategory.getName().equals(TARGET_EXPENSE_CATEGORY)) {
             throw new IllegalArgumentException("Can't delete category by default");
         }
         ExpenseCategory defaultCategory =

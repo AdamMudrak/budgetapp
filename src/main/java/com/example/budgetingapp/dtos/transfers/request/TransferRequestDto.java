@@ -33,13 +33,11 @@ public record TransferRequestDto(
                 requiredMode = REQUIRED)
         @NotNull
         @Positive
-        @Digits(integer = 9, fraction = 0)
         Long fromAccountId,
         @Schema(name = TransactionDtoConstants.TO_ACCOUNT_ID,
                 example = TransactionDtoConstants.TO_ACCOUNT_ID_EXAMPLE,
                 requiredMode = REQUIRED)
         @NotNull
         @Positive
-        @Digits(integer = 9, fraction = 0)
         Long toAccountId) {
 }

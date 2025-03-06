@@ -28,27 +28,11 @@ public class Constants {
 
     public static final String ROLE_USER = "hasRole('ROLE_USER')";
 
-    public static final String CATEGORY_PAGEABLE_EXAMPLE = """
-            {
-              "page": 0,
-              "size": 10,
-              "sort":"name,DESC"
-            }
-            """;
-
     public static final String TRANSACTION_PAGEABLE_EXAMPLE = """
             {
               "page": 0,
               "size": 10,
               "sort":"transactionDate,ASC"
-            }
-            """;
-
-    public static final String TARGET_PAGEABLE_EXAMPLE = """
-            {
-              "page": 0,
-              "size": 5,
-              "sort":"name,ASC"
             }
             """;
 }

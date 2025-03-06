@@ -2,9 +2,11 @@ package com.example.budgetingapp.repositories.transactions;
 
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.transactions.Expense;
+import com.example.budgetingapp.repositories.TransactionsSorter;
 import jakarta.persistence.criteria.Join;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,14 +28,15 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long>,
         return findAll(userIdSpecification);
     }
 
-    default List<Expense> findAllByUserIdPaged(Long userId,
+    default Page<Expense> findAllByUserIdPaged(Long userId,
                                                Specification<Expense> specification,
                                                Pageable pageable) {
         Specification<Expense> userIdSpecification = getUserIdSpecification(userId);
         if (specification != null) {
             userIdSpecification = userIdSpecification.and(specification);
         }
-        return findAll(userIdSpecification, pageable).getContent();
+        return findAll(userIdSpecification,
+                TransactionsSorter.getSortOrSortByDefault(pageable));
     }
 
     private Specification<Expense> getUserIdSpecification(Long userId) {

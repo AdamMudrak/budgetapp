@@ -5,6 +5,7 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 import com.example.budgetingapp.constants.dtos.BudgetDtoConstants;
 import com.example.budgetingapp.validation.date.Date;
 import com.example.budgetingapp.validation.date.todateafterfromdate.BudgetToDateAfterFromDate;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
@@ -12,6 +13,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @BudgetToDateAfterFromDate
 public record BudgetRequestDto(
         @Schema(name = BudgetDtoConstants.NAME,
@@ -43,7 +45,6 @@ public record BudgetRequestDto(
                 requiredMode = REQUIRED)
         @NotNull
         @Positive
-        @Digits(integer = 9, fraction = 0)
         Long categoryId,
         @Schema(name = BudgetDtoConstants.LIMIT_SUM,
                 example = BudgetDtoConstants.LIMIT_SUM_EXAMPLE,

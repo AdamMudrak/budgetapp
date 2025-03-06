@@ -7,6 +7,8 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.BOT_
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONTENT_TYPE;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONTENT_TYPE_HEADER;
 import static com.example.budgetingapp.constants.security.SecurityConstants.FAILED;
+import static com.example.budgetingapp.constants.security.SecurityConstants.KEYBOARD_BUTTON_TEXT;
+import static com.example.budgetingapp.constants.security.SecurityConstants.PARSE_MODE;
 import static com.example.budgetingapp.constants.security.SecurityConstants.PLUS;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_ACTION_JWT_STRENGTH;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_STRENGTH;
@@ -20,9 +22,9 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.UNKN
 import com.example.budgetingapp.entities.tokens.ActionToken;
 import com.example.budgetingapp.exceptions.forbidden.LoginException;
 import com.example.budgetingapp.repositories.actiontoken.ActionTokenRepository;
-import com.example.budgetingapp.security.RandomStringUtil;
 import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
+import com.example.budgetingapp.security.utils.RandomStringUtil;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -98,7 +100,7 @@ public class BudgetAppBot extends TelegramLongPollingBot {
     }
 
     private void requestContact(Update update) {
-        KeyboardButton contactButton = new KeyboardButton("Share");
+        KeyboardButton contactButton = new KeyboardButton(KEYBOARD_BUTTON_TEXT);
         contactButton.setRequestContact(true);
 
         KeyboardRow contactRow = new KeyboardRow();
@@ -156,7 +158,7 @@ public class BudgetAppBot extends TelegramLongPollingBot {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
         message.setText(text);
-        message.setParseMode("MarkdownV2");
+        message.setParseMode(PARSE_MODE);
         try {
             execute(message);
         } catch (TelegramApiException e) {

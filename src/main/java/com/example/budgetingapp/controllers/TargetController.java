@@ -6,7 +6,6 @@ import static com.example.budgetingapp.constants.Constants.CODE_204;
 import static com.example.budgetingapp.constants.Constants.CODE_400;
 import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
-import static com.example.budgetingapp.constants.Constants.TARGET_PAGEABLE_EXAMPLE;
 import static com.example.budgetingapp.constants.controllers.TargetControllerConstants.ADD_TARGET;
 import static com.example.budgetingapp.constants.controllers.TargetControllerConstants.ADD_TARGET_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.TargetControllerConstants.DESTROY_TARGET;
@@ -23,20 +22,18 @@ import static com.example.budgetingapp.constants.controllers.TargetControllerCon
 import static com.example.budgetingapp.constants.controllers.TargetControllerConstants.TARGET_API_DESCRIPTION;
 import static com.example.budgetingapp.constants.controllers.TargetControllerConstants.TARGET_API_NAME;
 
-import com.example.budgetingapp.dtos.targets.request.DeleteTargetRequestDto;
-import com.example.budgetingapp.dtos.targets.request.ReplenishTargetRequestDto;
-import com.example.budgetingapp.dtos.targets.request.TargetTransactionRequestDto;
-import com.example.budgetingapp.dtos.targets.response.TargetTransactionResponseDto;
+import com.example.budgetingapp.dtos.targets.request.CreateTargetDto;
+import com.example.budgetingapp.dtos.targets.request.DeleteTargetDto;
+import com.example.budgetingapp.dtos.targets.request.ReplenishTargetDto;
+import com.example.budgetingapp.dtos.targets.response.TargetDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.services.interfaces.TargetService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -61,8 +58,8 @@ public class TargetController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PostMapping(ADD_TARGET)
     @ResponseStatus(HttpStatus.CREATED)
-    public TargetTransactionResponseDto addTarget(@AuthenticationPrincipal User user,
-                                      @Valid @RequestBody TargetTransactionRequestDto requestDto) {
+    public TargetDto addTarget(@AuthenticationPrincipal User user,
+                               @Valid @RequestBody CreateTargetDto requestDto) {
         return targetService.saveTarget(user.getId(), requestDto);
     }
 
@@ -70,17 +67,16 @@ public class TargetController {
     @ApiResponse(responseCode = CODE_200, description = SUCCESSFULLY_REPLENISHED_TARGET)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PostMapping(REPLENISH_TARGET)
-    public TargetTransactionResponseDto replenishTarget(@AuthenticationPrincipal User user,
-                                        @Valid @RequestBody ReplenishTargetRequestDto requestDto) {
+    public TargetDto replenishTarget(@AuthenticationPrincipal User user,
+                                     @Valid @RequestBody ReplenishTargetDto requestDto) {
         return targetService.replenishTarget(user.getId(), requestDto);
     }
 
     @Operation(summary = GET_ALL_TARGETS_SUMMARY)
     @ApiResponse(responseCode = CODE_200, description = SUCCESSFULLY_RETRIEVED_TARGETS)
     @GetMapping(GET_ALL_TARGETS)
-    public List<TargetTransactionResponseDto> getAllTargets(@AuthenticationPrincipal User user,
-                            @Parameter(example = TARGET_PAGEABLE_EXAMPLE) Pageable pageable) {
-        return targetService.getAllTargets(user.getId(), pageable);
+    public List<TargetDto> getAllTargets(@AuthenticationPrincipal User user) {
+        return targetService.getAllTargets(user.getId());
     }
 
     @Operation(summary = DESTROY_TARGET_SUMMARY)
@@ -88,7 +84,7 @@ public class TargetController {
     @DeleteMapping(DESTROY_TARGET)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTarget(@AuthenticationPrincipal User user,
-                             @Valid @RequestBody DeleteTargetRequestDto requestDto) {
+                             @Valid @RequestBody DeleteTargetDto requestDto) {
         targetService.deleteByTargetId(user.getId(), requestDto);
     }
 }

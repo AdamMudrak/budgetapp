@@ -10,5 +10,7 @@ public record TransferResponseDto(
         BigDecimal amount,
         LocalDate transactionDate,
         Long fromAccountId,
-        Long toAccountId) {
+        String fromAccountName,
+        Long toAccountId,
+        String toAccountName) {
 }

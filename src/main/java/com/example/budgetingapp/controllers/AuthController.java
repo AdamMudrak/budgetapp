@@ -39,21 +39,21 @@ import static com.example.budgetingapp.constants.controllers.AuthControllerConst
 import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.TELEGRAM_LOGIN_SUMMARY;
 
 import com.example.budgetingapp.constants.Constants;
+import com.example.budgetingapp.dtos.users.request.SetNewPasswordDto;
 import com.example.budgetingapp.dtos.users.request.TelegramAuthenticationRequestDto;
-import com.example.budgetingapp.dtos.users.request.UserGetLinkToSetRandomPasswordRequestDto;
+import com.example.budgetingapp.dtos.users.request.UserGetLinkToResetPasswordDto;
 import com.example.budgetingapp.dtos.users.request.UserRegistrationRequestDto;
-import com.example.budgetingapp.dtos.users.request.UserSetNewPasswordRequestDto;
-import com.example.budgetingapp.dtos.users.request.userloginrequestdtos.UserEmailLoginRequestDto;
-import com.example.budgetingapp.dtos.users.request.userloginrequestdtos.UserTelegramLoginRequestDto;
-import com.example.budgetingapp.dtos.users.response.AccessTokenResponseDto;
+import com.example.budgetingapp.dtos.users.request.userlogindtos.UserEmailLoginDto;
+import com.example.budgetingapp.dtos.users.request.userlogindtos.UserTelegramLoginDto;
+import com.example.budgetingapp.dtos.users.response.AccessTokenDto;
+import com.example.budgetingapp.dtos.users.response.StartPasswordResetDto;
 import com.example.budgetingapp.dtos.users.response.TelegramAuthenticationResponseDto;
-import com.example.budgetingapp.dtos.users.response.UserLoginResponseDto;
-import com.example.budgetingapp.dtos.users.response.UserPasswordResetResponseDto;
+import com.example.budgetingapp.dtos.users.response.UserLoginDto;
 import com.example.budgetingapp.dtos.users.response.UserRegistrationResponseDto;
 import com.example.budgetingapp.exceptions.badrequest.RegistrationException;
-import com.example.budgetingapp.security.RandomParamFromHttpRequestUtil;
 import com.example.budgetingapp.security.services.AuthenticationService;
 import com.example.budgetingapp.security.services.TelegramAuthenticationService;
+import com.example.budgetingapp.security.utils.RandomParamFromHttpRequestUtil;
 import com.example.budgetingapp.services.interfaces.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -113,8 +113,8 @@ public class AuthController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @ApiResponse(responseCode = CODE_403, description = ACCESS_DENIED)
     @PostMapping(LOGIN_TELEGRAM)
-    public UserLoginResponseDto loginTelegram(@RequestBody @Valid
-                                                  UserTelegramLoginRequestDto request) {
+    public UserLoginDto loginTelegram(@RequestBody @Valid
+                                              UserTelegramLoginDto request) {
         return authenticationService.authenticateTelegram(request);
     }
 
@@ -124,7 +124,7 @@ public class AuthController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @ApiResponse(responseCode = CODE_403, description = ACCESS_DENIED)
     @PostMapping(LOGIN_EMAIL)
-    public UserLoginResponseDto loginEmail(@RequestBody @Valid UserEmailLoginRequestDto request) {
+    public UserLoginDto loginEmail(@RequestBody @Valid UserEmailLoginDto request) {
         return authenticationService.authenticateEmail(request);
     }
 
@@ -133,8 +133,8 @@ public class AuthController {
             SUCCESSFULLY_INITIATED_PASSWORD_RESET)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PostMapping(FORGOT_PASSWORD)
-    public UserPasswordResetResponseDto initiatePasswordReset(@Valid @RequestBody
-                                              UserGetLinkToSetRandomPasswordRequestDto request) {
+    public StartPasswordResetDto initiatePasswordReset(@Valid @RequestBody
+                                                            UserGetLinkToResetPasswordDto request) {
         return authenticationService.initiatePasswordReset(request.email());
     }
 
@@ -159,8 +159,8 @@ public class AuthController {
     @ApiResponse(responseCode = CODE_403, description = ACCESS_DENIED)
     @PreAuthorize(ROLE_USER)
     @PostMapping(CHANGE_PASSWORD)
-    public UserPasswordResetResponseDto changePassword(HttpServletRequest httpServletRequest,
-                                 @RequestBody @Valid UserSetNewPasswordRequestDto request) {
+    public StartPasswordResetDto changePassword(HttpServletRequest httpServletRequest,
+                                                @RequestBody @Valid SetNewPasswordDto request) {
         return authenticationService.changePassword(httpServletRequest, request);
     }
 
@@ -180,7 +180,7 @@ public class AuthController {
             SUCCESSFULLY_REFRESHED_TOKEN)
     @ApiResponse(responseCode = CODE_403, description = ACCESS_DENIED)
     @PostMapping(REFRESH_ACCESS_TOKEN)
-    public AccessTokenResponseDto refreshToken(HttpServletRequest httpServletRequest) {
+    public AccessTokenDto refreshToken(HttpServletRequest httpServletRequest) {
         return authenticationService.refreshToken(httpServletRequest);
     }
 }

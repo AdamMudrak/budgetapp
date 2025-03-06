@@ -16,7 +16,7 @@ import com.example.budgetingapp.repositories.paramtoken.ParamTokenRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;
 import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
-import com.example.budgetingapp.security.services.RegistrationDefaultUserObjectsUtil;
+import com.example.budgetingapp.security.utils.AssignDefaultUserObjectsUtil;
 import com.example.budgetingapp.services.RedirectUtil;
 import com.example.budgetingapp.services.email.PasswordEmailService;
 import com.example.budgetingapp.services.interfaces.UserService;
@@ -30,7 +30,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final RedirectUtil redirectUtil;
-    private final RegistrationDefaultUserObjectsUtil defaultUserObjectsUtil;
+    private final AssignDefaultUserObjectsUtil defaultUserObjectsUtil;
     private final UserRepository userRepository;
     private final ParamTokenRepository paramTokenRepository;
     private final UserMapper userMapper;
