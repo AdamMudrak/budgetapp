@@ -36,8 +36,8 @@ public class ExpenseCategoryServiceImpl implements CategoryService {
     public CategoryDto saveCategory(Long userId, CreateCategoryDto createCategoryDto) {
         if (expenseCategoryRepository.countCategoriesByUserId(userId)
                 >= CATEGORY_QUANTITY_THRESHOLD) {
-            throw new ConflictException("You can't have more than " + CATEGORY_QUANTITY_THRESHOLD
-                    + " expense categories!");
+            throw new ConflictException("You can't have more than "
+                    + (CATEGORY_QUANTITY_THRESHOLD - 1) + " expense categories!");
         }
         User currentUser = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(
