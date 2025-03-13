@@ -16,6 +16,7 @@ import static com.example.budgetingapp.constants.controllers.TransferControllerC
 import static com.example.budgetingapp.constants.controllers.TransferControllerConstants.SUCCESSFULLY_DELETED_TRANSFER;
 import static com.example.budgetingapp.constants.controllers.TransferControllerConstants.SUCCESSFULLY_RETRIEVED_TRANSFERS;
 import static com.example.budgetingapp.constants.controllers.TransferControllerConstants.TRANSFERS;
+import static com.example.budgetingapp.constants.controllers.TransferControllerConstants.TRANSFERS_API_DESCRIPTION;
 import static com.example.budgetingapp.constants.controllers.TransferControllerConstants.TRANSFERS_API_NAME;
 
 import com.example.budgetingapp.dtos.transfers.request.TransferRequestDto;
@@ -44,7 +45,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @PreAuthorize(ROLE_USER)
 @RestController
-@Tag(name = TRANSFERS_API_NAME)
+@Tag(name = TRANSFERS_API_NAME, description = TRANSFERS_API_DESCRIPTION)
 @RequestMapping(TRANSFERS)
 @RequiredArgsConstructor
 public class TransferController {
