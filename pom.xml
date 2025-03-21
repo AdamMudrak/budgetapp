@@ -157,6 +157,12 @@
 			<artifactId>telegrambots</artifactId>
 			<version>6.9.7.1</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.sendgrid</groupId>
+			<artifactId>sendgrid-java</artifactId>
+			<version>4.10.3</version>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -18,7 +18,6 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.RESE
 import com.example.budgetingapp.exceptions.notfoundexceptions.ActionNotFoundException;
 import com.example.budgetingapp.security.utils.EmailLinkParameterProvider;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,9 +28,7 @@ public class PasswordEmailService extends EmailService {
     @Value(CONFIRMATION_PATH)
     private String confirmationPath;
 
-    public PasswordEmailService(JavaMailSender mailSender,
-                                EmailLinkParameterProvider emailLinkParameterProvider) {
-        super(mailSender);
+    public PasswordEmailService(EmailLinkParameterProvider emailLinkParameterProvider) {
         this.emailLinkParameterProvider = emailLinkParameterProvider;
     }
 

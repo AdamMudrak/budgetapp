@@ -1,7 +1,8 @@
 package com.example.budgetingapp.constants.security;
 
 public class SecurityConstants {
-    public static final String SUPPORT_EMAIL = "${spring.mail.username}";
+    public static final String SUPPORT_EMAIL = "${mail.address}";
+    public static final String SEND_GRID_API_KEY = "${sendgrid.api.key}";
     public static final String SUPPORT_EMAIL_SUBJECT = "A request from ";
 
     public static final String PLUS = "+";
@@ -22,7 +23,7 @@ public class SecurityConstants {
     public static final String RESET_PATH = "${reset.path}";
     public static final String CONFIRMATION_PATH = "${confirmation.path}";
     public static final String TOKEN = "${telegram.bot.token}";
-    public static final String BOT_TO_SERVER_REQUEST_URI = "${bot-to-server-request-uri}";
+    public static final String BOT_TO_SERVER_REQUEST_URI = "${bot.to.server.request.uri}";
 
     public static final int BEGIN_INDEX = 7;
 
