@@ -43,13 +43,16 @@ public class SecurityConstants {
             "Initiate password reset for Moneta";
     public static final String INITIATE_RANDOM_PASSWORD_BODY = """
             Good day! This email is here to help you reset
-            password for your Moneta account. Please, use
+            password for your Moneta account. After confirmation,
+            you will receive a follow-up email with a new temporary
+            random password. Do not hesitate to change it after to
+            something you will remember! Please, use
             this link to confirm your request of password reset:""";
 
     public static final String RANDOM_PASSWORD_SUBJECT = "New password for Moneta";
     public static final String RANDOM_PASSWORD_BODY = "Your new random password:";
     public static final String RANDOM_PASSWORD_BODY_2 =
-            "Follow the link and log in using new password:";
+            "Click or tap the link and log in using new password:";
     public static final String RANDOM_PASSWORD_BODY_3 =
             "Feel free to change password to something you will remember!";
 
