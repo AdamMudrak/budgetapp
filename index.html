@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moneta - Landing Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 900px;
+            width: 100%;
+        }
+        .box-wrapper {
+            background-color: #90a4ae;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+        .box-wrapper:hover {
+            transform: scale(1.05);
+        }
+        .box {
+            background-color: #1b5e20;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .box:hover {
+            background-color: #154c13;
+            transform: translateY(-2px);
+        }
+        .description {
+            margin-top: 12px;
+            font-size: 16px;
+            color: #263238;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Moneta</h1>
+    <div class="container">
+        <div class="box-wrapper">
+            <a href="https://github.com/AdamMudrak/budgetapp" class="box" target="_blank">GitHub Repository</a>
+            <p class="description">
+                Dive into the source code of Moneta! Track the project's development and stay up-to-date with new features and improvements.
+            </p>
+        </div>
+        <div class="box-wrapper">
+            <a href="https://my.moneta-api.space/" class="box" target="_blank">Project's Website</a>
+            <p class="description">
+                Experience Moneta's front-end interface, designed for a smooth and user-friendly experience. Explore its features, test functionalities, and see how everything comes together visually.
+            </p>
+        </div>
+        <div class="box-wrapper">
+            <a href="https://moneta-api.space/swagger-ui/index.html" class="box" target="_blank">Swagger UI</a>
+            <p class="description">
+                Test and interact with Moneta's API in real time! After registering and logging in via telegram or email, you can enter your access token to explore all available endpoints and functionalities.
+            </p>
+        </div>
+        <div class="box-wrapper">
+            <a href="https://t.me/CoinBudgetAppBot" class="box" target="_blank">MyBudgetApp Telegram Bot</a>
+            <p class="description">
+                Manage your account effortlessly via Telegram! Register, log in, and get a new password with ease - all from the convenience of your messaging app.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
