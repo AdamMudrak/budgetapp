@@ -45,7 +45,7 @@ Moneta BudgetApp is built with a robust and scalable technology stack:
 ## 🔧 Setup and Installation
 Not ready for setting up my application locally yet? Then explore our [Team Project](https://landing.moneta-api.space/) first!<br>There, you will be able to have a look at Swagger documentation, my running telegram bot and my colleague's work - WebSite for the frontend done by [Maria Shmakova](https://www.linkedin.com/in/mariashmakova/)
 
-Follow these steps to set up Moneta BudgetApp locally or follow steps in this [video](https://icecreamapps.com/v/btumc23):
+Follow these steps to set up Moneta BudgetApp locally or follow steps in this [video](https://www.youtube.com/watch?v=OUsDDkUCCTE):
 
 1. **Prerequisites:**
     - If you want to use your **own** MySQL, update [application.properties](src/main/resources/application.properties) directly or [envrironment variables](.env.sample) with your MySQL credentials.
