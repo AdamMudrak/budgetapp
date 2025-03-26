@@ -27,6 +27,8 @@ public class PasswordEmailService extends EmailService {
     private String resetPath;
     @Value(CONFIRMATION_PATH)
     private String confirmationPath;
+    @Value(RANDOM_PASSWORD_REDIRECT_LINK)
+    private String redirectPath;
 
     public PasswordEmailService(EmailLinkParameterProvider emailLinkParameterProvider) {
         this.emailLinkParameterProvider = emailLinkParameterProvider;
@@ -52,7 +54,7 @@ public class PasswordEmailService extends EmailService {
                             + System.lineSeparator()
                             + RANDOM_PASSWORD_BODY_2
                             + System.lineSeparator()
-                            + RANDOM_PASSWORD_REDIRECT_LINK
+                            + redirectPath
                             + System.lineSeparator()
                             + RANDOM_PASSWORD_BODY_3);
     }
