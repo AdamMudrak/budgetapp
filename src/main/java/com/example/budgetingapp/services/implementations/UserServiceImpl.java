@@ -22,6 +22,7 @@ import com.example.budgetingapp.services.email.PasswordEmailService;
 import com.example.budgetingapp.services.interfaces.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,8 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtStrategy jwtStrategy;
     private final PasswordEmailService passwordEmailService;
+    @Value(REGISTRATION_CONFIRMATION_LINK)
+    private String redirectPath;
 
     @Transactional
     @Override
@@ -71,6 +74,7 @@ public class UserServiceImpl implements UserService {
         ParamToken paramToken = paramTokenRepository.findByActionToken(token).orElseThrow(()
                 -> new EntityNotFoundException("No such request"));
         paramTokenRepository.deleteById(paramToken.getId());
-        return redirectUtil.redirect(REGISTRATION_CONFIRMATION_LINK);
+
+        return redirectUtil.redirect(redirectPath);
     }
 }

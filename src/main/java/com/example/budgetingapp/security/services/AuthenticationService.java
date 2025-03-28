@@ -41,6 +41,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -63,6 +64,8 @@ public class AuthenticationService {
     private final PasswordEmailService passwordEmailService;
     private final RandomStringUtil randomStringUtil;
     private final ParamTokenRepository paramTokenRepository;
+    @Value(PASSWORD_RESET_CONFIRMATION_LINK)
+    private String redirectPath;
 
     public UserLoginDto authenticateTelegram(UserTelegramLoginDto requestDto) {
         InnerUserLoginDto innerUserLoginRequestDto = interprete(requestDto);
@@ -100,7 +103,7 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(randomPassword));
         userRepository.save(user);
         passwordEmailService.sendResetPassword(email, randomPassword);
-        return redirectUtil.redirect(PASSWORD_RESET_CONFIRMATION_LINK);
+        return redirectUtil.redirect(redirectPath);
     }
 
     public StartPasswordResetDto changePassword(HttpServletRequest httpServletRequest,

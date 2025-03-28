@@ -37,6 +37,7 @@ import static com.example.budgetingapp.constants.controllers.AuthControllerConst
 import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.TELEGRAM_AUTH;
 import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.TELEGRAM_AUTH_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.AuthControllerConstants.TELEGRAM_LOGIN_SUMMARY;
+import static com.example.budgetingapp.constants.redirects.RedirectConstants.ACTION_ERROR_LINK;
 
 import com.example.budgetingapp.constants.Constants;
 import com.example.budgetingapp.dtos.users.request.SetNewPasswordDto;
@@ -51,9 +52,11 @@ import com.example.budgetingapp.dtos.users.response.TelegramAuthenticationRespon
 import com.example.budgetingapp.dtos.users.response.UserLoginDto;
 import com.example.budgetingapp.dtos.users.response.UserRegistrationResponseDto;
 import com.example.budgetingapp.exceptions.badrequest.RegistrationException;
+import com.example.budgetingapp.exceptions.notfoundexceptions.ActionNotFoundException;
 import com.example.budgetingapp.security.services.AuthenticationService;
 import com.example.budgetingapp.security.services.TelegramAuthenticationService;
 import com.example.budgetingapp.security.utils.RandomParamFromHttpRequestUtil;
+import com.example.budgetingapp.services.RedirectUtil;
 import com.example.budgetingapp.services.interfaces.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -61,6 +64,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -81,6 +85,9 @@ public class AuthController {
     private final AuthenticationService authenticationService;
     private final TelegramAuthenticationService telegramAuthenticationService;
     private final RandomParamFromHttpRequestUtil randomParamFromHttpRequestUtil;
+    private final RedirectUtil redirectUtil;
+    @Value(ACTION_ERROR_LINK)
+    private String actionErrorPath;
 
     @Operation(summary = REGISTER_SUMMARY)
     @ApiResponse(responseCode = CODE_201, description =
@@ -101,10 +108,14 @@ public class AuthController {
     @GetMapping(CONFIRM_REGISTRATION)
     public ResponseEntity<Void> confirmRegistration(HttpServletRequest httpServletRequest) {
         randomParamFromHttpRequestUtil.parseRandomParameterAndToken(httpServletRequest);
-        return userService
-                .confirmRegistration(randomParamFromHttpRequestUtil.getTokenFromRepo(
-                        randomParamFromHttpRequestUtil.getRandomParameter(),
-                        randomParamFromHttpRequestUtil.getToken()));
+        try {
+            return userService
+                    .confirmRegistration(randomParamFromHttpRequestUtil.getTokenFromRepo(
+                            randomParamFromHttpRequestUtil.getRandomParameter(),
+                            randomParamFromHttpRequestUtil.getToken()));
+        } catch (ActionNotFoundException e) {
+            return redirectUtil.redirect(actionErrorPath);
+        }
     }
 
     @Operation(summary = TELEGRAM_LOGIN_SUMMARY)
@@ -145,10 +156,14 @@ public class AuthController {
     @GetMapping(RESET_PASSWORD)
     public ResponseEntity<Void> resetPassword(HttpServletRequest httpServletRequest) {
         randomParamFromHttpRequestUtil.parseRandomParameterAndToken(httpServletRequest);
-        return authenticationService
+        try {
+            return authenticationService
                 .confirmResetPassword(randomParamFromHttpRequestUtil.getTokenFromRepo(
                 randomParamFromHttpRequestUtil.getRandomParameter(),
                 randomParamFromHttpRequestUtil.getToken()));
+        } catch (ActionNotFoundException e) {
+            return redirectUtil.redirect(actionErrorPath);
+        }
     }
 
     @Operation(summary = CHANGE_PASSWORD_SUMMARY)
