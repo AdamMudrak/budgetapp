@@ -6,38 +6,136 @@ efficiently track their incomes, expenses, and savings. With seamless authentica
 or email, Moneta BudgetApp provides an intuitive and feature-rich experience to help users gain financial control.
 
 ## 🚀 Features
-- **User Authentication and Password Management:** Sign up and log in using Telegram or email. <br>Reset password via email (for email users) or get a new password through Telegram bot authentication.
-    - [AuthController](src/main/java/com/example/budgetingapp/controllers/AuthController.java)
-- **Transaction Management:** Add, update, delete, and retrieve income and expense records categorized by date, year, month, accounts, and categories.
-    - [IncomeTransactionController](src/main/java/com/example/budgetingapp/controllers/transactions/IncomeTransactionController.java)
-    - [ExpenseTransactionController](src/main/java/com/example/budgetingapp/controllers/transactions/ExpenseTransactionController.java)
-- **Savings Targets:** Manage savings goals by adding, replenishing, retrieving, and deleting targets.
-    - [TargetController](src/main/java/com/example/budgetingapp/controllers/TargetController.java)
-- **Account Management:** Create, update, retrieve, and delete financial accounts. Set default accounts.
-    - [AccountController](src/main/java/com/example/budgetingapp/controllers/AccountController.java)
-- **Budgeting:** Set and manage budgets for specific categories and periods.
-    - [BudgetController](src/main/java/com/example/budgetingapp/controllers/BudgetController.java)
-- **Support Contact:** Send inquiries to the support team via email (without authentication).
-    - [SupportController](src/main/java/com/example/budgetingapp/controllers/SupportController.java)
-- **Transfers:** Manage fund transfers between different accounts in the same currency.
-    - [TransferController](src/main/java/com/example/budgetingapp/controllers/TransferController.java)
-- **Category Management:** Add, update, delete, and retrieve income and expense categories.
-    - [IncomeCategoryController](src/main/java/com/example/budgetingapp/controllers/categories/IncomeCategoryController.java)
-    - [ExpenseCategoryController](src/main/java/com/example/budgetingapp/controllers/categories/ExpenseCategoryController.java)
+
+## Support API Controller
+Send inquiries to the support team via email (without authentication).
+
+- **POST**: `/support/send-request-to-email` - Send email request to our team (no authentication required).
+- [SupportController](src/main/java/com/example/budgetingapp/controllers/SupportController.java)
+
+## Authentication API Controller
+Sign up and log in using Telegram or email. Reset password via email (for email users) or get
+a new password through Telegram bot authentication. Change password.
+
+- **POST**: `/auth/register` - Register a new user in the app.
+- **POST**: `/auth/login-email` - Log in using existing email account.
+- **POST**: `/auth/login-telegram` - Log in using existing telegram account.
+- **POST**: `/auth/change-password` - Change password while being logged in.
+- **POST**: `/auth/forgot-password` - Initiate password reset via a link sent to your email.
+
+- [AuthController](src/main/java/com/example/budgetingapp/controllers/AuthController.java)
+
+## Expense & Income Transactions API Controller
+Add, update, delete, and retrieve income and expense records categorized by date, year, month, accounts, and categories.
+
+- **POST**: `/income-transactions/add-income` - Add income.
+- **POST**: `/expense-transactions/add-expense` - Add expense.
+
+- **GET**: `/income-transactions/get-all-incomes` - Retrieve all incomes, or optionally filter them by: accountId, fromDate, toDate, categoryIds.
+- **GET**: `/income-transactions/get-all-incomes-for-charts-days` - Retrieve all incomes grouped by day, then grouped by categories.
+- **GET**: `/income-transactions/get-all-incomes-for-charts-months-years` - Retrieve all incomes grouped by month or year, then grouped by categories.
+
+- **GET**: `/expense-transactions/get-all-expenses` - Retrieve all expenses, or optionally filter them by: accountId, fromDate, toDate, categoryIds.
+- **GET**: `/expense-transactions/get-all-expenses-for-charts-days` - Retrieve all expenses grouped by day, then grouped by categories.
+- **GET**: `/expense-transactions/get-all-expenses-for-charts-months-years` - Retrieve all expenses grouped by month or year, then grouped by categories.
+
+- **PUT**: `/income-transactions/update-income/{transactionId}` - Update income.
+- **PUT**: `/expense-transactions/update-expense/{transactionId}` - Update expense.
+
+- **DELETE**: `/income-transactions/delete-income/{transactionId}` - Delete income.
+- **DELETE**: `/expense-transactions/delete-expense/{transactionId}` - Delete expense.
+
+- [IncomeTransactionController](src/main/java/com/example/budgetingapp/controllers/transactions/IncomeTransactionController.java)
+- [ExpenseTransactionController](src/main/java/com/example/budgetingapp/controllers/transactions/ExpenseTransactionController.java)
+
+## Account API Controller
+Create, update, retrieve financial accounts. Set default accounts.
+
+- **POST**: `/account/add-account` - Add a new user's account.
+- **GET**: `/account/get-account-by-id/{accountId}` - Get user's account by id.
+- **GET**: `/account/get-account-by-default` - Get the account by default.
+- **GET**: `/account/get-all-accounts` - Get all user's account.
+- **PUT**: `/account/update-account/{accountId}` - Update a user's account name.
+- **PUT**: `/account/set-account-by-default/{accountId}` - Set a new account by default.
+
+- [AccountController](src/main/java/com/example/budgetingapp/controllers/AccountController.java)
+
+## Transfers API Controller
+Manage fund transfers between different accounts in the same currency.
+
+- **POST**: `/transfers/add-transfer` - Add transfer.
+- **GET**: `/transfers/get-all-transfers` - Retrieve all transfers.
+- **DELETE**: `/transfers/delete-transfer/{transferId}` - Delete a transfer by its id.
+
+- [TransferController](src/main/java/com/example/budgetingapp/controllers/TransferController.java)
+
+## Expense & Income Category API Controller
+Add, update, delete, and retrieve income and expense categories.
+
+- **POST**: `/income-categories/add-category` - Add income category.
+- **POST**: `/expense-categories/add-category` - Add expense category.
+- **GET**: `/income-categories/get-all-categories` - Get all user's income categories.
+- **GET**: `/expense-categories/get-all-categories` - Get all user's expense categories.
+- **PUT**: `/income-categories/update-category/{categoryId}` - Update income category.
+- **PUT**: `/expense-categories/update-category/{categoryId}` - Update expense category.
+- **DELETE**: `/expense-categories/delete-category/{categoryId}` - Delete expense category.
+- **DELETE**: `/income-categories/delete-category/{categoryId}` - Delete income category.
+
+- [IncomeCategoryController](src/main/java/com/example/budgetingapp/controllers/categories/IncomeCategoryController.java)
+- [ExpenseCategoryController](src/main/java/com/example/budgetingapp/controllers/categories/ExpenseCategoryController.java)
+
+## Target API Controller
+Manage savings goals by adding, replenishing, retrieving, and deleting targets.
+
+- **POST**: `/targets/add-target` - Add target.
+- **POST**: `/targets/replenish-target` - Replenish target.
+- **DELETE**: `/targets/destroy-target` - Destroy a target, retrieve money to one of your accounts.
+- **GET**: `/targets/get-all-targets` - Retrieve all targets.
+
+- [TargetController](src/main/java/com/example/budgetingapp/controllers/TargetController.java)
+
+## Budget API Controller
+Set and manage budgets for specific categories and periods.
+
+- **POST**: `/budgets/add-budget` - Add a new user's budget.
+- **GET**: `/budgets/get-all-budgets` - Get all user's budgets.
+- **DELETE**: `/budgets/delete-budget/{budgetId}` - Delete a user's budget.
+
+- [BudgetController](src/main/java/com/example/budgetingapp/controllers/BudgetController.java)
+
+### ⚠️Nota bene!
+#### All requests above, except for:
+- **POST**: `/support/send-request-to-email`
+- **POST**: `/auth/register`
+- **POST**: `/auth/login-email`
+- **POST**: `/auth/login-telegram`
+- **POST**: `/auth/forgot-password`
+#### require user to be **AUTHENTICATED** using Bearer Authentication Token, given to you in one these requests:
+- **POST**: `/auth/login-email`
+- **POST**: `/auth/login-telegram`
 
 ## 🛠️ Technologies Used
-Moneta BudgetApp is built with a robust and scalable technology stack:
 
-### **Backend Technologies**
-- **Spring Security** – Securing the application with JWT authentication.
-- **Spring Data JPA** – For seamless database interactions.
-- **Liquibase** – For database versioning and migrations.
-- **Hibernate Validator** – For data validation.
-- **Spring Mail (SendGrid)** – For email notifications and password resets.
-- **Telegram Bot API** – For Telegram-based authentication.
-- **MapStruct** – For mapping DTOs and entities.
-- **JWT (JSON Web Tokens)** – For access, refresh, and action token management.
-- **MySQL Database** – MySQL for local testing in volatile containers and for production.
+Moneta BudgetApp leverages a comprehensive and robust technology stack, primarily built on Java, to ensure scalability, security, and maintainability.
+
+### Core Language and Environment
+
+* **Java 17**: The primary programming language for the backend, ensuring modern features and performance.
+
+### Backend Technologies
+
+* **Spring Boot 3.4.4**: The foundation of the application, providing rapid application development and deployment.
+* **Spring Security**: Securing the application with JWT authentication, leveraging `io.jsonwebtoken` (version `0.12.6`).
+* **Spring Data JPA**: For seamless database interactions, simplifying data access and persistence.
+* **Liquibase 4.31.1**: For database versioning and migrations, ensuring consistent database schema management.
+* **Hibernate Validator**: For data validation, ensuring data integrity across the application.
+* **Spring Mail (SendGrid 4.10.3)**: For email notifications and password resets, integrating with SendGrid's email delivery service.
+* **Telegram Bot API 6.9.7.1**: For Telegram-based authentication and interaction, enabling seamless user access via Telegram.
+* **MapStruct 1.6.3**: For mapping DTOs and entities, reducing boilerplate code and improving mapping efficiency.
+* **JWT (JSON Web Tokens) 0.12.6**: For access, refresh, and action token management, ensuring secure authentication and authorization.
+* **MySQL Database 8.0.33**: MySQL for local testing in volatile containers and for production, providing a reliable relational database.
+* **SpringDoc OpenAPI Starter WebMVC UI 2.8.6**: For API documentation and testing, enabling easy interaction with the application's endpoints.
+* **Lombok 1.18.36**: For reducing boilerplate code, improving code readability and maintainability.
 
 ### **Documentation**
 - **SpringDoc OpenAPI (Swagger UI)** – For API documentation and testing.
