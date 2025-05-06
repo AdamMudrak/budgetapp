@@ -141,7 +141,7 @@ Moneta BudgetApp leverages a comprehensive and robust technology stack, primaril
 - **SpringDoc OpenAPI (Swagger UI)** – For API documentation and testing.
 
 ## 🔧 Setup and Installation
-Not ready for setting up my application locally yet? Then explore our [Team Project](https://landing.moneta-api.space/) first!<br>There, you will be able to have a look at Swagger documentation, my running telegram bot and my colleague's work - WebSite for the frontend done by [Maria Shmakova](https://www.linkedin.com/in/mariashmakova/)
+Not ready for setting up my application locally yet? Then explore our [Team Project](https://landing.adammudrak.space/) first!<br>There, you will be able to have a look at Swagger documentation, my running telegram bot and my colleague's work - WebSite for the frontend done by [Maria Shmakova](https://www.linkedin.com/in/mariashmakova/)
 
 Follow these steps to set up Moneta BudgetApp locally or follow steps in this [video](https://www.youtube.com/watch?v=OUsDDkUCCTE):
 
