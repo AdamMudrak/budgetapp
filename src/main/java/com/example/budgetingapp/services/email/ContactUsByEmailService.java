@@ -1,13 +1,17 @@
 package com.example.budgetingapp.services.email;
 
+import static com.example.budgetingapp.constants.security.SecurityConstants.SUPPORT_EMAIL;
 import static com.example.budgetingapp.constants.security.SecurityConstants.SUPPORT_EMAIL_SUBJECT;
 
 import com.example.budgetingapp.constants.Constants;
 import com.example.budgetingapp.dtos.support.request.SupportRequestDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ContactUsByEmailService extends EmailService {
+    @Value(SUPPORT_EMAIL)
+    private String supportEmail;
 
     public void sendMessageToHost(SupportRequestDto contactUsByEmailDto) {
         super.sendMessage(supportEmail, getSubject(contactUsByEmailDto),

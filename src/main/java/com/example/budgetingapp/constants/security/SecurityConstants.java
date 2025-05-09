@@ -1,8 +1,9 @@
 package com.example.budgetingapp.constants.security;
 
 public class SecurityConstants {
-    public static final String SUPPORT_EMAIL = "${mail.address}";
-    public static final String SEND_GRID_API_KEY = "${sendgrid.api.key}";
+    public static final String SUPPORT_EMAIL = "${support.mail.address}";
+    public static final String SENDER_EMAIL = "${sender.mail.address}";
+    public static final String RESEND_API_KEY = "${resend.api.key}";
     public static final String SUPPORT_EMAIL_SUBJECT = "A request from ";
 
     public static final String PLUS = "+";
