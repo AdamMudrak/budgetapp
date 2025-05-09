@@ -37,7 +37,8 @@
 		<springdoc-openapi-starter-webmvc-ui>2.8.6</springdoc-openapi-starter-webmvc-ui>
 		<jjwt.version>0.12.6</jjwt.version>
 		<telegrambots.version>6.9.7.1</telegrambots.version>
-		<sendgrid.version>4.10.3</sendgrid.version>
+		<resend.version>4.3.0</resend.version>
+		<log4j.version>2.24.3</log4j.version>
 	</properties>
 
 	<dependencies>
@@ -135,9 +136,15 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.sendgrid</groupId>
-			<artifactId>sendgrid-java</artifactId>
-			<version>${sendgrid.version}</version>
+			<groupId>com.resend</groupId>
+			<artifactId>resend-java</artifactId>
+			<version>${resend.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j.version}</version>
 		</dependency>
 	</dependencies>
 

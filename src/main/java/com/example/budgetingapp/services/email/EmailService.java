@@ -1,42 +1,41 @@
 package com.example.budgetingapp.services.email;
 
-import static com.example.budgetingapp.constants.security.SecurityConstants.SEND_GRID_API_KEY;
-import static com.example.budgetingapp.constants.security.SecurityConstants.SUPPORT_EMAIL;
+import static com.example.budgetingapp.constants.security.SecurityConstants.RESEND_API_KEY;
+import static com.example.budgetingapp.constants.security.SecurityConstants.SENDER_EMAIL;
 
-import com.sendgrid.Method;
-import com.sendgrid.Request;
-import com.sendgrid.SendGrid;
-import com.sendgrid.helpers.mail.Mail;
-import com.sendgrid.helpers.mail.objects.Content;
-import com.sendgrid.helpers.mail.objects.Email;
-import java.io.IOException;
+import com.resend.Resend;
+import com.resend.core.exception.ResendException;
+import com.resend.services.emails.model.CreateEmailOptions;
+import com.resend.services.emails.model.CreateEmailResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmailService {
-    @Value(SUPPORT_EMAIL)
-    protected String supportEmail;
-
-    @Value(SEND_GRID_API_KEY)
-    private String sendGridApiKey;
+    private static final Logger logger = LogManager.getLogger(EmailService.class);
+    @Value(SENDER_EMAIL)
+    protected String senderEmail;
+    @Value(RESEND_API_KEY)
+    private String resendApiKey;
 
     public void sendMessage(String toEmail, String subject, String body) {
-        Email from = new Email(supportEmail);
-        Email to = new Email(toEmail);
-        Content content = new Content("text", body);
-        Mail mail = new Mail(from, subject, to, content);
+        Resend resend = new Resend(resendApiKey);
 
-        SendGrid sendGrid = new SendGrid(sendGridApiKey);
-        Request request = new Request();
+        CreateEmailOptions params = CreateEmailOptions.builder()
+                .from(senderEmail)
+                .to(toEmail)
+                .subject(subject)
+                .text(body)
+                .build();
 
         try {
-            request.setMethod(Method.POST);
-            request.setEndpoint("mail/send");
-            request.setBody(mail.build());
-            sendGrid.api(request);
-        } catch (IOException ex) {
-            ex.printStackTrace();
+            CreateEmailResponse data = resend.emails().send(params);
+            logger.info("Response id: {}",
+                    data.getId());
+        } catch (ResendException e) {
+            logger.error(e.getMessage());
         }
     }
 }
