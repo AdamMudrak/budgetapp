@@ -173,7 +173,7 @@ Follow these steps to set up Moneta BudgetApp locally or follow steps in this [v
     - Having a telegram bot with /start and /stop command is **a must** for authentication. Please visit [BotFather](https://t.me/BotFather) and create a bot with aforementioned commands. Use [this](BOTINSTRUCTION.md) instruction to create your bot.
       - You can now use your Bot Api Token in [.env.sample](.env.sample) to replace placeholder:
          - TELEGRAM_TOKEN=your_telegram_token
-   - Having a resend API key **or** adjusting [EmailService](src/main/java/com/example/budgetingapp/services/email/EmailService.java) to use Google SMTP **is a must**.
+   - Having a resend API key **or** adjusting [EmailService](src/main/java/com/example/budgetingapp/services/email/EmailService.java) to use Google SMTP **is optional if telegram auth was set up**.
       - Having a [Resend account](https://resend.com) **is a must** if using Google SMTP is unwanted;
          - [Get API key](https://apidog.com/blog/resend-api/#1-sign-up-and-create-an-api-key)
       - Having a spare domain for email address to use Resend **is highly recommended**;
