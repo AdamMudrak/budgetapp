@@ -21,7 +21,6 @@ public class ContactUsByEmailService extends EmailService {
     String getSubject(SupportRequestDto contactUsByEmailDto) {
         return SUPPORT_EMAIL_SUBJECT
                 + contactUsByEmailDto.name()
-                + System.lineSeparator()
                 + Constants.LEFT_PARENTHESIS
                 + contactUsByEmailDto.email()
                 + Constants.RIGHT_PARENTHESIS;
