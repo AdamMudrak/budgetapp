@@ -146,16 +146,10 @@ Not ready for setting up my application locally yet? Then explore our [Team Proj
 Follow these steps to set up Moneta BudgetApp locally or follow steps in this [video](https://www.youtube.com/watch?v=OUsDDkUCCTE):
 
 1. **Prerequisites:**
-    - If you want to use your **own** MySQL, update [application.properties](src/main/resources/application.properties) directly or [envrironment variables](.env.sample) with your MySQL credentials.
-        - If not, just proceed with the next step as follow-up commands are ready to start MySQL locally in docker container.
-    - Having a telegram bot with /start and /stop command is **a must** for authentication. Please visit [BotFather](https://t.me/BotFather) and create a bot with aforementioned commands. Use [this](BOTINSTRUCTION.md) instruction to create your bot.
-    - Having a sendgrid API key or adjusting [EmailService](src/main/java/com/example/budgetingapp/services/email/EmailService.java) to use Google SMTP **is recommended** but can be ignored on condition you are okay with not being able to use email registration.
-        - Having a [SendGrid account](https://sendgrid.com/en-us) **is required** if using Google SMTP is unwanted;
-            - Having a spare email address to use for sendgrid **is required**;
-    - Software **required**:
-        - Git
-        - Maven
-        - Docker
+   - Software **required**:
+      - Git
+      - Maven
+      - Docker
     ```sh
       #check if everything is installed
       #by checking version of software
@@ -163,14 +157,41 @@ Follow these steps to set up Moneta BudgetApp locally or follow steps in this [v
       mvn -v
       docker -v
     ```
-
-2. **Run the application:**
+   **Open git bash**
     ```sh
       #clone the repository
       git clone https://github.com/AdamMudrak/budgetapp.git
       #change to budgetapp root package
       cd budgetapp/
     ```
+      ```sh
+      #to change environment variables, you can now use
+      nano .env.sample
+   ```
+    - If you want to use your **own** MySQL, update [application.properties](src/main/resources/application.properties) directly or [.env.sample](.env.sample) with your MySQL credentials.
+        - If not, just proceed with the next step as follow-up commands are ready to start MySQL locally in docker container.
+    - Having a telegram bot with /start and /stop command is **a must** for authentication. Please visit [BotFather](https://t.me/BotFather) and create a bot with aforementioned commands. Use [this](BOTINSTRUCTION.md) instruction to create your bot.
+      - You can now use your Bot Api Token in [.env.sample](.env.sample) to replace placeholder:
+         - TELEGRAM_TOKEN=your_telegram_token
+   - Having a resend API key **or** adjusting [EmailService](src/main/java/com/example/budgetingapp/services/email/EmailService.java) to use Google SMTP **is a must**.
+      - Having a [Resend account](https://resend.com) **is a must** if using Google SMTP is unwanted;
+         - [Get API key](https://apidog.com/blog/resend-api/#1-sign-up-and-create-an-api-key)
+      - Having a spare domain for email address to use Resend **is highly recommended**;
+         - [Verify your domain](https://apidog.com/blog/resend-api/#2-verify-your-domain)
+      - After successful registration, domain verification and getting API token, in [.env.sample](.env.sample) replace values for:
+         - RESEND_API_KEY=your_resend_api_key
+         - SENDER_EMAIL_ADDRESS=your_domained_email
+         - SUPPORT_MAIL_ADDRESS=your_email_to_receive_support_requests
+
+   - **Recommended**, but app will start without them:
+      - JWT_SECRET - secure your JWTs
+      - EMAIL_SECRET - secure your email links with a random string
+      - REGISTRATION_CONFIRMATION_LINK
+      - PASSWORD_RESET_CONFIRMATION_LINK
+      - GET_RANDOM_PASSWORD_REDIRECT_LINK
+      - ORIGINS_ALLOWED
+
+2. **Run the application:**
     ```sh
       #build application archive
       mvn clean package
@@ -192,17 +213,6 @@ Follow these steps to set up Moneta BudgetApp locally or follow steps in this [v
         -e MYSQL_PASSWORD=moneta_pass \
         -p 3307:3306 -v mysql_data:/var/lib/mysql -d mysql
     ```
-    - Adjusting [application.properties](src/main/resources/application.properties) directly or [envrironment variables](.env.sample) **required**:
-        - TELEGRAM_TOKEN - provide Bot API Token to enable telegram authentication
-    - **Recommended**, but app will start without them:
-        - JWT_SECRET - secure your JWTs
-        - EMAIL_SECRET - secure your email links with a random string
-        - REGISTRATION_CONFIRMATION_LINK
-        - PASSWORD_RESET_CONFIRMATION_LINK
-        - GET_RANDOM_PASSWORD_REDIRECT_LINK
-        - ORIGINS_ALLOWED
-        - SENDGRID_API_KEY - key required to enable [EmailService](src/main/java/com/example/budgetingapp/services/email/EmailService.java)
-        - MAIL_ADDRESS - your spare mail address used and verified on [SendGrid](https://sendgrid.com/en-us)
     ```sh
       #run application using .env.sample
       docker run -p 8080:8080 --env-file .env.sample budgetapp
