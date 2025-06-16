@@ -6,7 +6,7 @@ import com.example.budgetingapp.dtos.users.request.TelegramAuthenticationRequest
 import com.example.budgetingapp.dtos.users.response.TelegramAuthenticationResponseDto;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.tokens.ActionToken;
-import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
+import com.example.budgetingapp.exceptions.EntityNotFoundException;
 import com.example.budgetingapp.mappers.UserMapper;
 import com.example.budgetingapp.repositories.actiontoken.ActionTokenRepository;
 import com.example.budgetingapp.repositories.user.UserRepository;

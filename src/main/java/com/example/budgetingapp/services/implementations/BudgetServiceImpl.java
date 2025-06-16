@@ -8,9 +8,9 @@ import com.example.budgetingapp.dtos.transactions.request.filters.FilterTransact
 import com.example.budgetingapp.entities.Budget;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.transactions.Expense;
-import com.example.budgetingapp.exceptions.conflictexpections.AlreadyExistsException;
-import com.example.budgetingapp.exceptions.conflictexpections.ConflictException;
-import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
+import com.example.budgetingapp.exceptions.AlreadyExistsException;
+import com.example.budgetingapp.exceptions.ConflictException;
+import com.example.budgetingapp.exceptions.EntityNotFoundException;
 import com.example.budgetingapp.mappers.BudgetMapper;
 import com.example.budgetingapp.repositories.account.AccountRepository;
 import com.example.budgetingapp.repositories.budget.BudgetRepository;

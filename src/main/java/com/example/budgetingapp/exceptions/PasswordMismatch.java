@@ -1,4 +1,4 @@
-package com.example.budgetingapp.exceptions.conflictexpections;
+package com.example.budgetingapp.exceptions;
 
 public class PasswordMismatch extends RuntimeException {
     public PasswordMismatch(String message) {

@@ -1,4 +1,4 @@
-package com.example.budgetingapp.exceptions.conflictexpections;
+package com.example.budgetingapp.exceptions;
 
 public class ConflictException extends RuntimeException {
     public ConflictException(String message) {

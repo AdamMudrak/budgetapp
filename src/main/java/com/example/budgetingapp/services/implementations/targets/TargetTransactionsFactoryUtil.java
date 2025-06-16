@@ -9,7 +9,7 @@ import com.example.budgetingapp.entities.Target;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.transactions.Expense;
 import com.example.budgetingapp.entities.transactions.Income;
-import com.example.budgetingapp.exceptions.notfoundexceptions.EntityNotFoundException;
+import com.example.budgetingapp.exceptions.EntityNotFoundException;
 import com.example.budgetingapp.repositories.categories.ExpenseCategoryRepository;
 import com.example.budgetingapp.repositories.categories.IncomeCategoryRepository;
 import java.time.LocalDate;

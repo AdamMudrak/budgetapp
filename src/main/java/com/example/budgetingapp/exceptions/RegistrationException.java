@@ -1,4 +1,4 @@
-package com.example.budgetingapp.exceptions.badrequest;
+package com.example.budgetingapp.exceptions;
 
 public class RegistrationException extends Exception {
     public RegistrationException(String message) {

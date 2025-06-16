@@ -1,4 +1,4 @@
-package com.example.budgetingapp.exceptions.forbidden;
+package com.example.budgetingapp.exceptions;
 
 public class LoginException extends RuntimeException {
     public LoginException(String message) {

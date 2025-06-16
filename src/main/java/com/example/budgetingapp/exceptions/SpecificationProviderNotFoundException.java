@@ -1,4 +1,4 @@
-package com.example.budgetingapp.exceptions.notfoundexceptions;
+package com.example.budgetingapp.exceptions;
 
 public class SpecificationProviderNotFoundException extends RuntimeException {
     public SpecificationProviderNotFoundException(String message) {
