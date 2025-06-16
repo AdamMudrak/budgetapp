@@ -1,8 +1,5 @@
 package com.example.budgetingapp.entities.categories;
 
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.INCOME_CATEGORIES;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.USER_ID;
-
 import com.example.budgetingapp.entities.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = INCOME_CATEGORIES)
+@Table(name = "income_categories")
 public class IncomeCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +24,6 @@ public class IncomeCategory {
     @Column(nullable = false)
     private String name;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = USER_ID, nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

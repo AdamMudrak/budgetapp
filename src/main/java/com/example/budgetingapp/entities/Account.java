@@ -1,9 +1,5 @@
 package com.example.budgetingapp.entities;
 
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.ACCOUNTS;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.BOOLEAN_TO_INT;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.USER_ID;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -20,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = ACCOUNTS)
+@Table(name = "accounts")
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,12 +24,12 @@ public class Account {
     @Column(nullable = false)
     private String name;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = USER_ID, nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
     @Column(nullable = false)
     private BigDecimal balance;
     @Column(nullable = false)
     private String currency;
-    @Column(nullable = false, columnDefinition = BOOLEAN_TO_INT)
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean byDefault = false;
 }
