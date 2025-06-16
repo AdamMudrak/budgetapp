@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TargetServiceImpl implements TargetService {
     private final ExpenseRepository expenseRepository;
     private final IncomeRepository incomeRepository;
@@ -59,7 +60,6 @@ public class TargetServiceImpl implements TargetService {
         return targetMapper.toTargetDto(targetRepository.save(newTarget));
     }
 
-    @Transactional
     @Override
     public TargetDto replenishTarget(Long userId,
                                      ReplenishTargetDto replenishTargetRequestDto) {
@@ -107,7 +107,6 @@ public class TargetServiceImpl implements TargetService {
         return targetMapper.toTargetDtoList(targetRepository.findAllByUserId(userId));
     }
 
-    @Transactional
     @Override
     public void deleteByTargetId(Long userId, DeleteTargetDto deleteTargetRequestDto) {
         Target target = targetRepository.findByIdAndUserId(deleteTargetRequestDto.targetId(),

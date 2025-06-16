@@ -19,6 +19,7 @@ import com.example.budgetingapp.repositories.UserRepository;
 import com.example.budgetingapp.repositories.transactions.ExpenseRepository;
 import com.example.budgetingapp.repositories.transactions.transactionsspecs.expense.ExpenseSpecificationBuilder;
 import com.example.budgetingapp.services.BudgetService;
+import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BudgetServiceImpl implements BudgetService {
     private final BudgetRepository budgetRepository;
     private final ExpenseRepository expenseRepository;

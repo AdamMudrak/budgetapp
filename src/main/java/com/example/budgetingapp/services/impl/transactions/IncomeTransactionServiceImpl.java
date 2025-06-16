@@ -1,5 +1,6 @@
 package com.example.budgetingapp.services.impl.transactions;
 
+import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.INCOME;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGET_INCOME_CATEGORY;
 
 import com.example.budgetingapp.dtos.transactions.request.CreateTransactionDto;
@@ -39,8 +40,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
-@Qualifier("INCOME")
+@Qualifier(INCOME)
 @RequiredArgsConstructor
+@Transactional
 public class IncomeTransactionServiceImpl implements TransactionService {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
@@ -50,7 +52,6 @@ public class IncomeTransactionServiceImpl implements TransactionService {
     private final IncomeSpecificationBuilder incomeSpecificationBuilder;
     private final TransactionsCommonFunctionsUtil transactionsCommonFunctionsUtil;
 
-    @Transactional
     @Override
     public SaveAndUpdateResponseDto saveTransaction(Long userId,
                                                     CreateTransactionDto requestTransactionDto) {
@@ -133,7 +134,6 @@ public class IncomeTransactionServiceImpl implements TransactionService {
         return transactionsCommonFunctionsUtil.prepareListOfAccumulatedDtos(categorizedIncomeSums);
     }
 
-    @Transactional
     @Override
     public SaveAndUpdateResponseDto updateTransaction(
                                                Long userId,
@@ -217,7 +217,6 @@ public class IncomeTransactionServiceImpl implements TransactionService {
         return transactionMapper.toPersistIncomeDto(thisIncome);
     }
 
-    @Transactional
     @Override
     public void deleteByTransactionId(Long userId, Long transactionId) {
         Income income = incomeRepository

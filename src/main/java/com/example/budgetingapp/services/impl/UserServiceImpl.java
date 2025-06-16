@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService {
     private final RedirectUtil redirectUtil;
     private final AssignDefaultUserObjectsUtil defaultUserObjectsUtil;
@@ -40,7 +41,6 @@ public class UserServiceImpl implements UserService {
     @Value("${registration.confirmation.link}")
     private String redirectPath;
 
-    @Transactional
     @Override
     public UserRegistrationResponseDto register(UserRegistrationRequestDto requestDto)
             throws RegistrationException {
@@ -60,7 +60,6 @@ public class UserServiceImpl implements UserService {
         return new UserRegistrationResponseDto(REGISTERED);
     }
 
-    @Transactional
     @Override
     public ResponseEntity<Void> confirmRegistration(String token) {
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACTION);

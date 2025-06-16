@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TransferServiceImpl implements TransferService {
     private final TransferRepository transferRepository;
     private final AccountRepository accountRepository;
@@ -31,7 +32,6 @@ public class TransferServiceImpl implements TransferService {
     private final TransferMapper transferMapper;
     private final TransactionsCommonFunctionsUtil transactionsCommonFunctionsUtil;
 
-    @Transactional
     @Override
     public TransferResponseDto transfer(Long userId,
                                         TransferRequestDto requestDto) {
@@ -86,7 +86,6 @@ public class TransferServiceImpl implements TransferService {
                 transferMapper.toTransferDtoList(transferPage.getContent()));
     }
 
-    @Transactional
     @Override
     public void deleteByTransferId(Long userId, Long transferId) {
         Transfer transfer = transferRepository.findByIdAndUserId(transferId, userId)

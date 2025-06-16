@@ -1,5 +1,6 @@
 package com.example.budgetingapp.services.impl.transactions;
 
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.EXPENSE;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGET_EXPENSE_CATEGORY;
 
 import com.example.budgetingapp.dtos.transactions.request.CreateTransactionDto;
@@ -39,8 +40,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
-@Qualifier("EXPENSE")
+@Qualifier(EXPENSE)
 @RequiredArgsConstructor
+@Transactional
 public class ExpenseTransactionServiceImpl implements TransactionService {
     private final AccountRepository accountRepository;
     private final TransactionMapper transactionMapper;
@@ -50,7 +52,6 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
     private final ExpenseSpecificationBuilder expenseSpecificationBuilder;
     private final TransactionsCommonFunctionsUtil transactionsCommonFunctionsUtil;
 
-    @Transactional
     @Override
     public SaveAndUpdateResponseDto saveTransaction(Long userId,
                                                     CreateTransactionDto requestTransactionDto) {
@@ -138,7 +139,6 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
         return transactionsCommonFunctionsUtil.prepareListOfAccumulatedDtos(categorizedExpenseSums);
     }
 
-    @Transactional
     @Override
     public SaveAndUpdateResponseDto updateTransaction(
                                                Long userId,
@@ -223,7 +223,6 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
         return transactionMapper.toPersistExpenseDto(thisExpense);
     }
 
-    @Transactional
     @Override
     public void deleteByTransactionId(Long userId, Long transactionId) {
         Expense expense = expenseRepository

@@ -1,5 +1,6 @@
 package com.example.budgetingapp.services.impl.categories;
 
+import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.INCOME;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.CATEGORY_QUANTITY_THRESHOLD;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_CATEGORY_NAME;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGET_INCOME_CATEGORY;
@@ -17,14 +18,16 @@ import com.example.budgetingapp.repositories.IncomeCategoryRepository;
 import com.example.budgetingapp.repositories.UserRepository;
 import com.example.budgetingapp.repositories.transactions.IncomeRepository;
 import com.example.budgetingapp.services.CategoryService;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
-@Qualifier("INCOME")
+@Qualifier(INCOME)
 @RequiredArgsConstructor
+@Transactional
 public class IncomeCategoryServiceImpl implements CategoryService {
     private final CategoryMapper categoryMapper;
     private final IncomeCategoryRepository incomeCategoryRepository;

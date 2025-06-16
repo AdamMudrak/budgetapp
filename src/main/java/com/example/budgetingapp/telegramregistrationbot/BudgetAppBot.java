@@ -48,8 +48,8 @@ public class BudgetAppBot extends TelegramLongPollingBot {
     private final RandomStringUtil randomStringUtil;
     private final ActionTokenRepository actionTokenRepository;
     private final JwtStrategy jwtStrategy;
-    @Value("${bot.to.server.request.uri}")
-    private String botToServerRequestUri;
+    @Value("${server.path}")
+    private String serverPath;
 
     public BudgetAppBot(@Value("${telegram.bot.token}") String token,
                         @Autowired RandomStringUtil randomStringUtil,
@@ -166,7 +166,7 @@ public class BudgetAppBot extends TelegramLongPollingBot {
                     password, token);
 
         HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(botToServerRequestUri))
+                    .uri(URI.create(serverPath + "/auth/telegram-auth?"))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .timeout(Duration.of(TIME_OUT, ChronoUnit.SECONDS))

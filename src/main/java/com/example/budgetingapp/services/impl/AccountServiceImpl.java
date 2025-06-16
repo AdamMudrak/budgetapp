@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
@@ -87,7 +88,6 @@ public class AccountServiceImpl implements AccountService {
                                         + accountId + " was found for user with id " + userId)));
     }
 
-    @Transactional
     @Override
     public AccountDto setAccountByDefault(Long userId, Long accountId) {
         Account account = accountRepository.findByIdAndUserId(accountId, userId)

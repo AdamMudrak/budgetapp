@@ -1,5 +1,6 @@
 package com.example.budgetingapp.services.impl.categories;
 
+import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.EXPENSE;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.CATEGORY_QUANTITY_THRESHOLD;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_CATEGORY_NAME;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGET_EXPENSE_CATEGORY;
@@ -17,14 +18,16 @@ import com.example.budgetingapp.repositories.ExpenseCategoryRepository;
 import com.example.budgetingapp.repositories.UserRepository;
 import com.example.budgetingapp.repositories.transactions.ExpenseRepository;
 import com.example.budgetingapp.services.CategoryService;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
-@Qualifier("EXPENSE")
+@Qualifier(EXPENSE)
 @RequiredArgsConstructor
+@Transactional
 public class ExpenseCategoryServiceImpl implements CategoryService {
     private final CategoryMapper categoryMapper;
     private final ExpenseCategoryRepository expenseCategoryRepository;
