@@ -16,7 +16,7 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.RESE
 import static com.example.budgetingapp.constants.security.SecurityConstants.RESET_PATH;
 
 import com.example.budgetingapp.exceptions.ActionNotFoundException;
-import com.example.budgetingapp.security.utils.EmailLinkParameterProvider;
+import com.example.budgetingapp.services.utils.EmailLinkParameterProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

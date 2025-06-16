@@ -24,7 +24,7 @@ import com.example.budgetingapp.exceptions.LoginException;
 import com.example.budgetingapp.repositories.ActionTokenRepository;
 import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
-import com.example.budgetingapp.security.utils.RandomStringUtil;
+import com.example.budgetingapp.services.utils.RandomStringUtil;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;

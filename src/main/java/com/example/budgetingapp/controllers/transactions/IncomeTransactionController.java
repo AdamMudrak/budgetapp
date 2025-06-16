@@ -30,7 +30,7 @@ import com.example.budgetingapp.dtos.transactions.response.GetTransactionsPageDt
 import com.example.budgetingapp.dtos.transactions.response.SaveAndUpdateResponseDto;
 import com.example.budgetingapp.dtos.transactions.response.charts.SumsByPeriodDto;
 import com.example.budgetingapp.entities.User;
-import com.example.budgetingapp.services.interfaces.TransactionService;
+import com.example.budgetingapp.services.TransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

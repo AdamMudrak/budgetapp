@@ -22,7 +22,7 @@ import com.example.budgetingapp.dtos.targets.request.DeleteTargetDto;
 import com.example.budgetingapp.dtos.targets.request.ReplenishTargetDto;
 import com.example.budgetingapp.dtos.targets.response.TargetDto;
 import com.example.budgetingapp.entities.User;
-import com.example.budgetingapp.services.interfaces.TargetService;
+import com.example.budgetingapp.services.TargetService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;

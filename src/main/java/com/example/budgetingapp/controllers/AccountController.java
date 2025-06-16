@@ -23,7 +23,7 @@ import com.example.budgetingapp.dtos.accounts.request.CreateAccountDto;
 import com.example.budgetingapp.dtos.accounts.request.UpdateAccountDto;
 import com.example.budgetingapp.dtos.accounts.response.AccountDto;
 import com.example.budgetingapp.entities.User;
-import com.example.budgetingapp.services.interfaces.AccountService;
+import com.example.budgetingapp.services.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;

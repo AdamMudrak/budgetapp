@@ -17,7 +17,7 @@ import static com.example.budgetingapp.constants.controllers.BudgetControllerCon
 import com.example.budgetingapp.dtos.budgets.request.BudgetRequestDto;
 import com.example.budgetingapp.dtos.budgets.response.BudgetResponseDto;
 import com.example.budgetingapp.entities.User;
-import com.example.budgetingapp.services.interfaces.BudgetService;
+import com.example.budgetingapp.services.BudgetService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
