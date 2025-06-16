@@ -1,4 +1,4 @@
-package com.example.budgetingapp.repositories.role;
+package com.example.budgetingapp.repositories;
 
 import com.example.budgetingapp.entities.Role;
 import org.springframework.data.jpa.repository.JpaRepository;

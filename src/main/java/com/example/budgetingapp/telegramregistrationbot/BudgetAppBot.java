@@ -21,7 +21,7 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.UNKN
 
 import com.example.budgetingapp.entities.tokens.ActionToken;
 import com.example.budgetingapp.exceptions.LoginException;
-import com.example.budgetingapp.repositories.actiontoken.ActionTokenRepository;
+import com.example.budgetingapp.repositories.ActionTokenRepository;
 import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
 import com.example.budgetingapp.security.utils.RandomStringUtil;

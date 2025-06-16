@@ -1,8 +1,7 @@
-package com.example.budgetingapp.repositories.transfer;
+package com.example.budgetingapp.repositories;
 
 import com.example.budgetingapp.entities.Transfer;
 import com.example.budgetingapp.entities.User;
-import com.example.budgetingapp.repositories.TransactionsSorter;
 import jakarta.persistence.criteria.Join;
 import java.util.Optional;
 import org.springframework.data.domain.Page;

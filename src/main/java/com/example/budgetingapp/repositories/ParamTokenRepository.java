@@ -1,4 +1,4 @@
-package com.example.budgetingapp.repositories.paramtoken;
+package com.example.budgetingapp.repositories;
 
 import com.example.budgetingapp.entities.tokens.ParamToken;
 import java.util.Optional;

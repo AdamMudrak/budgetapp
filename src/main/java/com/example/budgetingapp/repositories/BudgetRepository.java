@@ -1,4 +1,4 @@
-package com.example.budgetingapp.repositories.budget;
+package com.example.budgetingapp.repositories;
 
 import com.example.budgetingapp.entities.Budget;
 import jakarta.transaction.Transactional;

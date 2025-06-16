@@ -1,4 +1,4 @@
-package com.example.budgetingapp.repositories.account;
+package com.example.budgetingapp.repositories;
 
 import com.example.budgetingapp.entities.Account;
 import java.util.List;

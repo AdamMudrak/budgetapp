@@ -1,4 +1,4 @@
-package com.example.budgetingapp.repositories.actiontoken;
+package com.example.budgetingapp.repositories;
 
 import com.example.budgetingapp.entities.tokens.ActionToken;
 import java.util.Optional;

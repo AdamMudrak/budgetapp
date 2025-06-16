@@ -1,4 +1,4 @@
-package com.example.budgetingapp.repositories.categories;
+package com.example.budgetingapp.repositories;
 
 import com.example.budgetingapp.entities.categories.ExpenseCategory;
 import jakarta.transaction.Transactional;

@@ -1,4 +1,4 @@
-package com.example.budgetingapp.repositories.user;
+package com.example.budgetingapp.repositories;
 
 import com.example.budgetingapp.entities.User;
 import java.util.Optional;

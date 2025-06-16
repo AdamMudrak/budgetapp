@@ -4,7 +4,7 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.ACTI
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_LINK_STRENGTH;
 
 import com.example.budgetingapp.entities.tokens.ParamToken;
-import com.example.budgetingapp.repositories.paramtoken.ParamTokenRepository;
+import com.example.budgetingapp.repositories.ParamTokenRepository;
 import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.example.budgetingapp.repositories.target;
+package com.example.budgetingapp.repositories;
 
 import com.example.budgetingapp.entities.Target;
 import java.util.List;

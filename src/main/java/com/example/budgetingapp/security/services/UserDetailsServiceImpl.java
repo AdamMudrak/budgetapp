@@ -1,7 +1,7 @@
 package com.example.budgetingapp.security.services;
 
 import com.example.budgetingapp.exceptions.EntityNotFoundException;
-import com.example.budgetingapp.repositories.user.UserRepository;
+import com.example.budgetingapp.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
