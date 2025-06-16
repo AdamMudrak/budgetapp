@@ -1,16 +1,7 @@
 package com.example.budgetingapp.constants.controllers.transactions;
 
 public class IncomeControllerConstants {
-    public static final String INCOME_TRANSACTIONS = "/income-transactions";
     public static final String INCOME = "INCOME";
-    public static final String ADD_INCOME = "/add-income";
-    public static final String GET_ALL_INCOMES = "/get-all-incomes";
-    public static final String GET_ALL_INCOMES_FOR_CHARTS_DAYS =
-            "/get-all-incomes-for-charts-days";
-    public static final String GET_ALL_INCOMES_FOR_CHARTS_MONTHS_YEARS =
-            "/get-all-incomes-for-charts-months-years";
-    public static final String UPDATE_INCOME_BY_ID = "/update-income/{transactionId}";
-    public static final String DELETE_INCOME_BY_ID = "/delete-income/{transactionId}";
 
     public static final String ADD_INCOME_SUMMARY = "Add income";
     public static final String SUCCESSFULLY_ADDED_INCOME =

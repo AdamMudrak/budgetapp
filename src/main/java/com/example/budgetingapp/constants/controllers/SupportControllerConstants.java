@@ -7,7 +7,4 @@ public class SupportControllerConstants {
             of how to contact support team via a form,
             redirecting an email from the site
             """;
-    public static final String SUPPORT = "/support";
-    public static final String SEND_REQUEST_TO_EMAIL = "/send-request-to-email";
-
 }

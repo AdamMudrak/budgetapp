@@ -10,15 +10,15 @@ import jakarta.validation.constraints.NotBlank;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record UserEmailLoginDto(
-        @Schema(name = UserDtoConstants.EMAIL,
-        example = UserDtoConstants.EMAIL_EXAMPLE,
+        @Schema(name = "email",
+        example = "example@gmail.com",
         requiredMode = REQUIRED)
         @NotBlank
         @Email
         String email,
 
-        @Schema(name = UserDtoConstants.PASSWORD,
-        example = UserDtoConstants.PASSWORD_EXAMPLE,
+        @Schema(name = "password",
+        example = "Best_Password1@3$",
         description = UserDtoConstants.PASSWORD_DESCRIPTION,
         requiredMode = REQUIRED)
         @NotBlank

@@ -2,7 +2,6 @@ package com.example.budgetingapp.dtos.budgets.request;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
-import com.example.budgetingapp.constants.dtos.BudgetDtoConstants;
 import com.example.budgetingapp.validation.date.Date;
 import com.example.budgetingapp.validation.date.todateafterfromdate.BudgetToDateAfterFromDate;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -16,38 +15,38 @@ import java.math.BigDecimal;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @BudgetToDateAfterFromDate
 public record BudgetRequestDto(
-        @Schema(name = BudgetDtoConstants.NAME,
-                example = BudgetDtoConstants.NAME_EXAMPLE,
+        @Schema(name = "name",
+                example = "New budget",
                 requiredMode = REQUIRED)
         @NotBlank
         String name,
-        @Schema(name = BudgetDtoConstants.CURRENCY,
-                example = BudgetDtoConstants.CURRENCY_EXAMPLE,
+        @Schema(name = "currency",
+                example = "USD",
                 requiredMode = REQUIRED)
         @NotBlank
         String currency,
-        @Schema(name = BudgetDtoConstants.FROM_DATE,
-                example = BudgetDtoConstants.FROM_DATE_EXAMPLE,
-                description = BudgetDtoConstants.DATE_DESCRIPTION,
+        @Schema(name = "fromDate",
+                example = "2024-10-29",
+                description = "date format should be: YYYY-MM-dd",
                 requiredMode = REQUIRED)
         @NotBlank
         @Date
         String fromDate,
-        @Schema(name = BudgetDtoConstants.TO_DATE,
-                example = BudgetDtoConstants.TO_DATE_EXAMPLE,
-                description = BudgetDtoConstants.DATE_DESCRIPTION,
+        @Schema(name = "toDate",
+                example = "2024-10-31",
+                description = "date format should be: YYYY-MM-dd",
                 requiredMode = REQUIRED)
         @NotBlank
         @Date
         String toDate,
-        @Schema(name = BudgetDtoConstants.CATEGORY_ID,
-                example = BudgetDtoConstants.CATEGORY_ID_EXAMPLE,
+        @Schema(name = "categoryId",
+                example = "1",
                 requiredMode = REQUIRED)
         @NotNull
         @Positive
         Long categoryId,
-        @Schema(name = BudgetDtoConstants.LIMIT_SUM,
-                example = BudgetDtoConstants.LIMIT_SUM_EXAMPLE,
+        @Schema(name = "limitSum",
+                example = "999.99",
                 requiredMode = REQUIRED)
         @NotNull
         @Positive

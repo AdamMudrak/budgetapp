@@ -9,16 +9,6 @@ public class AuthControllerConstants {
             get a new random password instead, and set
             a new password afterwards
             """;
-    public static final String AUTH = "/auth";
-    public static final String REGISTER = "/register";
-    public static final String CONFIRM_REGISTRATION = "/register-success";
-    public static final String LOGIN_EMAIL = "/login-email";
-    public static final String LOGIN_TELEGRAM = "/login-telegram";
-    public static final String FORGOT_PASSWORD = "/forgot-password";
-    public static final String RESET_PASSWORD = "/reset-password";
-    public static final String CHANGE_PASSWORD = "/change-password";
-    public static final String TELEGRAM_AUTH = "/telegram-auth";
-    public static final String REFRESH_ACCESS_TOKEN = "/refresh-access-token";
 
     public static final String REGISTER_SUMMARY = "Register a new user in the app";
     public static final String SUCCESSFULLY_REGISTERED = "Successfully registered a new user";

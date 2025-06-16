@@ -7,25 +7,18 @@ import static com.example.budgetingapp.constants.Constants.CODE_400;
 import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
 import static com.example.budgetingapp.constants.Constants.TRANSACTION_PAGEABLE_EXAMPLE;
-import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.ADD_INCOME;
 import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.ADD_INCOME_SUMMARY;
-import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.DELETE_INCOME_BY_ID;
 import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.DELETE_INCOME_SUMMARY;
-import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.GET_ALL_INCOMES;
-import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.GET_ALL_INCOMES_FOR_CHARTS_DAYS;
-import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.GET_ALL_INCOMES_FOR_CHARTS_MONTHS_YEARS;
 import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.GET_ALL_INCOMES_FOR_CHARTS_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.GET_ALL_INCOMES_FOR_CHARTS_SUMMARY_DAY;
 import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.GET_ALL_INCOMES_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.INCOME;
-import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.INCOME_TRANSACTIONS;
 import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.SUCCESSFULLY_ADDED_INCOME;
 import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.SUCCESSFULLY_DELETED_INCOME;
 import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.SUCCESSFULLY_RETRIEVED_INCOMES;
 import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.SUCCESSFULLY_RETRIEVED_INCOMES_FOR_CHARTS;
 import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.SUCCESSFULLY_RETRIEVED_INCOMES_FOR_CHARTS_DAY;
 import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.SUCCESSFULLY_UPDATED_INCOME;
-import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.UPDATE_INCOME_BY_ID;
 import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.UPDATE_INCOME_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.transactions.TransactionsCommonConstants.TRANSACTION_API_NAME;
 
@@ -65,7 +58,7 @@ import org.springframework.web.bind.annotation.RestController;
 @PreAuthorize(ROLE_USER)
 @RestController
 @Tag(name = TRANSACTION_API_NAME)
-@RequestMapping(INCOME_TRANSACTIONS)
+@RequestMapping("/income-transactions")
 public class IncomeTransactionController {
     private final TransactionService incomeTransactionService;
 
@@ -78,7 +71,7 @@ public class IncomeTransactionController {
     @ApiResponse(responseCode = CODE_201, description =
             SUCCESSFULLY_ADDED_INCOME)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @PostMapping(ADD_INCOME)
+    @PostMapping("/add-income")
     @ResponseStatus(HttpStatus.CREATED)
     public SaveAndUpdateResponseDto addIncomeTransaction(
                                 @AuthenticationPrincipal User user,
@@ -90,7 +83,7 @@ public class IncomeTransactionController {
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_RETRIEVED_INCOMES)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @GetMapping(GET_ALL_INCOMES)
+    @GetMapping("/get-all-incomes")
     public GetTransactionsPageDto getAllIncomesTransactions(
             @AuthenticationPrincipal User user,
             @Valid FilterTransactionByDaysDto filterTransactionsDto,
@@ -103,7 +96,7 @@ public class IncomeTransactionController {
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_RETRIEVED_INCOMES_FOR_CHARTS_DAY)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @GetMapping(GET_ALL_INCOMES_FOR_CHARTS_DAYS)
+    @GetMapping("/get-all-incomes-for-charts-days")
     public List<SumsByPeriodDto> getIncomesForDaysCharts(
             @AuthenticationPrincipal User user,
             @Valid FilterTransactionByDaysDto filterTransactionsDto) {
@@ -116,7 +109,7 @@ public class IncomeTransactionController {
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_RETRIEVED_INCOMES_FOR_CHARTS)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @GetMapping(GET_ALL_INCOMES_FOR_CHARTS_MONTHS_YEARS)
+    @GetMapping("/get-all-incomes-for-charts-months-years")
     public List<SumsByPeriodDto> getIncomesForMonthOrYearCharts(
             @AuthenticationPrincipal User user,
             @Valid FilterTransactionByMonthsYearsDto
@@ -130,7 +123,7 @@ public class IncomeTransactionController {
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_UPDATED_INCOME)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @PutMapping(UPDATE_INCOME_BY_ID)
+    @PutMapping("/update-income/{transactionId}")
     public SaveAndUpdateResponseDto updateIncomeTransaction(
                              @AuthenticationPrincipal User user,
                              @Valid @RequestBody UpdateTransactionDto requestTransactionDto,
@@ -143,7 +136,7 @@ public class IncomeTransactionController {
     @ApiResponse(responseCode = CODE_204, description =
             SUCCESSFULLY_DELETED_INCOME)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @DeleteMapping(DELETE_INCOME_BY_ID)
+    @DeleteMapping("/delete-income/{transactionId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteIncomeById(@AuthenticationPrincipal User user,
                                  @PathVariable @Positive Long transactionId) {

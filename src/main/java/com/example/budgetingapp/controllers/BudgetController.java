@@ -5,14 +5,10 @@ import static com.example.budgetingapp.constants.Constants.CODE_201;
 import static com.example.budgetingapp.constants.Constants.CODE_400;
 import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
-import static com.example.budgetingapp.constants.controllers.BudgetControllerConstants.ADD_BUDGET;
 import static com.example.budgetingapp.constants.controllers.BudgetControllerConstants.ADD_BUDGET_SUMMARY;
-import static com.example.budgetingapp.constants.controllers.BudgetControllerConstants.BUDGET;
 import static com.example.budgetingapp.constants.controllers.BudgetControllerConstants.BUDGET_API_DESCRIPTION;
 import static com.example.budgetingapp.constants.controllers.BudgetControllerConstants.BUDGET_API_NAME;
-import static com.example.budgetingapp.constants.controllers.BudgetControllerConstants.DELETE_BUDGET_BY_ID;
 import static com.example.budgetingapp.constants.controllers.BudgetControllerConstants.DELETE_BUDGET_BY_ID_SUMMARY;
-import static com.example.budgetingapp.constants.controllers.BudgetControllerConstants.GET_ALL_BUDGETS;
 import static com.example.budgetingapp.constants.controllers.BudgetControllerConstants.GET_ALL_BUDGETS_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.BudgetControllerConstants.SUCCESSFULLY_ADDED;
 import static com.example.budgetingapp.constants.controllers.BudgetControllerConstants.SUCCESSFULLY_DELETED;
@@ -44,14 +40,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = BUDGET_API_NAME, description = BUDGET_API_DESCRIPTION)
 @RestController
-@RequestMapping(BUDGET)
+@RequestMapping("/budgets")
 public class BudgetController {
     private final BudgetService budgetService;
 
     @Operation(summary = ADD_BUDGET_SUMMARY)
     @ApiResponse(responseCode = CODE_201, description = SUCCESSFULLY_ADDED)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @PostMapping(ADD_BUDGET)
+    @PostMapping("/add-budget")
     @ResponseStatus(HttpStatus.CREATED)
     public BudgetResponseDto addBudget(@AuthenticationPrincipal User user,
                                        @Valid @RequestBody BudgetRequestDto budgetRequestDto) {
@@ -60,14 +56,14 @@ public class BudgetController {
 
     @Operation(summary = GET_ALL_BUDGETS_SUMMARY)
     @ApiResponse(responseCode = CODE_200, description = SUCCESSFULLY_RETRIEVED)
-    @GetMapping(GET_ALL_BUDGETS)
+    @GetMapping("/get-all-budgets")
     public List<BudgetResponseDto> getAllBudgets(@AuthenticationPrincipal User user) {
         return budgetService.updateAndGetAllBudgets(user.getId());
     }
 
     @Operation(summary = DELETE_BUDGET_BY_ID_SUMMARY)
     @ApiResponse(responseCode = CODE_201, description = SUCCESSFULLY_DELETED)
-    @DeleteMapping(DELETE_BUDGET_BY_ID)
+    @DeleteMapping("/delete-budget/{budgetId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBudget(@AuthenticationPrincipal User user,
                                           @PathVariable Long budgetId) {

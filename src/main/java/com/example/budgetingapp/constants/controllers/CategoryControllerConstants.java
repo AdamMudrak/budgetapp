@@ -6,13 +6,6 @@ public class CategoryControllerConstants {
             Here you'll find a comprehensive overview
             of how to work with categories of transactions
             in this app.""";
-    public static final String INCOME_CATEGORIES = "/income-categories";
-    public static final String EXPENSE_CATEGORIES = "/expense-categories";
-
-    public static final String ADD_CATEGORY = "/add-category";
-    public static final String GET_ALL_CATEGORIES = "/get-all-categories";
-    public static final String UPDATE_CATEGORY_BY_ID = "/update-category/{categoryId}";
-    public static final String DELETE_CATEGORY_BY_ID = "/delete-category/{categoryId}";
 
     public static final String ADD_CATEGORY_SUMMARY = "Add category.";
     public static final String SUCCESSFULLY_ADDED_CATEGORY =

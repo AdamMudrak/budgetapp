@@ -7,15 +7,9 @@ import static com.example.budgetingapp.constants.Constants.CODE_400;
 import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
 import static com.example.budgetingapp.constants.Constants.TRANSACTION_PAGEABLE_EXAMPLE;
-import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.ADD_EXPENSE;
 import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.ADD_EXPENSE_SUMMARY;
-import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.DELETE_EXPENSE_BY_ID;
 import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.DELETE_EXPENSE_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.EXPENSE;
-import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.EXPENSE_TRANSACTIONS;
-import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.GET_ALL_EXPENSES;
-import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.GET_ALL_EXPENSES_FOR_CHARTS_DAYS;
-import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.GET_ALL_EXPENSES_FOR_CHARTS_MONTHS_YEARS;
 import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.GET_ALL_EXPENSES_FOR_CHARTS_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.GET_ALL_EXPENSES_FOR_CHARTS_SUMMARY_DAY;
 import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.GET_ALL_EXPENSES_SUMMARY;
@@ -25,7 +19,6 @@ import static com.example.budgetingapp.constants.controllers.transactions.Expens
 import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.SUCCESSFULLY_RETRIEVED_EXPENSES_FOR_CHARTS;
 import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.SUCCESSFULLY_RETRIEVED_EXPENSES_FOR_CHARTS_DAY;
 import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.SUCCESSFULLY_UPDATED_EXPENSE;
-import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.UPDATE_EXPENSE_BY_ID;
 import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.UPDATE_EXPENSE_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.transactions.TransactionsCommonConstants.TRANSACTION_API_NAME;
 
@@ -65,7 +58,7 @@ import org.springframework.web.bind.annotation.RestController;
 @PreAuthorize(ROLE_USER)
 @RestController
 @Tag(name = TRANSACTION_API_NAME)
-@RequestMapping(EXPENSE_TRANSACTIONS)
+@RequestMapping("/expense-transactions")
 public class ExpenseTransactionController {
     private final TransactionService expenseTransactionService;
 
@@ -78,7 +71,7 @@ public class ExpenseTransactionController {
     @ApiResponse(responseCode = CODE_201, description =
             SUCCESSFULLY_ADDED_EXPENSE)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @PostMapping(ADD_EXPENSE)
+    @PostMapping("/add-expense")
     @ResponseStatus(HttpStatus.CREATED)
     public SaveAndUpdateResponseDto addExpenseTransaction(
             @AuthenticationPrincipal User user,
@@ -90,7 +83,7 @@ public class ExpenseTransactionController {
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_RETRIEVED_EXPENSES)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @GetMapping(GET_ALL_EXPENSES)
+    @GetMapping("/get-all-expenses")
     public GetTransactionsPageDto getAllExpenseTransactions(
             @AuthenticationPrincipal User user,
             @Valid FilterTransactionByDaysDto filterTransactionsDto,
@@ -103,7 +96,7 @@ public class ExpenseTransactionController {
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_RETRIEVED_EXPENSES_FOR_CHARTS_DAY)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @GetMapping(GET_ALL_EXPENSES_FOR_CHARTS_DAYS)
+    @GetMapping("/get-all-expenses-for-charts-days")
     public List<SumsByPeriodDto> getExpensesForDaysCharts(
             @AuthenticationPrincipal User user,
             @Valid FilterTransactionByDaysDto filterTransactionsDto) {
@@ -116,7 +109,7 @@ public class ExpenseTransactionController {
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_RETRIEVED_EXPENSES_FOR_CHARTS)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @GetMapping(GET_ALL_EXPENSES_FOR_CHARTS_MONTHS_YEARS)
+    @GetMapping("/get-all-expenses-for-charts-months-years")
     public List<SumsByPeriodDto> getExpensesForMonthOrYearCharts(
             @AuthenticationPrincipal User user,
             @Valid FilterTransactionByMonthsYearsDto
@@ -130,7 +123,7 @@ public class ExpenseTransactionController {
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_UPDATED_EXPENSE)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @PutMapping(UPDATE_EXPENSE_BY_ID)
+    @PutMapping("/update-expense/{transactionId}")
     public SaveAndUpdateResponseDto updateExpenseTransaction(
             @AuthenticationPrincipal User user,
             @Valid @RequestBody UpdateTransactionDto requestTransactionDto,
@@ -143,7 +136,7 @@ public class ExpenseTransactionController {
     @ApiResponse(responseCode = CODE_204, description =
             SUCCESSFULLY_DELETED_EXPENSE)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @DeleteMapping(DELETE_EXPENSE_BY_ID)
+    @DeleteMapping("/delete-expense/{transactionId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteExpenseById(@AuthenticationPrincipal User user,
                                   @PathVariable @Positive Long transactionId) {
