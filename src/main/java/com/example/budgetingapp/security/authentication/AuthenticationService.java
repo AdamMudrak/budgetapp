@@ -2,7 +2,6 @@ package com.example.budgetingapp.security.authentication;
 
 import static com.example.budgetingapp.constants.Constants.EMAIL;
 import static com.example.budgetingapp.constants.Constants.TELEGRAM_PHONE_NUMBER;
-import static com.example.budgetingapp.constants.redirects.RedirectConstants.PASSWORD_RESET_CONFIRMATION_LINK;
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACCESS;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.PASSWORD_SET_SUCCESSFULLY;
@@ -33,7 +32,7 @@ import com.example.budgetingapp.repositories.ParamTokenRepository;
 import com.example.budgetingapp.repositories.UserRepository;
 import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
-import com.example.budgetingapp.services.email.PasswordEmailService;
+import com.example.budgetingapp.services.email.ActionEmailService;
 import com.example.budgetingapp.services.utils.RandomStringUtil;
 import com.example.budgetingapp.services.utils.RedirectUtil;
 import io.jsonwebtoken.JwtException;
@@ -61,10 +60,10 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtStrategy jwtStrategy;
-    private final PasswordEmailService passwordEmailService;
+    private final ActionEmailService passwordEmailService;
     private final RandomStringUtil randomStringUtil;
     private final ParamTokenRepository paramTokenRepository;
-    @Value(PASSWORD_RESET_CONFIRMATION_LINK)
+    @Value("${password.reset.confirmation.link}")
     private String redirectPath;
 
     public UserLoginDto authenticateTelegram(UserTelegramLoginDto requestDto) {

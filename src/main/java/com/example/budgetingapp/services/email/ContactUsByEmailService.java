@@ -1,6 +1,5 @@
 package com.example.budgetingapp.services.email;
 
-import static com.example.budgetingapp.constants.security.SecurityConstants.SUPPORT_EMAIL;
 import static com.example.budgetingapp.constants.security.SecurityConstants.SUPPORT_EMAIL_SUBJECT;
 
 import com.example.budgetingapp.constants.Constants;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ContactUsByEmailService extends EmailService {
-    @Value(SUPPORT_EMAIL)
+    @Value("${support.mail.address}")
     private String supportEmail;
 
     public void sendMessageToHost(SupportRequestDto contactUsByEmailDto) {

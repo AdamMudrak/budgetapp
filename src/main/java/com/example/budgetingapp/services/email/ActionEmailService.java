@@ -1,9 +1,7 @@
 package com.example.budgetingapp.services.email;
 
 import static com.example.budgetingapp.constants.Constants.SPLITERATOR;
-import static com.example.budgetingapp.constants.redirects.RedirectConstants.RANDOM_PASSWORD_REDIRECT_LINK;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION;
-import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION_PATH;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRM_REGISTRATION_BODY;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRM_REGISTRATION_SUBJECT;
 import static com.example.budgetingapp.constants.security.SecurityConstants.INITIATE_RANDOM_PASSWORD_BODY;
@@ -13,7 +11,6 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.RAND
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_BODY_3;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_SUBJECT;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RESET;
-import static com.example.budgetingapp.constants.security.SecurityConstants.RESET_PATH;
 
 import com.example.budgetingapp.exceptions.ActionNotFoundException;
 import com.example.budgetingapp.services.utils.EmailLinkParameterProvider;
@@ -21,25 +18,25 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PasswordEmailService extends EmailService {
+public class ActionEmailService extends EmailService {
     private final EmailLinkParameterProvider emailLinkParameterProvider;
-    @Value(RESET_PATH)
-    private String resetPath;
-    @Value(CONFIRMATION_PATH)
-    private String confirmationPath;
-    @Value(RANDOM_PASSWORD_REDIRECT_LINK)
+    @Value("${server.path}")
+    private String serverPath;
+    @Value("${get.random.password.redirect.link}")
     private String redirectPath;
 
-    public PasswordEmailService(EmailLinkParameterProvider emailLinkParameterProvider) {
+    public ActionEmailService(EmailLinkParameterProvider emailLinkParameterProvider) {
         this.emailLinkParameterProvider = emailLinkParameterProvider;
     }
 
     public void sendActionMessage(String toEmail, String action) {
         switch (action) {
             case RESET -> this.sendMessage(toEmail, INITIATE_RANDOM_PASSWORD_SUBJECT,
-                    formTextForAction(toEmail, INITIATE_RANDOM_PASSWORD_BODY, resetPath));
+                    formTextForAction(toEmail, INITIATE_RANDOM_PASSWORD_BODY,
+                            serverPath + "/auth/reset-password?"));
             case CONFIRMATION -> this.sendMessage(toEmail, CONFIRM_REGISTRATION_SUBJECT,
-                    formTextForAction(toEmail, CONFIRM_REGISTRATION_BODY, confirmationPath));
+                    formTextForAction(toEmail, CONFIRM_REGISTRATION_BODY, serverPath
+                            + "/auth/register-success?"));
             default -> throw new ActionNotFoundException("Unknown action " + action);
         }
     }
@@ -48,9 +45,7 @@ public class PasswordEmailService extends EmailService {
         this.sendMessage(toEmail, RANDOM_PASSWORD_SUBJECT,
                     RANDOM_PASSWORD_BODY
                             + System.lineSeparator()
-                            + System.lineSeparator()
                             + randomPassword
-                            + System.lineSeparator()
                             + System.lineSeparator()
                             + RANDOM_PASSWORD_BODY_2
                             + System.lineSeparator()

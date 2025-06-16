@@ -1,6 +1,5 @@
 package com.example.budgetingapp.services.impl.categories;
 
-import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.EXPENSE;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.CATEGORY_QUANTITY_THRESHOLD;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.DEFAULT_CATEGORY_NAME;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGET_EXPENSE_CATEGORY;
@@ -24,7 +23,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
-@Qualifier(EXPENSE)
+@Qualifier("EXPENSE")
 @RequiredArgsConstructor
 public class ExpenseCategoryServiceImpl implements CategoryService {
     private final CategoryMapper categoryMapper;

@@ -1,6 +1,5 @@
 package com.example.budgetingapp.services.impl;
 
-import static com.example.budgetingapp.constants.redirects.RedirectConstants.REGISTRATION_CONFIRMATION_LINK;
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACTION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.REGISTERED;
@@ -17,7 +16,7 @@ import com.example.budgetingapp.repositories.UserRepository;
 import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
 import com.example.budgetingapp.services.UserService;
-import com.example.budgetingapp.services.email.PasswordEmailService;
+import com.example.budgetingapp.services.email.ActionEmailService;
 import com.example.budgetingapp.services.utils.AssignDefaultUserObjectsUtil;
 import com.example.budgetingapp.services.utils.RedirectUtil;
 import jakarta.transaction.Transactional;
@@ -37,8 +36,8 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtStrategy jwtStrategy;
-    private final PasswordEmailService passwordEmailService;
-    @Value(REGISTRATION_CONFIRMATION_LINK)
+    private final ActionEmailService passwordEmailService;
+    @Value("${registration.confirmation.link}")
     private String redirectPath;
 
     @Transactional

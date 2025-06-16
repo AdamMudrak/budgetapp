@@ -1,6 +1,5 @@
 package com.example.budgetingapp.services.impl.transactions;
 
-import static com.example.budgetingapp.constants.controllers.transactions.IncomeControllerConstants.INCOME;
 import static com.example.budgetingapp.constants.entities.EntitiesConstants.TARGET_INCOME_CATEGORY;
 
 import com.example.budgetingapp.dtos.transactions.request.CreateTransactionDto;
@@ -40,7 +39,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
-@Qualifier(INCOME)
+@Qualifier("INCOME")
 @RequiredArgsConstructor
 public class IncomeTransactionServiceImpl implements TransactionService {
     private final AccountRepository accountRepository;
