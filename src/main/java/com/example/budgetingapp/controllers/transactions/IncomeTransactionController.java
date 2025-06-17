@@ -26,6 +26,7 @@ import com.example.budgetingapp.dtos.transactions.request.CreateTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.UpdateTransactionDto;
 import com.example.budgetingapp.dtos.transactions.request.filters.FilterTransactionByDaysDto;
 import com.example.budgetingapp.dtos.transactions.request.filters.FilterTransactionByMonthsYearsDto;
+import com.example.budgetingapp.dtos.transactions.request.filters.FilterType;
 import com.example.budgetingapp.dtos.transactions.response.GetTransactionsPageDto;
 import com.example.budgetingapp.dtos.transactions.response.SaveAndUpdateResponseDto;
 import com.example.budgetingapp.dtos.transactions.response.charts.SumsByPeriodDto;
@@ -37,7 +38,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -51,6 +54,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -86,10 +90,13 @@ public class IncomeTransactionController {
     @GetMapping("/get-all-incomes")
     public GetTransactionsPageDto getAllIncomesTransactions(
             @AuthenticationPrincipal User user,
-            @Valid FilterTransactionByDaysDto filterTransactionsDto,
+            @RequestParam(required = false) Long accountId,
+            @RequestParam(required = false) Set<Long> categoryIds,
+            @RequestParam(required = false) LocalDate fromDate,
+            @RequestParam(required = false) LocalDate toDate,
             @Parameter(example = TRANSACTION_PAGEABLE_EXAMPLE) Pageable pageable) {
         return incomeTransactionService.getAllTransactions(user.getId(),
-                filterTransactionsDto, pageable);
+                new FilterTransactionByDaysDto(accountId,categoryIds,fromDate,toDate), pageable);
     }
 
     @Operation(summary = GET_ALL_INCOMES_FOR_CHARTS_SUMMARY_DAY)
@@ -99,10 +106,13 @@ public class IncomeTransactionController {
     @GetMapping("/get-all-incomes-for-charts-days")
     public List<SumsByPeriodDto> getIncomesForDaysCharts(
             @AuthenticationPrincipal User user,
-            @Valid FilterTransactionByDaysDto filterTransactionsDto) {
+            @RequestParam(required = false) Long accountId,
+            @RequestParam(required = false) Set<Long> categoryIds,
+            @RequestParam(required = false) LocalDate fromDate,
+            @RequestParam(required = false) LocalDate toDate) {
         return incomeTransactionService
-                .getSumOfTransactionsForPeriodOfTime(
-                        user.getId(), filterTransactionsDto);
+                .getSumOfTransactionsForPeriodOfTime(user.getId(),
+                        new FilterTransactionByDaysDto(accountId,categoryIds,fromDate,toDate));
     }
 
     @Operation(summary = GET_ALL_INCOMES_FOR_CHARTS_SUMMARY)
@@ -112,11 +122,13 @@ public class IncomeTransactionController {
     @GetMapping("/get-all-incomes-for-charts-months-years")
     public List<SumsByPeriodDto> getIncomesForMonthOrYearCharts(
             @AuthenticationPrincipal User user,
-            @Valid FilterTransactionByMonthsYearsDto
-                    chartTransactionRequestDtoByMonthOrYear) {
+            @RequestParam Long accountId,
+            @RequestParam(required = false) Set<Long> categoryIds,
+            @RequestParam FilterType filterType) {
         return incomeTransactionService
                 .getSumOfTransactionsForMonthOrYear(
-                        user.getId(), chartTransactionRequestDtoByMonthOrYear);
+                        user.getId(),
+                        new FilterTransactionByMonthsYearsDto(accountId,categoryIds,filterType));
     }
 
     @Operation(summary = UPDATE_INCOME_SUMMARY)

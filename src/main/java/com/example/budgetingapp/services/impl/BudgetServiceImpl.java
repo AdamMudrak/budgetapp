@@ -119,8 +119,8 @@ public class BudgetServiceImpl implements BudgetService {
         return new FilterTransactionByDaysDto(
                 null,
                 Set.of(budget.getExpenseCategory().getId()),
-                budget.getFromDate().toString(),
-                budget.getToDate().toString());
+                budget.getFromDate(),
+                budget.getToDate());
     }
 
     private void isAccountPresentByCurrencyAndUserId(Long userId,
