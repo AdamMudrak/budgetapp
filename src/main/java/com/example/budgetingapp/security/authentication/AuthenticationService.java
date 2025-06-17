@@ -10,8 +10,6 @@ import static com.example.budgetingapp.constants.security.SecurityConstants.REFR
 import static com.example.budgetingapp.constants.security.SecurityConstants.REGISTERED_BUT_NOT_ACTIVATED;
 import static com.example.budgetingapp.constants.security.SecurityConstants.SUCCESS_EMAIL;
 
-import com.example.budgetingapp.constants.controllers.AuthControllerConstants;
-import com.example.budgetingapp.constants.security.SecurityConstants;
 import com.example.budgetingapp.dtos.users.request.SetNewPasswordDto;
 import com.example.budgetingapp.dtos.users.request.userlogindtos.InnerUserLoginDto;
 import com.example.budgetingapp.dtos.users.request.userlogindtos.UserEmailLoginDto;
@@ -28,6 +26,7 @@ import com.example.budgetingapp.repositories.UserRepository;
 import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
 import com.example.budgetingapp.services.email.PasswordEmailService;
+import com.example.budgetingapp.services.email.RegisterConfirmEmailService;
 import com.example.budgetingapp.services.utils.ParamFromHttpRequestUtil;
 import com.example.budgetingapp.services.utils.RandomStringUtil;
 import com.example.budgetingapp.services.utils.RedirectUtil;
@@ -36,7 +35,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,7 +42,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 @Component
 @RequiredArgsConstructor
@@ -57,6 +54,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtStrategy jwtStrategy;
     private final PasswordEmailService passwordEmailService;
+    private final RegisterConfirmEmailService registerConfirmEmailService;
     private final RandomStringUtil randomStringUtil;
     @Value("${password.reset.confirmation.link}")
     private String happyRedirectPath;
@@ -85,7 +83,7 @@ public class AuthenticationService {
     }
 
     public ResponseEntity<Void> confirmResetPassword(HttpServletRequest httpServletRequest) {
-        String token = parseToken(httpServletRequest);
+        String token = requestUtil.parseTokenFromParam(httpServletRequest);
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
         try {
             jwtAbstractUtil.isValidToken(token);
@@ -104,7 +102,7 @@ public class AuthenticationService {
 
     public StartPasswordResetDto changePassword(HttpServletRequest httpServletRequest,
                                                 SetNewPasswordDto userSetNewPasswordRequestDto) {
-        String token = requestUtil.parseRandomParameterAndToken(httpServletRequest);
+        String token = requestUtil.parseTokenFromParam(httpServletRequest);
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
         String email = jwtAbstractUtil.getUsername(token);
         User user = userRepository.findByUserName(email).orElseThrow(() ->
@@ -151,7 +149,7 @@ public class AuthenticationService {
 
     private void isEnabled(User user) {
         if (!user.isEnabled()) {
-            passwordEmailService.sendInitiatePasswordReset(user.getUsername());
+            registerConfirmEmailService.sendRegisterConfirmEmail(user.getUsername());
             throw new LoginException(REGISTERED_BUT_NOT_ACTIVATED);
         }
     }
@@ -161,15 +159,6 @@ public class AuthenticationService {
                 .filter(refreshCookie -> refreshCookie.getName().equals(REFRESH_TOKEN))
                 .findFirst()
                 .orElseThrow(() -> new EntityNotFoundException("Couldn't find RT in cookies"));
-    }
-
-    private String parseToken(HttpServletRequest httpServletRequest) {
-        String bearerToken = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        if (StringUtils.hasText(bearerToken) && bearerToken
-                .startsWith(AuthControllerConstants.BEARER)) {
-            bearerToken = bearerToken.substring(SecurityConstants.BEGIN_INDEX);
-        }
-        return bearerToken;
     }
 
     private InnerUserLoginDto interprete(
