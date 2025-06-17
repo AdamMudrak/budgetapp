@@ -40,20 +40,16 @@ import com.example.budgetingapp.dtos.users.response.StartPasswordResetDto;
 import com.example.budgetingapp.dtos.users.response.TelegramAuthenticationResponseDto;
 import com.example.budgetingapp.dtos.users.response.UserLoginDto;
 import com.example.budgetingapp.dtos.users.response.UserRegistrationResponseDto;
-import com.example.budgetingapp.exceptions.ActionNotFoundException;
 import com.example.budgetingapp.exceptions.RegistrationException;
 import com.example.budgetingapp.security.authentication.AuthenticationService;
 import com.example.budgetingapp.security.authentication.TelegramAuthenticationService;
 import com.example.budgetingapp.services.UserService;
-import com.example.budgetingapp.services.utils.RandomParamFromHttpRequestUtil;
-import com.example.budgetingapp.services.utils.RedirectUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -73,10 +69,6 @@ public class AuthController {
     private final UserService userService;
     private final AuthenticationService authenticationService;
     private final TelegramAuthenticationService telegramAuthenticationService;
-    private final RandomParamFromHttpRequestUtil randomParamFromHttpRequestUtil;
-    private final RedirectUtil redirectUtil;
-    @Value("${action.error.link}")
-    private String actionErrorPath;
 
     @Operation(summary = REGISTER_SUMMARY)
     @ApiResponse(responseCode = CODE_201, description =
@@ -96,15 +88,7 @@ public class AuthController {
     @ApiResponse(responseCode = CODE_403, description = ACCESS_DENIED)
     @GetMapping("/register-success")
     public ResponseEntity<Void> confirmRegistration(HttpServletRequest httpServletRequest) {
-        randomParamFromHttpRequestUtil.parseRandomParameterAndToken(httpServletRequest);
-        try {
-            return userService
-                    .confirmRegistration(randomParamFromHttpRequestUtil.getTokenFromRepo(
-                            randomParamFromHttpRequestUtil.getRandomParameter(),
-                            randomParamFromHttpRequestUtil.getToken()));
-        } catch (ActionNotFoundException e) {
-            return redirectUtil.redirect(actionErrorPath);
-        }
+        return userService.confirmRegistration(httpServletRequest);
     }
 
     @Operation(summary = TELEGRAM_LOGIN_SUMMARY)
@@ -144,15 +128,7 @@ public class AuthController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @GetMapping("/reset-password")
     public ResponseEntity<Void> resetPassword(HttpServletRequest httpServletRequest) {
-        randomParamFromHttpRequestUtil.parseRandomParameterAndToken(httpServletRequest);
-        try {
-            return authenticationService
-                .confirmResetPassword(randomParamFromHttpRequestUtil.getTokenFromRepo(
-                randomParamFromHttpRequestUtil.getRandomParameter(),
-                randomParamFromHttpRequestUtil.getToken()));
-        } catch (ActionNotFoundException e) {
-            return redirectUtil.redirect(actionErrorPath);
-        }
+        return authenticationService.confirmResetPassword(httpServletRequest);
     }
 
     @Operation(summary = CHANGE_PASSWORD_SUMMARY)

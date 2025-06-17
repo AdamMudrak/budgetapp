@@ -3,13 +3,11 @@ package com.example.budgetingapp.security.authentication;
 import static com.example.budgetingapp.constants.Constants.EMAIL;
 import static com.example.budgetingapp.constants.Constants.TELEGRAM_PHONE_NUMBER;
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACCESS;
-import static com.example.budgetingapp.constants.security.SecurityConstants.CONFIRMATION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.PASSWORD_SET_SUCCESSFULLY;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_STRENGTH;
 import static com.example.budgetingapp.constants.security.SecurityConstants.REFRESH;
 import static com.example.budgetingapp.constants.security.SecurityConstants.REFRESH_TOKEN;
 import static com.example.budgetingapp.constants.security.SecurityConstants.REGISTERED_BUT_NOT_ACTIVATED;
-import static com.example.budgetingapp.constants.security.SecurityConstants.RESET;
 import static com.example.budgetingapp.constants.security.SecurityConstants.SUCCESS_EMAIL;
 
 import com.example.budgetingapp.constants.controllers.AuthControllerConstants;
@@ -22,20 +20,17 @@ import com.example.budgetingapp.dtos.users.response.AccessTokenDto;
 import com.example.budgetingapp.dtos.users.response.StartPasswordResetDto;
 import com.example.budgetingapp.dtos.users.response.UserLoginDto;
 import com.example.budgetingapp.entities.User;
-import com.example.budgetingapp.entities.tokens.ParamToken;
 import com.example.budgetingapp.exceptions.EntityNotFoundException;
-import com.example.budgetingapp.exceptions.LinkExpiredException;
 import com.example.budgetingapp.exceptions.LoginException;
 import com.example.budgetingapp.exceptions.PasswordMismatch;
 import com.example.budgetingapp.mappers.UserMapper;
-import com.example.budgetingapp.repositories.ParamTokenRepository;
 import com.example.budgetingapp.repositories.UserRepository;
 import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
-import com.example.budgetingapp.services.email.ActionEmailService;
+import com.example.budgetingapp.services.email.PasswordEmailService;
+import com.example.budgetingapp.services.utils.ParamFromHttpRequestUtil;
 import com.example.budgetingapp.services.utils.RandomStringUtil;
 import com.example.budgetingapp.services.utils.RedirectUtil;
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -54,17 +49,19 @@ import org.springframework.util.StringUtils;
 @Component
 @RequiredArgsConstructor
 public class AuthenticationService {
+    private final ParamFromHttpRequestUtil requestUtil;
     private final RedirectUtil redirectUtil;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtStrategy jwtStrategy;
-    private final ActionEmailService passwordEmailService;
+    private final PasswordEmailService passwordEmailService;
     private final RandomStringUtil randomStringUtil;
-    private final ParamTokenRepository paramTokenRepository;
     @Value("${password.reset.confirmation.link}")
-    private String redirectPath;
+    private String happyRedirectPath;
+    @Value("${action.error.link}")
+    private String actionErrorPath;
 
     public UserLoginDto authenticateTelegram(UserTelegramLoginDto requestDto) {
         InnerUserLoginDto innerUserLoginRequestDto = interprete(requestDto);
@@ -83,31 +80,31 @@ public class AuthenticationService {
     public StartPasswordResetDto initiatePasswordReset(String email) {
         User currentUser = isCreated(email);
         isEnabled(currentUser);
-        passwordEmailService.sendActionMessage(email, RESET);
+        passwordEmailService.sendInitiatePasswordReset(email);
         return new StartPasswordResetDto(SUCCESS_EMAIL);
     }
 
-    public ResponseEntity<Void> confirmResetPassword(String token) {
+    public ResponseEntity<Void> confirmResetPassword(HttpServletRequest httpServletRequest) {
+        String token = parseToken(httpServletRequest);
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
         try {
             jwtAbstractUtil.isValidToken(token);
-        } catch (JwtException e) {
-            throw new LinkExpiredException("This link is expired. Please, submit another "
-                    + " \"forgot password\" request");
+        } catch (Exception e) {
+            redirectUtil.redirect(actionErrorPath);
         }
-        String email = getEmailFromTokenSecure(token, jwtAbstractUtil);
+        String email = jwtAbstractUtil.getUsername(token);
         String randomPassword = randomStringUtil.generateRandomString(RANDOM_PASSWORD_STRENGTH);
         User user = userRepository.findByUserName(email).orElseThrow(() ->
                 new EntityNotFoundException("User with email " + email + " was not found"));
         user.setPassword(passwordEncoder.encode(randomPassword));
         userRepository.save(user);
         passwordEmailService.sendResetPassword(email, randomPassword);
-        return redirectUtil.redirect(redirectPath);
+        return redirectUtil.redirect(happyRedirectPath);
     }
 
     public StartPasswordResetDto changePassword(HttpServletRequest httpServletRequest,
                                                 SetNewPasswordDto userSetNewPasswordRequestDto) {
-        String token = parseToken(httpServletRequest);
+        String token = requestUtil.parseRandomParameterAndToken(httpServletRequest);
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
         String email = jwtAbstractUtil.getUsername(token);
         User user = userRepository.findByUserName(email).orElseThrow(() ->
@@ -154,18 +151,9 @@ public class AuthenticationService {
 
     private void isEnabled(User user) {
         if (!user.isEnabled()) {
-            passwordEmailService.sendActionMessage(user.getUsername(), CONFIRMATION);
+            passwordEmailService.sendInitiatePasswordReset(user.getUsername());
             throw new LoginException(REGISTERED_BUT_NOT_ACTIVATED);
         }
-    }
-
-    private String getEmailFromTokenSecure(String token, JwtAbstractUtil jwtAbstractUtil) {
-        ParamToken paramToken = paramTokenRepository.findByActionToken(token).orElseThrow(()
-                -> new EntityNotFoundException(
-                "No such request was found... The link might be expired or forged"));
-        String email = jwtAbstractUtil.getUsername(paramToken.getActionToken());
-        paramTokenRepository.deleteById(paramToken.getId());
-        return email;
     }
 
     private Cookie findRefreshCookie(HttpServletRequest httpServletRequest) {
