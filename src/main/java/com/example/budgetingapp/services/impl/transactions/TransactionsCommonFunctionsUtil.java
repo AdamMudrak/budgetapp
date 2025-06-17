@@ -38,7 +38,8 @@ public class TransactionsCommonFunctionsUtil {
         return new FilterTransactionByDaysDto(
                 chartTransactionRequestDtoByMonthOrYear.accountId(),
                 chartTransactionRequestDtoByMonthOrYear.categoryIds(),
-                LocalDate.MIN, LocalDate.MAX);
+                null,
+                null);
     }
 
     List<SumsByPeriodDto> prepareListOfAccumulatedDtos(
