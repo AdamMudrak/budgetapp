@@ -2,7 +2,7 @@ package com.example.budgetingapp.repositories.transactions.transactionsspecs.inc
 
 import com.example.budgetingapp.entities.transactions.Income;
 import com.example.budgetingapp.repositories.specifications.SpecificationProvider;
-import java.time.LocalDate;
+import com.example.budgetingapp.repositories.transactions.transactionsspecs.TransactionSpecificationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class IToDateSpecificationProvider implements SpecificationProvider<Income> {
+    private final TransactionSpecificationProvider<Income> transactionSpecificationProvider;
 
     @Override
     public String getKey() {
@@ -18,8 +19,6 @@ public class IToDateSpecificationProvider implements SpecificationProvider<Incom
 
     @Override
     public Specification<Income> getSpecification(String[] params) {
-        LocalDate toDate = LocalDate.parse(params[0]);
-        return ((root, query, criteriaBuilder) ->
-                criteriaBuilder.lessThanOrEqualTo(root.get("transactionDate"), toDate));
+        return transactionSpecificationProvider.getToDateSpecification(params);
     }
 }
