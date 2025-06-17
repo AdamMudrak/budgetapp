@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<Void> confirmRegistration(HttpServletRequest httpServletRequest) {
-        String token = requestParamUtil.parseRandomParameterAndToken(httpServletRequest);
+        String token = requestParamUtil.parseTokenFromParam(httpServletRequest);
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACTION);
         try {
             jwtAbstractUtil.isValidToken(token);
