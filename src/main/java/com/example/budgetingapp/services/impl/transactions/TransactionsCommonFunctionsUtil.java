@@ -1,9 +1,5 @@
 package com.example.budgetingapp.services.impl.transactions;
 
-import static com.example.budgetingapp.constants.Constants.MONTH;
-import static com.example.budgetingapp.constants.Constants.NO_VALUE;
-import static com.example.budgetingapp.constants.Constants.YEAR;
-
 import com.example.budgetingapp.dtos.transactions.request.filters.FilterTransactionByDaysDto;
 import com.example.budgetingapp.dtos.transactions.request.filters.FilterTransactionByMonthsYearsDto;
 import com.example.budgetingapp.dtos.transactions.response.charts.SumsByPeriodDto;
@@ -34,9 +30,6 @@ public class TransactionsCommonFunctionsUtil {
         return switch (chartTransactionRequestDtoByMonthOrYear.filterType()) {
             case MONTH -> transactionDate.withDayOfMonth(FIRST_DAY);
             case YEAR -> transactionDate.withDayOfYear(FIRST_DAY);
-            default -> throw new IllegalArgumentException(
-                    "Unexpected value: "
-                            + chartTransactionRequestDtoByMonthOrYear.filterType());
         };
     }
 
@@ -45,7 +38,7 @@ public class TransactionsCommonFunctionsUtil {
         return new FilterTransactionByDaysDto(
                 chartTransactionRequestDtoByMonthOrYear.accountId(),
                 chartTransactionRequestDtoByMonthOrYear.categoryIds(),
-                NO_VALUE, NO_VALUE);
+                LocalDate.MIN, LocalDate.MAX);
     }
 
     List<SumsByPeriodDto> prepareListOfAccumulatedDtos(
