@@ -9,6 +9,8 @@ import com.example.budgetingapp.dtos.transactions.request.filters.FilterTransact
 import com.example.budgetingapp.dtos.transactions.response.charts.SumsByPeriodDto;
 import com.example.budgetingapp.dtos.transactions.response.charts.inner.SumsByCategoryDto;
 import com.example.budgetingapp.entities.Account;
+import com.example.budgetingapp.exceptions.EntityNotFoundException;
+import com.example.budgetingapp.repositories.AccountRepository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -62,5 +64,17 @@ public class TransactionsCommonFunctionsUtil {
                 })
                 .sorted(Comparator.comparing(SumsByPeriodDto::localDate))
                 .collect(Collectors.toList());
+    }
+
+    void accountPresenceCheck(Long userId,
+                              FilterTransactionByDaysDto filterTransactionsDto,
+                              AccountRepository accountRepository) {
+        if (filterTransactionsDto.accountId() != null) {
+            if (!accountRepository.existsByIdAndUserId(filterTransactionsDto.accountId(), userId)) {
+                throw new EntityNotFoundException("No account with id "
+                        + filterTransactionsDto.accountId() + " for user with id "
+                        + userId + " was found");
+            }
+        }
     }
 }

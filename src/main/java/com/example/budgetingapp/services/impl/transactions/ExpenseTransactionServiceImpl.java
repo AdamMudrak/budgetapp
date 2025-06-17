@@ -272,13 +272,8 @@ public class ExpenseTransactionServiceImpl implements TransactionService {
     }
 
     private void presenceCheck(Long userId, FilterTransactionByDaysDto filterTransactionsDto) {
-        if (filterTransactionsDto.accountId() != null) {
-            if (!accountRepository.existsByIdAndUserId(filterTransactionsDto.accountId(), userId)) {
-                throw new EntityNotFoundException("No account with id "
-                        + filterTransactionsDto.accountId() + " for user with id "
-                        + userId + " was found");
-            }
-        }
+        transactionsCommonFunctionsUtil.accountPresenceCheck(
+                userId, filterTransactionsDto, accountRepository);
         if (filterTransactionsDto.categoryIds() != null) {
             for (Long categoryId : filterTransactionsDto.categoryIds()) {
                 isCategoryPresentInDb(userId, categoryId);
