@@ -72,9 +72,7 @@ public class ExpenseCategoryController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PutMapping("/update-category/{categoryId}")
     public CategoryDto updateCategory(@AuthenticationPrincipal User user,
-                                      @PathVariable
-                                              @Positive
-                                              Long categoryId,
+                                      @PathVariable @Positive Long categoryId,
                                       @Valid @RequestBody UpdateCategoryDto updateCategoryDto) {
         return expenseCategoryService.updateCategory(user.getId(), categoryId, updateCategoryDto);
     }
@@ -94,8 +92,7 @@ public class ExpenseCategoryController {
     @DeleteMapping("/delete-category/{categoryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategory(@AuthenticationPrincipal User user,
-                               @PathVariable
-                               @Positive Long categoryId) {
+                               @PathVariable @Positive Long categoryId) {
         expenseCategoryService.deleteByCategoryIdAndUserId(user.getId(), categoryId);
     }
 }

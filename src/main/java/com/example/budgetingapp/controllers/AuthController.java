@@ -97,8 +97,7 @@ public class AuthController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @ApiResponse(responseCode = CODE_403, description = ACCESS_DENIED)
     @PostMapping("/login-telegram")
-    public UserLoginDto loginTelegram(@RequestBody @Valid
-                                              UserTelegramLoginDto request) {
+    public UserLoginDto loginTelegram(@RequestBody @Valid UserTelegramLoginDto request) {
         return authenticationService.authenticateTelegram(request);
     }
 
@@ -117,8 +116,8 @@ public class AuthController {
             SUCCESSFULLY_INITIATED_PASSWORD_RESET)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @PostMapping("/forgot-password")
-    public StartPasswordResetDto initiatePasswordReset(@Valid @RequestBody
-                                                            UserGetLinkToResetPasswordDto request) {
+    public StartPasswordResetDto initiatePasswordReset(
+            @Valid @RequestBody UserGetLinkToResetPasswordDto request) {
         return authenticationService.initiatePasswordReset(request.email());
     }
 
@@ -150,8 +149,8 @@ public class AuthController {
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
     @ApiResponse(responseCode = CODE_403, description = ACCESS_DENIED)
     @PostMapping("/telegram-auth")
-    public TelegramAuthenticationResponseDto telegramAuth(@RequestBody @Valid
-                              TelegramAuthenticationRequestDto telegramAuthenticationRequestDto) {
+    public TelegramAuthenticationResponseDto telegramAuth(
+            @RequestBody @Valid TelegramAuthenticationRequestDto telegramAuthenticationRequestDto) {
         return telegramAuthenticationService.registerOrGetLogin(telegramAuthenticationRequestDto);
     }
 

@@ -92,7 +92,7 @@ public class AccountController {
             SUCCESSFULLY_RETRIEVED_ACCOUNT_BY_ID)
     @GetMapping("/get-account-by-id/{accountId}")
     public AccountDto getAccountById(@AuthenticationPrincipal User user,
-                                               @PathVariable @Positive Long accountId) {
+                                     @PathVariable @Positive Long accountId) {
         return accountService.getAccountByIdAndUserId(user.getId(), accountId);
     }
 
