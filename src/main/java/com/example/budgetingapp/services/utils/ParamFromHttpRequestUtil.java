@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 public class ParamFromHttpRequestUtil {
     private final ActionTokenRepository actionTokenRepository;
 
-    public String parseRandomParameterAndToken(HttpServletRequest request) {
+    public String parseTokenFromParam(HttpServletRequest request) {
         String token = request.getParameter("token");
-        if (token == null || token.isBlank()) {
+        if (token != null && !token.isBlank()) {
             if (!actionTokenRepository.existsByActionToken(token)) {
                 throw new ActionNotFoundException(
                         "No such request was found... The link might be expired or forged");
