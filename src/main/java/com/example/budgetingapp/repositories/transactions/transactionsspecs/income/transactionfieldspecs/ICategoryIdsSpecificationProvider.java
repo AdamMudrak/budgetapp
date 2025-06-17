@@ -1,5 +1,6 @@
 package com.example.budgetingapp.repositories.transactions.transactionsspecs.income.transactionfieldspecs;
 
+import com.example.budgetingapp.entities.categories.IncomeCategory;
 import com.example.budgetingapp.entities.transactions.Income;
 import com.example.budgetingapp.repositories.specifications.SpecificationProvider;
 import com.example.budgetingapp.repositories.transactions.transactionsspecs.TransactionSpecificationProvider;
@@ -10,7 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class ICategoryIdsSpecificationProvider implements SpecificationProvider<Income> {
-    private final TransactionSpecificationProvider<Income> transactionSpecificationProvider;
+    private final TransactionSpecificationProvider<Income, IncomeCategory>
+            transactionSpecificationProvider;
 
     @Override
     public String getKey() {
@@ -19,6 +21,7 @@ public class ICategoryIdsSpecificationProvider implements SpecificationProvider<
 
     @Override
     public Specification<Income> getSpecification(String[] params) {
-        return transactionSpecificationProvider.getCategoryIdsSpecification(params);
+        return transactionSpecificationProvider.getCategoryIdsSpecification(
+                params, "incomeCategory");
     }
 }

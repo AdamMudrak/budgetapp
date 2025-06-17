@@ -1,8 +1,6 @@
 package com.example.budgetingapp.repositories.transactions.transactionsspecs;
 
 import com.example.budgetingapp.entities.Account;
-import com.example.budgetingapp.entities.categories.ExpenseCategory;
-import com.example.budgetingapp.entities.transactions.Expense;
 import jakarta.persistence.criteria.Join;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -10,19 +8,19 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TransactionSpecificationProvider<T> {
+public class TransactionSpecificationProvider<T,C> {
     public Specification<T> getAccountIdSpecification(String[] params) {
         Long accountId = Long.parseLong(params[0]);
         return ((root, query, criteriaBuilder) -> {
-            Join<Expense, Account> expenseAccountJoin = root.join("account");
-            return criteriaBuilder.equal(expenseAccountJoin.get("id"), accountId);
+            Join<T, Account> accountJoin = root.join("account");
+            return criteriaBuilder.equal(accountJoin.get("id"), accountId);
         });
     }
 
-    public Specification<T> getCategoryIdsSpecification(String[] params) {
+    public Specification<T> getCategoryIdsSpecification(String[] params, String categoryType) {
         return ((root, query, criteriaBuilder) -> {
-            Join<Expense, ExpenseCategory> expenseCategoryJoin = root.join("expenseCategory");
-            return expenseCategoryJoin.get("id").in(Arrays.stream(params).toArray());
+            Join<T, C> categoryJoin = root.join(categoryType);
+            return categoryJoin.get("id").in(Arrays.stream(params).toArray());
         });
     }
 

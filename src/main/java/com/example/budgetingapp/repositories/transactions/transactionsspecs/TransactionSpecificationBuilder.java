@@ -21,15 +21,15 @@ public class TransactionSpecificationBuilder<T> {
                     .getSpecificationProvider("accountId")
                     .getSpecification(new String[]{String.valueOf(transactionsDto.accountId())}));
         }
-        if (transactionsDto.fromDate() != null && !transactionsDto.fromDate().isBlank()) {
+        if (transactionsDto.fromDate() != null) {
             specification = specification.and(specificationProviderManager
                     .getSpecificationProvider("fromDate")
-                    .getSpecification(new String[]{transactionsDto.fromDate()}));
+                    .getSpecification(new String[]{String.valueOf(transactionsDto.fromDate())}));
         }
-        if (transactionsDto.toDate() != null && !transactionsDto.toDate().isBlank()) {
+        if (transactionsDto.toDate() != null) {
             specification = specification.and(specificationProviderManager
                     .getSpecificationProvider("toDate")
-                    .getSpecification(new String[]{transactionsDto.toDate()}));
+                    .getSpecification(new String[]{String.valueOf(transactionsDto.toDate())}));
         }
         if (transactionsDto.categoryIds() != null) {
             specification = specification.and(specificationProviderManager
