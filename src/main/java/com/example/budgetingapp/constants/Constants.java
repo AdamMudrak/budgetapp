@@ -6,11 +6,8 @@ public class Constants {
     public static final String MONTH = "MONTH";
     public static final String YEAR = "YEAR";
 
-    public static final String NO_VALUE = "";
-
     public static final int MONTHS_IN_A_YEAR = 12;
 
-    public static final String SPLITERATOR = "=";
     public static final String LEFT_PARENTHESIS = "(";
     public static final String RIGHT_PARENTHESIS = ")";
 

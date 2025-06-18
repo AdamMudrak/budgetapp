@@ -42,6 +42,4 @@ public class AuthControllerConstants {
             "Using a Refresh Token, get a new Access Token";
     public static final String SUCCESSFULLY_REFRESHED_TOKEN =
             "Successfully refreshed access token using refresh token";
-
-    public static final String BEARER = "Bearer ";
 }

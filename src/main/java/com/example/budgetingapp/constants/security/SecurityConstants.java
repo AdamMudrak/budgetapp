@@ -8,15 +8,12 @@ public class SecurityConstants {
     public static final int STRENGTH = 10;
     public static final int RANDOM_ACTION_JWT_STRENGTH = 24;
     public static final int RANDOM_PASSWORD_STRENGTH = 32;
-    public static final int RANDOM_LINK_STRENGTH = 128;
 
     public static final String RANDOM_STRING_BASE =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     public static final int BEGIN_INDEX = 7;
 
-    public static final String RESET = "RESET";
-    public static final String CONFIRMATION = "CONFIRMATION";
     public static final String ACCESS = "ACCESS";
     public static final String ACTION = "ACTION";
     public static final String REFRESH = "REFRESH";
