@@ -1,10 +1,5 @@
 package com.example.budgetingapp.entities;
 
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.FROM_ACCOUNT_ID;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.TO_ACCOUNT_ID;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.TRANSFERS;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.USER_ID;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -22,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = TRANSFERS)
+@Table(name = "transfers")
 public class Transfer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,13 +28,13 @@ public class Transfer {
     @Column(nullable = false)
     private LocalDate transactionDate;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = USER_ID, nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = FROM_ACCOUNT_ID, nullable = false)
+    @JoinColumn(name = "from_account_id", nullable = false)
     private Account fromAccount;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = TO_ACCOUNT_ID, nullable = false)
+    @JoinColumn(name = "to_account_id", nullable = false)
     private Account toAccount;
     @Column(nullable = false)
     private String currency;

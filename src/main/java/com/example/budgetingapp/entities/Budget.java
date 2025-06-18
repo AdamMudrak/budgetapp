@@ -1,10 +1,5 @@
 package com.example.budgetingapp.entities;
 
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.BOOLEAN_TO_INT;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.BUDGETS;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.EXPENSE_CATEGORY_ID;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.USER_ID;
-
 import com.example.budgetingapp.entities.categories.ExpenseCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,7 +18,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = BUDGETS)
+@Table(name = "budgets")
 public class Budget {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +30,7 @@ public class Budget {
     @Column(nullable = false)
     private LocalDate toDate;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = EXPENSE_CATEGORY_ID, nullable = false)
+    @JoinColumn(name = "expense_category_id", nullable = false)
     private ExpenseCategory expenseCategory;
     @Column(nullable = false)
     private String currency;
@@ -44,8 +39,8 @@ public class Budget {
     @Column(nullable = false)
     private BigDecimal currentSum = BigDecimal.ZERO;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = USER_ID, nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @Column(nullable = false, columnDefinition = BOOLEAN_TO_INT)
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean isExceeded = false;
 }

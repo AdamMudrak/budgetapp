@@ -3,28 +3,21 @@ package com.example.budgetingapp.telegramregistrationbot;
 import static com.example.budgetingapp.constants.Constants.CODE_200;
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACTION;
 import static com.example.budgetingapp.constants.security.SecurityConstants.BOT_NAME;
-import static com.example.budgetingapp.constants.security.SecurityConstants.BOT_TO_SERVER_REQUEST_URI;
-import static com.example.budgetingapp.constants.security.SecurityConstants.CONTENT_TYPE;
-import static com.example.budgetingapp.constants.security.SecurityConstants.CONTENT_TYPE_HEADER;
 import static com.example.budgetingapp.constants.security.SecurityConstants.FAILED;
 import static com.example.budgetingapp.constants.security.SecurityConstants.KEYBOARD_BUTTON_TEXT;
-import static com.example.budgetingapp.constants.security.SecurityConstants.PARSE_MODE;
 import static com.example.budgetingapp.constants.security.SecurityConstants.PLUS;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_ACTION_JWT_STRENGTH;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_STRENGTH;
-import static com.example.budgetingapp.constants.security.SecurityConstants.START;
-import static com.example.budgetingapp.constants.security.SecurityConstants.STOP;
 import static com.example.budgetingapp.constants.security.SecurityConstants.STOPPED_SUCCESS;
 import static com.example.budgetingapp.constants.security.SecurityConstants.TELEGRAM_REGISTRATION;
-import static com.example.budgetingapp.constants.security.SecurityConstants.TOKEN;
 import static com.example.budgetingapp.constants.security.SecurityConstants.UNKNOWN_COMMAND;
 
 import com.example.budgetingapp.entities.tokens.ActionToken;
-import com.example.budgetingapp.exceptions.forbidden.LoginException;
-import com.example.budgetingapp.repositories.actiontoken.ActionTokenRepository;
+import com.example.budgetingapp.exceptions.LoginException;
+import com.example.budgetingapp.repositories.ActionTokenRepository;
 import com.example.budgetingapp.security.jwtutils.abstr.JwtAbstractUtil;
 import com.example.budgetingapp.security.jwtutils.strategy.JwtStrategy;
-import com.example.budgetingapp.security.utils.RandomStringUtil;
+import com.example.budgetingapp.services.utils.RandomStringUtil;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -55,10 +48,10 @@ public class BudgetAppBot extends TelegramLongPollingBot {
     private final RandomStringUtil randomStringUtil;
     private final ActionTokenRepository actionTokenRepository;
     private final JwtStrategy jwtStrategy;
-    @Value(BOT_TO_SERVER_REQUEST_URI)
-    private String botToServerRequestUri;
+    @Value("${server.path}")
+    private String serverPath;
 
-    public BudgetAppBot(@Value(TOKEN) String token,
+    public BudgetAppBot(@Value("${telegram.bot.token}") String token,
                         @Autowired RandomStringUtil randomStringUtil,
                         @Autowired ActionTokenRepository actionTokenRepository,
                         @Autowired JwtStrategy jwtStrategy) {
@@ -80,11 +73,11 @@ public class BudgetAppBot extends TelegramLongPollingBot {
             Long currentUserId = update.getMessage().getChatId();
             if (update.getMessage().hasText()) {
                 String currentUserMessage = update.getMessage().getText();
-                if (currentUserMessage.equals(START)) {
+                if (currentUserMessage.equals("/start")) {
                     stoppedUserIds.remove(currentUserId);
                     requestContact(update);
                 } else if (!stoppedUserIds.contains(currentUserId)) {
-                    if (currentUserMessage.equals(STOP)) {
+                    if (currentUserMessage.equals("/stop")) {
                         stoppedUserIds.add(currentUserId);
                         handleStop(update);
                     } else {
@@ -158,7 +151,7 @@ public class BudgetAppBot extends TelegramLongPollingBot {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
         message.setText(text);
-        message.setParseMode(PARSE_MODE);
+        message.setParseMode("MarkdownV2");
         try {
             execute(message);
         } catch (TelegramApiException e) {
@@ -173,8 +166,8 @@ public class BudgetAppBot extends TelegramLongPollingBot {
                     password, token);
 
         HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(botToServerRequestUri))
-                    .header(CONTENT_TYPE_HEADER, CONTENT_TYPE)
+                    .uri(URI.create(serverPath + "/auth/telegram-auth?"))
+                    .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .timeout(Duration.of(TIME_OUT, ChronoUnit.SECONDS))
                     .build();

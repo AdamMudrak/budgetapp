@@ -6,19 +6,14 @@ import static com.example.budgetingapp.constants.Constants.CODE_204;
 import static com.example.budgetingapp.constants.Constants.CODE_400;
 import static com.example.budgetingapp.constants.Constants.INVALID_ENTITY_VALUE;
 import static com.example.budgetingapp.constants.Constants.ROLE_USER;
-import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.ADD_CATEGORY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.ADD_CATEGORY_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.CATEGORY_API_NAME;
-import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.DELETE_CATEGORY_BY_ID;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.DELETE_CATEGORY_SUMMARY;
-import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.EXPENSE_CATEGORIES;
-import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.GET_ALL_CATEGORIES;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.GET_ALL_CATEGORIES_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.SUCCESSFULLY_ADDED_CATEGORY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.SUCCESSFULLY_DELETE_CATEGORY;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.SUCCESSFULLY_RETRIEVED_CATEGORIES;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.SUCCESSFULLY_UPDATE_CATEGORY;
-import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.UPDATE_CATEGORY_BY_ID;
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.UPDATE_CATEGORY_SUMMARY;
 import static com.example.budgetingapp.constants.controllers.transactions.ExpenseControllerConstants.EXPENSE;
 
@@ -26,7 +21,7 @@ import com.example.budgetingapp.dtos.categories.request.CreateCategoryDto;
 import com.example.budgetingapp.dtos.categories.request.UpdateCategoryDto;
 import com.example.budgetingapp.dtos.categories.response.CategoryDto;
 import com.example.budgetingapp.entities.User;
-import com.example.budgetingapp.services.interfaces.CategoryService;
+import com.example.budgetingapp.services.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -52,7 +47,7 @@ import org.springframework.web.bind.annotation.RestController;
 @PreAuthorize(ROLE_USER)
 @RestController
 @Tag(name = CATEGORY_API_NAME)
-@RequestMapping(EXPENSE_CATEGORIES)
+@RequestMapping("/expense-categories")
 public class ExpenseCategoryController {
     private final CategoryService expenseCategoryService;
 
@@ -64,7 +59,7 @@ public class ExpenseCategoryController {
     @ApiResponse(responseCode = CODE_201, description =
             SUCCESSFULLY_ADDED_CATEGORY)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @PostMapping(ADD_CATEGORY)
+    @PostMapping("/add-category")
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryDto addCategory(@AuthenticationPrincipal User user,
                                    @Valid @RequestBody CreateCategoryDto createCategoryDto) {
@@ -75,11 +70,9 @@ public class ExpenseCategoryController {
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_UPDATE_CATEGORY)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @PutMapping(UPDATE_CATEGORY_BY_ID)
+    @PutMapping("/update-category/{categoryId}")
     public CategoryDto updateCategory(@AuthenticationPrincipal User user,
-                                      @PathVariable
-                                              @Positive
-                                              Long categoryId,
+                                      @PathVariable @Positive Long categoryId,
                                       @Valid @RequestBody UpdateCategoryDto updateCategoryDto) {
         return expenseCategoryService.updateCategory(user.getId(), categoryId, updateCategoryDto);
     }
@@ -87,7 +80,7 @@ public class ExpenseCategoryController {
     @Operation(summary = GET_ALL_CATEGORIES_SUMMARY)
     @ApiResponse(responseCode = CODE_200, description =
             SUCCESSFULLY_RETRIEVED_CATEGORIES)
-    @GetMapping(GET_ALL_CATEGORIES)
+    @GetMapping("/get-all-categories")
     public List<CategoryDto> getAllExpenseCategories(@AuthenticationPrincipal User user) {
         return expenseCategoryService.getAllCategoriesByUserId(user.getId());
     }
@@ -96,11 +89,10 @@ public class ExpenseCategoryController {
     @ApiResponse(responseCode = CODE_204, description =
             SUCCESSFULLY_DELETE_CATEGORY)
     @ApiResponse(responseCode = CODE_400, description = INVALID_ENTITY_VALUE)
-    @DeleteMapping(DELETE_CATEGORY_BY_ID)
+    @DeleteMapping("/delete-category/{categoryId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategory(@AuthenticationPrincipal User user,
-                               @PathVariable
-                               @Positive Long categoryId) {
+                               @PathVariable @Positive Long categoryId) {
         expenseCategoryService.deleteByCategoryIdAndUserId(user.getId(), categoryId);
     }
 }

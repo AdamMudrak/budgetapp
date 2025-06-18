@@ -1,7 +1,5 @@
 package com.example.budgetingapp.controllers;
 
-import static com.example.budgetingapp.constants.controllers.SupportControllerConstants.SEND_REQUEST_TO_EMAIL;
-import static com.example.budgetingapp.constants.controllers.SupportControllerConstants.SUPPORT;
 import static com.example.budgetingapp.constants.controllers.SupportControllerConstants.SUPPORT_API_DESCRIPTION;
 import static com.example.budgetingapp.constants.controllers.SupportControllerConstants.SUPPORT_API_NAME;
 import static com.example.budgetingapp.constants.dtos.SupportDtoConstants.SUPPORT_SEND_SUCCESS;
@@ -20,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @Tag(name = SUPPORT_API_NAME, description = SUPPORT_API_DESCRIPTION)
-@RequestMapping(SUPPORT)
+@RequestMapping("/support")
 public class SupportController {
     private final ContactUsByEmailService contactUsByEmailService;
 
-    @PostMapping(SEND_REQUEST_TO_EMAIL)
+    @PostMapping("/send-request-to-email")
     public SupportResponseDto contactUsByEmail(@Valid @RequestBody
                                                SupportRequestDto contactUsByEmailDto) {
         contactUsByEmailService.sendMessageToHost(contactUsByEmailDto);

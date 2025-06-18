@@ -1,11 +1,5 @@
 package com.example.budgetingapp.entities;
 
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.BOOLEAN_TO_INT;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.ROLE_ID;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.USERS;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.USERS_ROLES_JOIN_TABLE;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.USER_ID;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -27,7 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Getter
 @Setter
 @Entity
-@Table(name = USERS)
+@Table(name = "users")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,13 +32,13 @@ public class User implements UserDetails {
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = USERS_ROLES_JOIN_TABLE,
-            joinColumns = @JoinColumn(name = USER_ID),
-            inverseJoinColumns = @JoinColumn(name = ROLE_ID)
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
 
-    @Column(nullable = false, columnDefinition = BOOLEAN_TO_INT)
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean isEnabled;
 
     @Override
@@ -80,9 +74,5 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return isEnabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        isEnabled = enabled;
     }
 }

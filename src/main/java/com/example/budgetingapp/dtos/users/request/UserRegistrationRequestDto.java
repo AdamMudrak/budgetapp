@@ -15,24 +15,24 @@ import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @FieldRegisterMatch
 public record UserRegistrationRequestDto(
-        @JsonAlias(UserDtoConstants.EMAIL)
-        @Schema(name = UserDtoConstants.EMAIL,
-        example = UserDtoConstants.EMAIL_EXAMPLE,
+        @JsonAlias("email")
+        @Schema(name = "email",
+        example = "example@gmail.com",
         requiredMode = REQUIRED)
         @NotBlank
         @Email String userName,
 
-        @Schema(name = UserDtoConstants.PASSWORD,
-        example = UserDtoConstants.PASSWORD_EXAMPLE,
+        @Schema(name = "password",
+        example = "Best_Password1@3$",
         description = UserDtoConstants.PASSWORD_DESCRIPTION,
         requiredMode = REQUIRED)
-        @Size(min = UserDtoConstants.MIN_PASSWORD_SIZE,
-                max = UserDtoConstants.MAX_PASSWORD_SIZE)
+        @Size(min = 8,
+                max = 32)
         @NotBlank
         @Password String password,
 
-        @Schema(name = UserDtoConstants.REPEAT_PASSWORD,
-        example = UserDtoConstants.PASSWORD_EXAMPLE,
-        description = UserDtoConstants.REPEAT_PASSWORD_DESCRIPTION,
+        @Schema(name = "repeatPassword",
+        example = "Best_Password1@3$",
+        description = "This field must be the same as password!",
         requiredMode = REQUIRED)
         @NotBlank String repeatPassword) {}

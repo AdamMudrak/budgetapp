@@ -6,9 +6,7 @@ import static com.example.budgetingapp.constants.controllers.CategoryControllerC
 import static com.example.budgetingapp.constants.controllers.CategoryControllerConstants.CATEGORY_API_NAME;
 import static com.example.budgetingapp.constants.controllers.transactions.TransactionsCommonConstants.TRANSACTION_API_DESCRIPTION;
 import static com.example.budgetingapp.constants.controllers.transactions.TransactionsCommonConstants.TRANSACTION_API_NAME;
-import static com.example.budgetingapp.constants.security.SecurityConstants.SERVER_PATH;
 
-import com.example.budgetingapp.constants.config.ConfigConstants;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
@@ -21,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class OpenApiConfig {
-    @Value(SERVER_PATH) private String serverPath;
+    @Value("${server.path}") private String serverPath;
 
     @Bean
     public OpenAPI customOpenApi() {
@@ -33,13 +31,13 @@ public class OpenApiConfig {
                 .addTagsItem(new Tag().name(ACCOUNT_API_NAME)
                         .description(ACCOUNT_API_DESCRIPTION))
                 .components(new Components()
-                        .addSecuritySchemes(ConfigConstants.SECURITY_SCHEME_KEY,
+                        .addSecuritySchemes("BearerAuth",
                             new SecurityScheme()
                                 .type(SecurityScheme.Type.HTTP)
-                                .scheme(ConfigConstants.SECURITY_SCHEME)
-                                .bearerFormat(ConfigConstants.BEARER_FORMAT)))
+                                .scheme("bearer")
+                                .bearerFormat("JWT")))
                                 .addSecurityItem(new SecurityRequirement()
-                                .addList(ConfigConstants.SECURITY_SCHEME_KEY))
+                                .addList("BearerAuth"))
                                 .addServersItem(new Server().url(serverPath));
     }
 }

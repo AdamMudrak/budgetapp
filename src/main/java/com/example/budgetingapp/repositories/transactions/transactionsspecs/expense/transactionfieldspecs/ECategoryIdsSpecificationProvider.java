@@ -3,13 +3,17 @@ package com.example.budgetingapp.repositories.transactions.transactionsspecs.exp
 import com.example.budgetingapp.entities.categories.ExpenseCategory;
 import com.example.budgetingapp.entities.transactions.Expense;
 import com.example.budgetingapp.repositories.specifications.SpecificationProvider;
-import jakarta.persistence.criteria.Join;
-import java.util.Arrays;
+import com.example.budgetingapp.repositories.transactions.transactionsspecs.TransactionSpecificationProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class ECategoryIdsSpecificationProvider implements SpecificationProvider<Expense> {
+    private final TransactionSpecificationProvider<Expense, ExpenseCategory>
+            transactionSpecificationProvider;
+
     @Override
     public String getKey() {
         return "categoryIds";
@@ -17,9 +21,7 @@ public class ECategoryIdsSpecificationProvider implements SpecificationProvider<
 
     @Override
     public Specification<Expense> getSpecification(String[] params) {
-        return ((root, query, criteriaBuilder) -> {
-            Join<Expense, ExpenseCategory> expenseCategoryJoin = root.join("expenseCategory");
-            return expenseCategoryJoin.get("id").in(Arrays.stream(params).toArray());
-        });
+        return transactionSpecificationProvider.getCategoryIdsSpecification(
+                params, "expenseCategory");
     }
 }

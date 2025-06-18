@@ -1,8 +1,5 @@
 package com.example.budgetingapp.services.email;
 
-import static com.example.budgetingapp.constants.security.SecurityConstants.RESEND_API_KEY;
-import static com.example.budgetingapp.constants.security.SecurityConstants.SENDER_EMAIL;
-
 import com.resend.Resend;
 import com.resend.core.exception.ResendException;
 import com.resend.services.emails.model.CreateEmailOptions;
@@ -15,9 +12,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailService {
     private static final Logger logger = LogManager.getLogger(EmailService.class);
-    @Value(SENDER_EMAIL)
+    @Value("${sender.mail.address}")
     protected String senderEmail;
-    @Value(RESEND_API_KEY)
+    @Value("${resend.api.key}")
     private String resendApiKey;
 
     public void sendMessage(String toEmail, String subject, String body) {

@@ -8,13 +8,14 @@ public class ValidationConstants {
     public static final String DATE_BEFORE_TODAY = ": invalid date. Can't be earlier than today.";
     public static final String TO_DATE_EARLIER_THAN_FROM_DATE = ": invalid date. "
             + "to-date can't be earlier than from-date.";
-    public static final String DATE_PATTERN = "^\\d{4}-\\d{2}-\\d{2}$";
+    public static final Pattern DATE_PATTERN = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}$");
 
     public static final String INVALID_EMAIL = ": invalid email";
-    public static final String PATTERN_OF_EMAIL = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*"
-            + "@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+    public static final Pattern PATTERN_OF_EMAIL =
+            Pattern.compile("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*"
+            + "@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$");
     public static final String INVALID_PHONE = ": invalid phone";
-    public static final String PATTERN_OF_PHONE = "^\\+[1-9]\\d{1,14}$";
+    public static final Pattern PATTERN_OF_PHONE = Pattern.compile("^\\+[1-9]\\d{1,14}$");
 
     public static final String PASSWORD_COLLISION =
             "currentPassword collides with newPassword. Try again.";

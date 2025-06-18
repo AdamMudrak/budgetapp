@@ -15,24 +15,24 @@ import jakarta.validation.constraints.Size;
 @FieldSetNewPasswordMatch
 @FieldCurrentAndNewPasswordCollision
 public record SetNewPasswordDto(
-        @Schema(name = UserDtoConstants.CURRENT_PASSWORD,
-                example = UserDtoConstants.PASSWORD_EXAMPLE,
+        @Schema(name = "currentPassword",
+                example = "Best_Password1@3$",
                 description = UserDtoConstants.PASSWORD_DESCRIPTION,
                 requiredMode = REQUIRED)
         @NotBlank
         String currentPassword,
-        @Schema(name = UserDtoConstants.NEW_PASSWORD,
-                example = UserDtoConstants.PASSWORD_EXAMPLE,
+        @Schema(name = "newPassword",
+                example = "Best_Password1@3$",
                 description = UserDtoConstants.PASSWORD_DESCRIPTION,
                 requiredMode = REQUIRED)
-        @Size(min = UserDtoConstants.MIN_PASSWORD_SIZE,
-                max = UserDtoConstants.MAX_PASSWORD_SIZE)
+        @Size(min = 8,
+                max = 32)
         @NotBlank
         @Password
         String newPassword,
-        @Schema(name = UserDtoConstants.REPEAT_NEW_PASSWORD,
-                example = UserDtoConstants.PASSWORD_EXAMPLE,
-                description = UserDtoConstants.REPEAT_PASSWORD_DESCRIPTION,
+        @Schema(name = "repeatNewPassword",
+                example = "Best_Password1@3$",
+                description = "This field must be the same as password!",
                 requiredMode = REQUIRED)
         @NotBlank
         String repeatNewPassword) {}

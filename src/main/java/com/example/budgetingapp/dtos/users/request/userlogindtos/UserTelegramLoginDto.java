@@ -10,15 +10,15 @@ import jakarta.validation.constraints.NotBlank;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record UserTelegramLoginDto(
-        @Schema(name = UserDtoConstants.TELEGRAM_PHONE_NUMBER,
-        example = UserDtoConstants.TELEGRAM_PHONE_NUMBER_EXAMPLE,
+        @Schema(name = "phoneNumber",
+        example = "+380630000000",
         requiredMode = REQUIRED)
         @NotBlank
         @Phone
         String phoneNumber,
 
-        @Schema(name = UserDtoConstants.PASSWORD,
-        example = UserDtoConstants.PASSWORD_EXAMPLE,
+        @Schema(name = "password",
+        example = "Best_Password1@3$",
         description = UserDtoConstants.PASSWORD_DESCRIPTION,
         requiredMode = REQUIRED)
         @NotBlank

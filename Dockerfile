@@ -1,12 +1,12 @@
 # Builder stage
-FROM openjdk:17-jdk-alpine AS builder
+FROM eclipse-temurin:21-jdk-alpine AS builder
 WORKDIR application
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} application.jar
 RUN java -Djarmode=layertools -jar application.jar extract
 
 # Final stage
-FROM openjdk:17-jdk-alpine
+FROM eclipse-temurin:21-jdk-alpine
 WORKDIR application
 
 # Set JAVA_TOOL_OPTIONS environment variable for debugging

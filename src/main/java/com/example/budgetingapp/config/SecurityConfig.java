@@ -1,11 +1,9 @@
 package com.example.budgetingapp.config;
 
-import static com.example.budgetingapp.constants.config.ConfigConstants.ALLOWED_ORIGINS;
 import static com.example.budgetingapp.constants.security.SecurityConstants.SPLITERATOR;
 import static com.example.budgetingapp.constants.security.SecurityConstants.STRENGTH;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
-import com.example.budgetingapp.constants.config.ConfigConstants;
 import com.example.budgetingapp.security.JwtAuthenticationFilter;
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +30,7 @@ import org.springframework.web.cors.CorsConfiguration;
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    @Value(ALLOWED_ORIGINS)
+    @Value("${origins.allowed}")
     private String allowedOrigins;
 
     @Bean
@@ -48,19 +46,19 @@ public class SecurityConfig {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(Arrays.asList(allowedOriginsArray));
                     config.setAllowCredentials(true);
-                    config.setAllowedMethods(List.of(ConfigConstants.ALLOWED_METHODS));
-                    config.setAllowedHeaders(List.of(ConfigConstants.ALLOWED_HEADERS));
+                    config.setAllowedMethods(List.of("*"));
+                    config.setAllowedHeaders(List.of("*"));
                     return config;
                 }))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth -> auth
                                 .requestMatchers(
-                                        antMatcher(ConfigConstants.AUTH_MATCHER),
-                                        antMatcher(ConfigConstants.SUPPORT_MATCHER),
-                                        antMatcher(ConfigConstants.SWAGGER_MATCHER),
-                                        antMatcher(ConfigConstants.SWAGGER_DOCS_MATCHER),
-                                        antMatcher(ConfigConstants.ERRORS_MATCHER)
+                                        antMatcher("/auth/**"),
+                                        antMatcher("/support/**"),
+                                        antMatcher("/swagger-ui/**"),
+                                        antMatcher("/v3/api-docs/**"),
+                                        antMatcher("/errors")
                                 )
                                 .permitAll()
                                 .anyRequest()

@@ -1,10 +1,5 @@
 package com.example.budgetingapp.entities.transactions;
 
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.ACCOUNT_ID;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.EXPENSES;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.EXPENSE_CATEGORY_ID;
-import static com.example.budgetingapp.constants.entities.EntitiesConstants.USER_ID;
-
 import com.example.budgetingapp.entities.Account;
 import com.example.budgetingapp.entities.User;
 import com.example.budgetingapp.entities.categories.ExpenseCategory;
@@ -25,17 +20,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = EXPENSES)
+@Table(name = "expenses")
 public class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String comment;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = USER_ID, nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = ACCOUNT_ID, nullable = false)
+    @JoinColumn(name = "account_id", nullable = false)
     private Account account;
     @Column(nullable = false)
     private String currency;
@@ -44,6 +39,6 @@ public class Expense {
     @Column(nullable = false)
     private LocalDate transactionDate;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = EXPENSE_CATEGORY_ID, nullable = false)
+    @JoinColumn(name = "expense_category_id", nullable = false)
     private ExpenseCategory expenseCategory;
 }
