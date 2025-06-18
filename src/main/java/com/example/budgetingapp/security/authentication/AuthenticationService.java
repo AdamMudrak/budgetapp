@@ -3,6 +3,7 @@ package com.example.budgetingapp.security.authentication;
 import static com.example.budgetingapp.constants.Constants.EMAIL;
 import static com.example.budgetingapp.constants.Constants.TELEGRAM_PHONE_NUMBER;
 import static com.example.budgetingapp.constants.security.SecurityConstants.ACCESS;
+import static com.example.budgetingapp.constants.security.SecurityConstants.BEGIN_INDEX;
 import static com.example.budgetingapp.constants.security.SecurityConstants.PASSWORD_SET_SUCCESSFULLY;
 import static com.example.budgetingapp.constants.security.SecurityConstants.RANDOM_PASSWORD_STRENGTH;
 import static com.example.budgetingapp.constants.security.SecurityConstants.REFRESH;
@@ -35,6 +36,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,6 +44,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 @Component
 @RequiredArgsConstructor
@@ -102,7 +105,7 @@ public class AuthenticationService {
 
     public StartPasswordResetDto changePassword(HttpServletRequest httpServletRequest,
                                                 SetNewPasswordDto userSetNewPasswordRequestDto) {
-        String token = requestUtil.parseTokenFromParam(httpServletRequest);
+        String token = getToken(httpServletRequest);
         JwtAbstractUtil jwtAbstractUtil = jwtStrategy.getStrategy(ACCESS);
         String email = jwtAbstractUtil.getUsername(token);
         User user = userRepository.findByUserName(email).orElseThrow(() ->
@@ -188,5 +191,14 @@ public class AuthenticationService {
         jwtAbstractUtil = jwtStrategy.getStrategy(REFRESH);
         String refreshToken = jwtAbstractUtil.generateToken(authentication.getName());
         return new UserLoginDto(accessToken, refreshToken);
+    }
+
+    private String getToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (StringUtils.hasText(bearerToken)
+                && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(BEGIN_INDEX);
+        }
+        return null;
     }
 }
