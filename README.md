@@ -116,34 +116,61 @@ Set and manage budgets for specific categories and periods.
 
 ## 🛠️ Technologies Used
 
-Moneta BudgetApp leverages a comprehensive and robust technology stack, primarily built on Java, to ensure scalability, security, and maintainability.
+**Moneta BudgetApp** is built using a robust and secure Java 21 + Spring Boot stack designed to
+support personal budgeting features through maintainable code, efficient deployments, and scalable infrastructure.
 
-### Core Language and Environment
+## 🧱 Core Language and Environment
 
-* **Java 17**: The primary programming language for the backend, ensuring modern features and performance.
+- **Java 21** – Utilizes modern language features, records, pattern matching, and improved performance.
 
-### Backend Technologies
+## ⚙️ Backend Technologies
 
-* **Spring Boot 3.4.4**: The foundation of the application, providing rapid application development and deployment.
-* **Spring Security**: Securing the application with JWT authentication, leveraging `io.jsonwebtoken` (version `0.12.6`).
-* **Spring Data JPA**: For seamless database interactions, simplifying data access and persistence.
-* **Liquibase 4.31.1**: For database versioning and migrations, ensuring consistent database schema management.
-* **Hibernate Validator**: For data validation, ensuring data integrity across the application.
-* **Spring Mail (SendGrid 4.10.3)**: For email notifications and password resets, integrating with SendGrid's email delivery service.
-* **Telegram Bot API 6.9.7.1**: For Telegram-based authentication and interaction, enabling seamless user access via Telegram.
-* **MapStruct 1.6.3**: For mapping DTOs and entities, reducing boilerplate code and improving mapping efficiency.
-* **JWT (JSON Web Tokens) 0.12.6**: For access, refresh, and action token management, ensuring secure authentication and authorization.
-* **MySQL Database 8.0.33**: MySQL for local testing in volatile containers and for production, providing a reliable relational database.
-* **SpringDoc OpenAPI Starter WebMVC UI 2.8.6**: For API documentation and testing, enabling easy interaction with the application's endpoints.
-* **Lombok 1.18.36**: For reducing boilerplate code, improving code readability and maintainability.
+- **Spring Boot 3.4.4** – Core framework for REST APIs, dependency injection, and application lifecycle management.
+- **Spring Security** – Manages user authentication and role-based access control.
+- **Spring Data JPA** – Simplifies database interactions using JPA and Hibernate.
+- **Spring Web** – Builds RESTful services and handles HTTP requests/responses.
+- **Spring Validation (Hibernate Validator)** – Validates input at both API and entity levels.
 
-### **Documentation**
-- **SpringDoc OpenAPI (Swagger UI)** – For API documentation and testing.
+## 🗃️ Persistence and Migrations
+
+- **MySQL 8.0.33** – Robust relational database for persistent data storage.
+- **Liquibase 4.31.1** – Database version control and schema migration tool.
+
+## 🔐 Authentication and Authorization
+
+- **JWT (JJWT 0.12.6)** – Enables secure token-based authentication with stateless session management.
+
+## 📬 Communication and Notifications
+
+- **Resend Java SDK 4.3.0** – Sends email notifications for registration, password reset, and other events.
+- **Spring Boot Mail** – Supports basic email delivery configuration and dispatch.
+- **TelegramBots 6.9.7.1** – Integrates Telegram bot messaging for personal finance alerts or tips.
+
+## 🔧 Development Tools & Utilities
+
+- **Lombok 1.18.36** – Eliminates boilerplate code for getters, setters, constructors, and more.
+- **MapStruct 1.6.3** – Provides compile-time mappers for DTO ↔ entity conversion.
+- **Lombok-MapStruct Binding 0.2.0** – Ensures compatibility between Lombok and MapStruct during annotation processing.
+- **Maven Compiler Plugin 3.14.0** – Compiles code with proper Java 21 compatibility and annotation processing.
+- **Maven Checkstyle Plugin 3.6.0** – Enforces code style consistency using a custom `checkstyle.xml`.
+
+## 📦 API Documentation
+
+- **SpringDoc OpenAPI (Swagger UI) 2.8.6** – Automatically generates OpenAPI 3-compliant docs from annotated Spring controllers.
+
+## 🧪 Testing and Containerization
+
+- **Spring Boot Test** – Enables unit and integration testing out of the box.
+- **H2 Database (in-memory)** – Used for lightweight and fast testing scenarios.
+
+## 📈 Logging and Monitoring
+
+- **Log4j 2.24.3** – Configurable and performant logging system supporting various output formats and levels.
+
+> 🚀 This modern stack ensures **security**, **scalability**, and **flexibility**, empowering *Moneta BudgetApp* to deliver a smooth user experience in managing personal finances.
 
 ## 🔧 Setup and Installation
 Not ready for setting up my application locally yet? Then explore our [Team Project](https://moneta-landing.adammudrak.space/) first!<br>There, you will be able to have a look at Swagger documentation, my running telegram bot and my colleague's work - WebSite for the frontend done by [Maria Shmakova](https://www.linkedin.com/in/mariashmakova/)
-
-Follow these steps to set up Moneta BudgetApp locally or follow steps in this [video](https://www.youtube.com/watch?v=OUsDDkUCCTE):
 
 1. **Prerequisites:**
    - Software **required**:
@@ -185,7 +212,6 @@ Follow these steps to set up Moneta BudgetApp locally or follow steps in this [v
 
    - **Recommended**, but app will start without them:
       - JWT_SECRET - secure your JWTs
-      - EMAIL_SECRET - secure your email links with a random string
       - REGISTRATION_CONFIRMATION_LINK
       - PASSWORD_RESET_CONFIRMATION_LINK
       - GET_RANDOM_PASSWORD_REDIRECT_LINK
@@ -225,7 +251,7 @@ Follow these steps to set up Moneta BudgetApp locally or follow steps in this [v
 Building Moneta BudgetApp presented some interesting challenges:
 - **Security Implementation:** Managing JWT-based authentication for access, refresh, and action tokens required deep integration with Spring Security. Since I had only worked with access tokens before, implementing refresh and action tokens was a new challenge that demanded thorough research and deep learning.
 - **Telegram Bot Authentication:** Configuring the Telegram bot to work seamlessly with our authentication system required careful API handling. As I was unfamiliar with the Telegram API, I had to explore its documentation extensively to ensure a secure and efficient integration.
-- **Email Handling with SendGrid:** Setting up email-based password recovery and support requests while ensuring security and reliability. Working with the SendGrid API and Spring Email for the first time required an in-depth study of their capabilities to implement a robust and secure email system.
+- **Email Handling with Resend:** Setting up email-based password recovery and support requests while ensuring security and reliability. Working with the Resend API and Spring Email for the first time required an in-depth study of their capabilities to implement a robust and secure email system.
 
 Despite these challenges, overcoming them made the journey incredibly rewarding!
 
