@@ -9,11 +9,9 @@ public class FieldCurrentAndNewPasswordCollisionValidator implements ConstraintV
     @Override
     public boolean isValid(SetNewPasswordDto userSetNewPasswordRequestDto,
                            ConstraintValidatorContext constraintValidatorContext) {
-        if (userSetNewPasswordRequestDto.currentPassword() == null
-                || userSetNewPasswordRequestDto.newPassword() == null) {
-            return false;
-        }
-        return !userSetNewPasswordRequestDto.currentPassword()
+        return userSetNewPasswordRequestDto.currentPassword() != null
+                && userSetNewPasswordRequestDto.newPassword() != null
+                && !userSetNewPasswordRequestDto.currentPassword()
                 .equals(userSetNewPasswordRequestDto.newPassword());
     }
 }

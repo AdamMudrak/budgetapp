@@ -9,11 +9,9 @@ public class FieldSetNewPasswordMatchValidator implements ConstraintValidator<
     @Override
     public boolean isValid(SetNewPasswordDto userSetNewPasswordRequestDto,
                            ConstraintValidatorContext constraintValidatorContext) {
-        if (userSetNewPasswordRequestDto.newPassword() == null
-                || userSetNewPasswordRequestDto.repeatNewPassword() == null) {
-            return false;
-        }
-        return userSetNewPasswordRequestDto.newPassword()
+        return userSetNewPasswordRequestDto.newPassword() != null
+                && userSetNewPasswordRequestDto.repeatNewPassword() != null
+                && userSetNewPasswordRequestDto.newPassword()
                 .equals(userSetNewPasswordRequestDto.repeatNewPassword());
     }
 }

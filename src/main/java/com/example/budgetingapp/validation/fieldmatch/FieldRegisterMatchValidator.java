@@ -9,11 +9,9 @@ public class FieldRegisterMatchValidator implements ConstraintValidator<FieldReg
     @Override
     public boolean isValid(UserRegistrationRequestDto userRegistrationRequestDto,
                            ConstraintValidatorContext constraintValidatorContext) {
-        if (userRegistrationRequestDto.password() == null
-                || userRegistrationRequestDto.repeatPassword() == null) {
-            return false;
-        }
-        return userRegistrationRequestDto.password()
+        return userRegistrationRequestDto.password() != null
+                && userRegistrationRequestDto.repeatPassword() != null
+                && userRegistrationRequestDto.password()
                 .equals(userRegistrationRequestDto.repeatPassword());
     }
 }

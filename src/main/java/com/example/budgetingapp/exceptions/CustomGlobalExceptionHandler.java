@@ -70,67 +70,57 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     @ExceptionHandler(SpecificationProviderNotFoundException.class)
     protected ResponseEntity<Object> handleSpecificationNotFound(
-            RuntimeException ex, WebRequest request) {
+            RuntimeException ex) {
         return getUnifiedResponse(ex, NOT_FOUND);
     }
 
     @ExceptionHandler(ActionNotFoundException.class)
-    protected ResponseEntity<Object> handleActionNotFound(
-            Exception ex, WebRequest request) {
+    protected ResponseEntity<Object> handleActionNotFound(Exception ex) {
         return getUnifiedResponse(ex, NOT_FOUND);
     }
 
     @ExceptionHandler(RegistrationException.class)
-    protected ResponseEntity<Object> handleRegistrationException(
-            Exception ex, WebRequest request) {
+    protected ResponseEntity<Object> handleRegistrationException(Exception ex) {
         return getUnifiedResponse(ex, BAD_REQUEST);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    protected ResponseEntity<Object> handleIllegalArgumentException(
-            Exception ex, WebRequest request) {
+    protected ResponseEntity<Object> handleIllegalArgumentException(Exception ex) {
         return getUnifiedResponse(ex, BAD_REQUEST);
     }
 
     @ExceptionHandler(NumberFormatException.class)
-    protected ResponseEntity<Object> handleNumberFormatException(
-            Exception ex, WebRequest request) {
+    protected ResponseEntity<Object> handleNumberFormatException(Exception ex) {
         return getUnifiedResponse(ex, BAD_REQUEST);
     }
 
     @ExceptionHandler(PasswordMismatch.class)
-    protected ResponseEntity<Object> handlePasswordMismatch(
-            Exception ex, WebRequest request) {
+    protected ResponseEntity<Object> handlePasswordMismatch(Exception ex) {
         return getUnifiedResponse(ex, CONFLICT);
     }
 
     @ExceptionHandler(LinkExpiredException.class)
-    protected ResponseEntity<Object> handleLinkExpired(
-            Exception ex, WebRequest request) {
+    protected ResponseEntity<Object> handleLinkExpired(Exception ex) {
         return getUnifiedResponse(ex, GONE);
     }
 
     @ExceptionHandler(LoginException.class)
-    protected ResponseEntity<Object> handleLoginException(
-            Exception ex, WebRequest request) {
+    protected ResponseEntity<Object> handleLoginException(Exception ex) {
         return getUnifiedResponse(ex, FORBIDDEN);
     }
 
     @ExceptionHandler(AlreadyExistsException.class)
-    protected ResponseEntity<Object> handleAlreadyExists(
-            Exception ex, WebRequest request) {
+    protected ResponseEntity<Object> handleAlreadyExists(Exception ex) {
         return getUnifiedResponse(ex, CONFLICT);
     }
 
     @ExceptionHandler(ConflictException.class)
-    protected ResponseEntity<Object> handleConflict(
-            Exception ex, WebRequest request) {
+    protected ResponseEntity<Object> handleConflict(Exception ex) {
         return getUnifiedResponse(ex, CONFLICT);
     }
 
     @ExceptionHandler(TransactionFailedException.class)
-    protected ResponseEntity<Object> handleFailedTransaction(
-            Exception ex, WebRequest request) {
+    protected ResponseEntity<Object> handleFailedTransaction(Exception ex) {
         return getUnifiedResponse(ex, CONFLICT);
     }
 
